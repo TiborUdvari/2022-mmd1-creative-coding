@@ -28,57 +28,32 @@ boolean pRecording = false;
 int numFrames = 30;
 int startFrame = 0;
 
-// todo
-// Add way to save as a movie
-// Add slider for second seed value change
+// Video export does not work with resolutions that widths are not divisible by 2 
+/*
+  360 degrees
+  Diameter: 8 m
+  Resolution: 4500 x 1080
+*/
+
+final float ratio = 0.5;
+final int W = 4500; 
+final int H = 1080;
+
+final int displayW = (int)(W * ratio);
+final int displayH = (int)(H * ratio);
+
+PGraphics b; // b for buffer
+
+void settings() {    
+  size(displayW, displayH, P2D);
+  //fullScreen(2);
+  noSmooth();
+  pixelDensity(2);
+};
 
 void setup() {
-
-  println(sketchPath());
-  String path = sketchPath();
-
-  ProcessBuilder processBuilder = new ProcessBuilder();
-  processBuilder.directory(new File(path));
-  //processBuilder.command("/usr/bin/say", "welcome to the command line");
-
-  processBuilder.command("/bin/zsh", "mkdir", "hello-folder");
-
-  try {
-
-    Process process = processBuilder.start();
-
-    BufferedReader reader =
-      new BufferedReader(new InputStreamReader(process.getInputStream()));
-
-    String line;
-    while ((line = reader.readLine()) != null) {
-      System.out.println(line);
-    }
-
-    int exitCode = process.waitFor();
-    System.out.println("\nExited with error code : " + exitCode);
-  }
-  catch (IOException e) {
-    e.printStackTrace();
-  }
-  catch (InterruptedException e) {
-    e.printStackTrace();
-  }
-
-  //exec(["/bin/zsh", "mkdir hello-tibor-test"], sketchPath());
-
-
-  // IG reels sizes
-  // with external screen
-  fullScreen(2);
-  noSmooth();
-
-  //size(1080, 1920);
-  //size(540, 810, P2D);
-  pixelDensity(2);
-
-  //size(270, 405);
-
+  b = createGraphics(W, H);
+  
   noise = new OpenSimplexNoise(12345);
 
   cp5 = new ControlP5(this);
@@ -104,8 +79,6 @@ void setup() {
   cp5.addRadioButton("radioDebug")
     .setPosition(10, 14 + 10 * 8 + 8 * 8)
     .addItem("debug", 1);
-
-  // exec("/usr/bin/say", "welcome to the command line");
 }
 
 void draw() {
@@ -158,8 +131,6 @@ void drawDots() {
 
 void drawRecording() {
   if (!recording) return;
-
-  println("save");
 
   int currentFrame = frameCount - startFrame;
 

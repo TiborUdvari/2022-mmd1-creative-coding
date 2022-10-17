@@ -66,6 +66,7 @@ static class VideoExporter
     ProcessBuilder processBuilder = new ProcessBuilder();
     processBuilder.directory(new File(applet.sketchPath()));
     
+    println("Executing command: %s".formatted(command));
     processBuilder.command("zsh", "-c", command);
 
     try {
