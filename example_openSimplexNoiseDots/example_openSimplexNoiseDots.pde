@@ -6,24 +6,81 @@ import controlP5.*;
 import java.time.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
 
 OpenSimplexNoise noise;
 ControlP5 cp5;
 
 int seed = 12345;
 float scl = 0.018;
-
 float rad = 1.3;
-
 int m = 80;
 boolean periodicFuncDebug = false;
 float offScl = 0.15;
 
+// Recording
+String recordingName;
+boolean recording = false;
+boolean pRecording = false;
+int numFrames = 30;
+int startFrame = 0;
+
+// todo
+// Add way to save as a movie
+// Add slider for second seed value change
+
 void setup() {
-  
+
+  println(sketchPath());
+  String path = sketchPath();
+
+  ProcessBuilder processBuilder = new ProcessBuilder();
+  processBuilder.directory(new File(path));
+  //processBuilder.command("/usr/bin/say", "welcome to the command line");
+
+  processBuilder.command("/bin/zsh", "mkdir", "hello-folder");
+
+  try {
+
+    Process process = processBuilder.start();
+
+    BufferedReader reader =
+      new BufferedReader(new InputStreamReader(process.getInputStream()));
+
+    String line;
+    while ((line = reader.readLine()) != null) {
+      System.out.println(line);
+    }
+
+    int exitCode = process.waitFor();
+    System.out.println("\nExited with error code : " + exitCode);
+  }
+  catch (IOException e) {
+    e.printStackTrace();
+  }
+  catch (InterruptedException e) {
+    e.printStackTrace();
+  }
+
+
+
+
+  //exec(["/bin/zsh", "mkdir hello-tibor-test"], sketchPath());
+
+
   // IG reels sizes
+  // with external screen
+  fullScreen(2);
+  noSmooth();
+
   //size(1080, 1920);
-  size(540, 810, P2D);
+  //size(540, 810, P2D);
+  pixelDensity(2);
+
   //size(270, 405);
 
   noise = new OpenSimplexNoise(12345);
@@ -35,18 +92,24 @@ void setup() {
   cp5.addSlider("sliderRad", 0.1, 3.0, 1.3, 10, 14 + 10 * 2 + 8 * 2, 100, 14);
   cp5.addSlider("sliderN", 10, 200, 80, 10, 14 + 10 * 3 + 8 * 3, 100, 14);
   cp5.addSlider("sliderOffScl", 0.001, 0.015, 1, 10, 14 + 10 * 4 + 8 * 4, 100, 14);
-  
+
   cp5.addButton("saveParams")
     .setPosition(10, 14 + 10 * 5 + 8 * 5)
     .setSize(100, 14);
-    
+
   cp5.addButton("loadParams")
     .setPosition(10, 14 + 10 * 6 + 8 * 6)
     .setSize(100, 14);
 
-  cp5.addRadioButton("radioDebug")
+  cp5.addButton("recordSketch")
     .setPosition(10, 14 + 10 * 7 + 8 * 7)
+    .setSize(100, 14);
+
+  cp5.addRadioButton("radioDebug")
+    .setPosition(10, 14 + 10 * 8 + 8 * 8)
     .addItem("debug", 1);
+
+  // exec("/usr/bin/say", "welcome to the command line");
 }
 
 void draw() {
@@ -72,6 +135,8 @@ void drawDots() {
   int numFrames = 30;
   float t = 1.0*frameCount/numFrames;
 
+  strokeCap(PROJECT);
+
   stroke(255);
   strokeWeight(1.5);
 
@@ -90,6 +155,27 @@ void drawDots() {
       //dy = 0;
       point(x+dx, y+dy);
     }
+  }
+
+  drawRecording();
+}
+
+void drawRecording() {
+  if (!recording) return;
+
+  println("save");
+
+  int currentFrame = frameCount - startFrame;
+
+  if (currentFrame <= numFrames)
+  {
+    save(recordingName + "_" + String.format("%03d", currentFrame) + ".png");
+  }
+  if (currentFrame >= numFrames)
+  {
+    println("All frames have been saved");
+    recording = false;
+    // launch terminal things
   }
 }
 
@@ -135,13 +221,24 @@ float getValue(int x) {
 
 // --- Control P5 ---
 
+void recordSketch() {
+  println("Record sketch");
+  DateTimeFormatter dtf = DateTimeFormatter.ofPattern("uuuu-MM-dd_HH-mm-ss");
+  LocalDateTime now = LocalDateTime.now();
+  String fn = dtf.format(now);
+  recordingName = fn;
+
+  startFrame = frameCount + 1;
+  recording = true;
+}
+
 void saveParams() {
   println("Save params");
 
   DateTimeFormatter dtf = DateTimeFormatter.ofPattern("uuuu-MM-dd_HH-mm-ss");
   LocalDateTime now = LocalDateTime.now();
   String fn = dtf.format(now);
-  
+
   cp5.saveProperties();
   cp5.saveProperties(fn);
 }
