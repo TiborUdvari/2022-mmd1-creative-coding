@@ -11,7 +11,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-
 OpenSimplexNoise noise;
 ControlP5 cp5;
 
@@ -65,9 +64,6 @@ void setup() {
   catch (InterruptedException e) {
     e.printStackTrace();
   }
-
-
-
 
   //exec(["/bin/zsh", "mkdir hello-tibor-test"], sketchPath());
 
@@ -174,6 +170,11 @@ void drawRecording() {
   if (currentFrame >= numFrames)
   {
     println("All frames have been saved");
+    VideoExporter.generateVideo(this, recordingName);
+    VideoExporter.cleanupImages(this, recordingName);
+    
+    launch("%s/%s.mov".formatted(sketchPath(), recordingName));
+    
     recording = false;
     // launch terminal things
   }
@@ -223,21 +224,20 @@ float getValue(int x) {
 
 void recordSketch() {
   println("Record sketch");
-  DateTimeFormatter dtf = DateTimeFormatter.ofPattern("uuuu-MM-dd_HH-mm-ss");
-  LocalDateTime now = LocalDateTime.now();
-  String fn = dtf.format(now);
+  String fn = VideoExporter.defaultFileName(this);
   recordingName = fn;
-
+  
   startFrame = frameCount + 1;
   recording = true;
 }
 
 void saveParams() {
-  println("Save params");
+  String fn = VideoExporter.defaultFileName(this);
+  saveParams(fn);
+}
 
-  DateTimeFormatter dtf = DateTimeFormatter.ofPattern("uuuu-MM-dd_HH-mm-ss");
-  LocalDateTime now = LocalDateTime.now();
-  String fn = dtf.format(now);
+void saveParams(String fn) {
+  println("Save params");
 
   cp5.saveProperties();
   cp5.saveProperties(fn);
