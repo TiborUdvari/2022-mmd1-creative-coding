@@ -35,7 +35,7 @@ int startFrame = 0;
   Resolution: 4500 x 1080
 */
 
-final float ratio = 0.5;
+final float ratio = 0.3;
 final int W = 4500; 
 final int H = 1080;
 
@@ -48,11 +48,11 @@ void settings() {
   size(displayW, displayH, P2D);
   //fullScreen(2);
   noSmooth();
-  pixelDensity(2);
+  //pixelDensity(2);
 };
 
 void setup() {
-  b = createGraphics(W, H);
+  b = createGraphics(W, H, P2D);
   
   noise = new OpenSimplexNoise(12345);
 
@@ -84,15 +84,17 @@ void setup() {
 void draw() {
   background(0);
   drawDots();
-
+  image(b, 0, 0, width, height);
+  
   if (periodicFuncDebug) {
     drawPeriodicFunction();
   }
+  
 }
 
 float offset(float x, float y)
 {
-  return offScl*dist(x, y, width/2, height/2);
+  return offScl*dist(x, y, W/2, H/2);
 }
 
 float periodicFunction(float p, float seed, float x, float y)
@@ -101,30 +103,40 @@ float periodicFunction(float p, float seed, float x, float y)
 }
 
 void drawDots() {
+  b.beginDraw();
+  
   int numFrames = 30;
   float t = 1.0*frameCount/numFrames;
+  
+  b.fill(0);
+  b.stroke(0);
+  b.rect(0, 0, W, H);
+  
+  
+  b.strokeCap(PROJECT);
 
-  strokeCap(PROJECT);
-
-  stroke(255);
-  strokeWeight(1.5);
+  b.stroke(255);
+  b.strokeWeight(1.5);
+  //b.strokeWeight(6);
 
   for (int i=0; i<m; i++)
   {
     for (int j=0; j<m; j++)
     {
       float margin = 50;
-      float x = map(i, 0, m-1, margin, width-margin);
-      float y = map(j, 0, m-1, margin, height-margin);
+      float x = map(i, 0, m-1, margin, W-margin);
+      float y = map(j, 0, m-1, margin, H-margin);
 
       float dx = 20.0 * periodicFunction(t + offset(x, y), 0, x, y);
       float dy = 20.0 * periodicFunction(t + offset(x, y), 123, x, y);
 
       //dx = 0;
       //dy = 0;
-      point(x+dx, y+dy);
+      b.point(x+dx, y+dy);
     }
   }
+  
+  b.endDraw();
 
   drawRecording();
 }
@@ -136,7 +148,7 @@ void drawRecording() {
 
   if (currentFrame <= numFrames)
   {
-    save(recordingName + "_" + String.format("%03d", currentFrame) + ".png");
+    b.save(recordingName + "_" + String.format("%03d", currentFrame) + ".png");
   }
   if (currentFrame >= numFrames)
   {
@@ -152,40 +164,41 @@ void drawRecording() {
 }
 
 void drawNoise() {
-  loadPixels();
+  b.loadPixels();
 
-  for (int x = 0; x < width; x++) {
-    for (int y = 0; y < height; y++) {
+  for (int x = 0; x < W; x++) {
+    for (int y = 0; y < H; y++) {
       float val = (float)periodicFunction(0f, 0f, (float)x, (float)y);
       color c = color(map(val, -1, 1, 0, 1) * 255);
-      pixels[y * width + x] = c;
+      
+      b.pixels[y * W + x] = c;
     }
   }
 
-  updatePixels();
+  b.updatePixels();
 }
 
 // This draws only one line, not everything
 void drawPeriodicFunction() {
   stroke(0, 255, 0);
 
-  for (int i = 0; i < width; i++) {
+  for (int i = 0; i < W; i++) {
     float val1 = (float)periodicFunction(0f, 0f, (float)i, 0) ;
     float val2 = (float)periodicFunction(0f, 0f, (float)i + 1, 0);
     val1 = map(val1, -1, 1, 0, 1);
     val2 = map(val2, -1, 1, 0, 1);
-    point(i, val1 * height);
+    b.point(i, val1 * H);
 
     // draw line between them
-    line(i, val1 * height, i+1, val2 * height);
+    b.line(i, val1 * W, i+1, val2 * H);
   }
 }
 
 float getValue(int x) {
-  float delta = 1.0 / width;
+  float delta = 1.0 / W;
   float t = delta * x;
-  float samplingX = cos(t * TAU) * rad + width * 0.5;
-  float samplingY = sin(t * TAU) * rad + height * 0.5;
+  float samplingX = cos(t * TAU) * rad + W * 0.5;
+  float samplingY = sin(t * TAU) * rad + H * 0.5;
   float val = (float)noise.eval(scl * samplingX, scl * samplingY);
   float normalized = (val + 1) / 2;
   return normalized;
