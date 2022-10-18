@@ -3,6 +3,7 @@
 
 # Image files
 *.png
+*.mov
 
 ### Java ###
 # Compiled class file
