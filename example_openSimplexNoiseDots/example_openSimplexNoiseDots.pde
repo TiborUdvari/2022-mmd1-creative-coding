@@ -59,7 +59,8 @@ PGraphics b; // b for buffer
 
 float offset(float x, float y)
 {
-  return offScl*dist(x, y, W/2, H/2);
+  //return offScl*dist(x, y, W/2, H/2);
+  return offScl * dist(x, y, W/2, H/2) / max(W, H);
 }
 
 float periodicFunction(float p, float seed, float x, float y)
@@ -147,10 +148,9 @@ void settings() {
 void draw() {
   background(0);
   
-  /*drawDots();
+  drawDots();
   image(b, 0, 0, width, height);
-  background(0);
-*/
+  
   if (periodicFuncDebug) {
     drawPeriodicFunction();
   }
@@ -201,7 +201,6 @@ void drawNoise() {
 void drawPeriodicFunction() {
   stroke(0, 255, 0);
   strokeWeight(1);
-  background(0);
   for (int i = 0; i < width; i++) {
     float val1 = (float)periodicFunction(0f, 0f, (float)i, 0) ;
     float val2 = (float)periodicFunction(0f, 0f, (float)i + 1, 0);
