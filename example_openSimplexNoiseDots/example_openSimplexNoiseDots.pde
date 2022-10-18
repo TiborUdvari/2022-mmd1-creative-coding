@@ -28,7 +28,7 @@ float offScl = 0.15;
 String recordingName;
 boolean recording = false;
 boolean pRecording = false;
-int numFrames = 30;
+int numFrames = 60;
 int startFrame = 0;
 
 // Video export does not work with resolutions that widths are not divisible by 2 
@@ -39,15 +39,20 @@ int startFrame = 0;
   Resolution 360: 11000 x 2000
 */
 
+// vid.avi -s 800x800 -sws_flags neighbor -sws_dither none -vcodec rawvideo vid2.avi
+
+final int instagramMinW = 500;
+final int instagramMinH = 888;
+
 final int instagramW = 1080;
 final int instagramH = 1920;
 
 final int circularScreenW = 4500;
 final int circularScreenH = 1080;
 
-final float ratio = 0.5;
-final int W = instagramW; 
-final int H = instagramH;
+final float ratio = 1;
+final int W = instagramMinW; 
+final int H = instagramMinH;
 
 //final int W = circularScreenW; 
 //final int H = circularScreenH;
@@ -70,26 +75,24 @@ float periodicFunction(float p, float seed, float x, float y)
 
 void drawDots() {
   b.beginDraw();
-  
-  int numFrames = 30;
-  
+    
   float t = 1.0*frameCount/numFrames;
   
   b.fill(0);
-  b.stroke(0);
+  b.noStroke();
   b.rect(0, 0, W, H);
   
-  b.strokeCap(PROJECT);
+  b.strokeCap(SQUARE);
 
   b.stroke(255);
-  b.strokeWeight(1.5);
+  b.strokeWeight(1);
   //b.strokeWeight(6);
 
   for (int i=0; i<m; i++)
   {
     for (int j=0; j<m; j++)
     {
-      float margin = 50;
+      float margin = 0;
       float x = map(i, 0, m-1, margin, W-margin);
       float y = map(j, 0, m-1, margin, H-margin);
 
@@ -98,7 +101,7 @@ void drawDots() {
 
       //dx = 0;
       //dy = 0;
-      b.point(x+dx, y+dy);
+      b.point((int)x+dx, (int)y+dy);
     }
   }
   
@@ -109,8 +112,10 @@ void drawDots() {
 
 
 void setup() {
+  frameRate(60);
   b = createGraphics(W, H, P2D);
-  
+  b.smooth(8);
+
   noise = new OpenSimplexNoise(12345);
 
   cp5 = new ControlP5(this);
@@ -140,14 +145,15 @@ void setup() {
 
 void settings() {    
   size(displayW, displayH, P2D);
+  noSmooth();
+
+  //smooth(8);
   //fullScreen(2);
   //noSmooth();
   //pixelDensity(2);
 };
 
-void draw() {
-  background(0);
-  
+void draw() {  
   drawDots();
   image(b, 0, 0, width, height);
   
@@ -156,16 +162,12 @@ void draw() {
   }
 }
 
-
-
-
-
 void drawRecording() {
   if (!recording) return;
 
   int currentFrame = frameCount - startFrame;
 
-  if (currentFrame <= numFrames)
+  if (currentFrame < numFrames)
   {
     b.save(recordingName + "_" + String.format("%03d", currentFrame) + ".png");
   }
