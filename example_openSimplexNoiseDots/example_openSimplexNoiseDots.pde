@@ -11,6 +11,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+// ffmpeg -y -stream_loop TIMESTOLOOPMP4 -i input.mp4 -c copy output.mp4
+
+
 OpenSimplexNoise noise;
 ControlP5 cp5;
 
@@ -32,24 +35,77 @@ int startFrame = 0;
 /*
   360 degrees
   Diameter: 8 m
-  Resolution: 4500 x 1080
+  Resolution 180:  4500 x 1080
+  Resolution 360: 11000 x 2000
 */
 
-final float ratio = 0.3;
-final int W = 4500; 
-final int H = 1080;
+final int instagramW = 1080;
+final int instagramH = 1920;
+
+final int circularScreenW = 4500;
+final int circularScreenH = 1080;
+
+final float ratio = 0.5;
+final int W = instagramW; 
+final int H = instagramH;
+
+//final int W = circularScreenW; 
+//final int H = circularScreenH;
 
 final int displayW = (int)(W * ratio);
 final int displayH = (int)(H * ratio);
 
 PGraphics b; // b for buffer
 
-void settings() {    
-  size(displayW, displayH, P2D);
-  //fullScreen(2);
-  noSmooth();
-  //pixelDensity(2);
-};
+float offset(float x, float y)
+{
+  return offScl*dist(x, y, W/2, H/2);
+}
+
+float periodicFunction(float p, float seed, float x, float y)
+{
+  return (float)noise.eval(seed+rad*cos(TAU*p), rad*sin(TAU*p), scl*x, scl*y);
+}
+
+void drawDots() {
+  b.beginDraw();
+  
+  int numFrames = 30;
+  
+  float t = 1.0*frameCount/numFrames;
+  
+  b.fill(0);
+  b.stroke(0);
+  b.rect(0, 0, W, H);
+  
+  b.strokeCap(PROJECT);
+
+  b.stroke(255);
+  b.strokeWeight(1.5);
+  //b.strokeWeight(6);
+
+  for (int i=0; i<m; i++)
+  {
+    for (int j=0; j<m; j++)
+    {
+      float margin = 50;
+      float x = map(i, 0, m-1, margin, W-margin);
+      float y = map(j, 0, m-1, margin, H-margin);
+
+      float dx = 20.0 * periodicFunction(t + offset(x, y), 0, x, y);
+      float dy = 20.0 * periodicFunction(t + offset(x, y), 123, x, y);
+
+      //dx = 0;
+      //dy = 0;
+      b.point(x+dx, y+dy);
+    }
+  }
+  
+  b.endDraw();
+
+  drawRecording();
+}
+
 
 void setup() {
   b = createGraphics(W, H, P2D);
@@ -81,65 +137,28 @@ void setup() {
     .addItem("debug", 1);
 }
 
+void settings() {    
+  size(displayW, displayH, P2D);
+  //fullScreen(2);
+  //noSmooth();
+  //pixelDensity(2);
+};
+
 void draw() {
   background(0);
-  drawDots();
-  image(b, 0, 0, width, height);
   
+  /*drawDots();
+  image(b, 0, 0, width, height);
+  background(0);
+*/
   if (periodicFuncDebug) {
     drawPeriodicFunction();
   }
-  
 }
 
-float offset(float x, float y)
-{
-  return offScl*dist(x, y, W/2, H/2);
-}
 
-float periodicFunction(float p, float seed, float x, float y)
-{
-  return (float)noise.eval(seed+rad*cos(TAU*p), rad*sin(TAU*p), scl*x, scl*y);
-}
 
-void drawDots() {
-  b.beginDraw();
-  
-  int numFrames = 30;
-  float t = 1.0*frameCount/numFrames;
-  
-  b.fill(0);
-  b.stroke(0);
-  b.rect(0, 0, W, H);
-  
-  
-  b.strokeCap(PROJECT);
 
-  b.stroke(255);
-  b.strokeWeight(1.5);
-  //b.strokeWeight(6);
-
-  for (int i=0; i<m; i++)
-  {
-    for (int j=0; j<m; j++)
-    {
-      float margin = 50;
-      float x = map(i, 0, m-1, margin, W-margin);
-      float y = map(j, 0, m-1, margin, H-margin);
-
-      float dx = 20.0 * periodicFunction(t + offset(x, y), 0, x, y);
-      float dy = 20.0 * periodicFunction(t + offset(x, y), 123, x, y);
-
-      //dx = 0;
-      //dy = 0;
-      b.point(x+dx, y+dy);
-    }
-  }
-  
-  b.endDraw();
-
-  drawRecording();
-}
 
 void drawRecording() {
   if (!recording) return;
@@ -181,16 +200,16 @@ void drawNoise() {
 // This draws only one line, not everything
 void drawPeriodicFunction() {
   stroke(0, 255, 0);
-
-  for (int i = 0; i < W; i++) {
+  strokeWeight(1);
+  background(0);
+  for (int i = 0; i < width; i++) {
     float val1 = (float)periodicFunction(0f, 0f, (float)i, 0) ;
     float val2 = (float)periodicFunction(0f, 0f, (float)i + 1, 0);
     val1 = map(val1, -1, 1, 0, 1);
     val2 = map(val2, -1, 1, 0, 1);
-    b.point(i, val1 * H);
 
     // draw line between them
-    b.line(i, val1 * W, i+1, val2 * H);
+    line(i, val1 * width, i+1, val2 * width);
   }
 }
 
@@ -213,6 +232,7 @@ void recordSketch() {
   
   startFrame = frameCount + 1;
   recording = true;
+  saveParams();
 }
 
 void saveParams() {
