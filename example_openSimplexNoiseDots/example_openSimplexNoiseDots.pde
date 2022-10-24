@@ -1,7 +1,3 @@
-// https://bleuje.com/tutorial3/
-
-// Noise propagation
-
 import controlP5.*;
 import java.time.*;
 import java.time.LocalDate;
@@ -10,9 +6,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-
-// ffmpeg -y -stream_loop TIMESTOLOOPMP4 -i input.mp4 -c copy output.mp4
-
 
 OpenSimplexNoise noise;
 ControlP5 cp5;
@@ -65,7 +58,16 @@ PGraphics b; // b for buffer
 float offset(float x, float y)
 {
   //return offScl*dist(x, y, W/2, H/2);
-  return offScl * dist(x, y, W/2, H/2) / max(W, H);
+  // radial offset
+  //return offScl * dist(x, y, W/2, H/2) / max(W, H) * 100; 
+  
+  // min distance to corner
+  //return offScl * dist(x, y, max(x, W/2), max(y, H/2)) / max(W, H) * 100;
+  
+  return offScl * x % 2 * 100;
+  
+  //return offScl * max(W/2, x) * 100;
+
 }
 
 float periodicFunction(float p, float seed, float x, float y)
@@ -76,7 +78,7 @@ float periodicFunction(float p, float seed, float x, float y)
 void drawDots() {
   b.beginDraw();
     
-  float t = 1.0*frameCount/numFrames;
+  float t = 1.0 * frameCount/numFrames;
   
   b.fill(0);
   b.noStroke();
@@ -122,7 +124,7 @@ void setup() {
 
   cp5.addSlider("sliderScl", 0.001, 0.099, 0.018, 10, 10, 100, 14);
   cp5.addSlider("sliderSeed", 10000, 99999, 12345, 10, 14 + 10 + 8, 100, 14);
-  cp5.addSlider("sliderRad", 0.1, 3.0, 1.3, 10, 14 + 10 * 2 + 8 * 2, 100, 14);
+  cp5.addSlider("sliderRad", 0.01, 1.5, 1.3, 10, 14 + 10 * 2 + 8 * 2, 100, 14);
   cp5.addSlider("sliderN", 10, 200, 80, 10, 14 + 10 * 3 + 8 * 3, 100, 14);
   cp5.addSlider("sliderOffScl", 0.001, 0.015, 1, 10, 14 + 10 * 4 + 8 * 4, 100, 14);
 
