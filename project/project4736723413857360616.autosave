@@ -73,7 +73,7 @@ class CustomWaveForm implements Waveform {
     /*
     println(v);
     println(res);*/
-    float res = periodicFunction(v, 0, 0, 0);
+    float res = periodicFunction(v, 0, 1, 1);
     return res;
     
   }
@@ -147,7 +147,7 @@ void setup() {
   
   CustomWaveForm customWaveForm = new CustomWaveForm();
   
-  wave = new Oscil( 44, 1f, customWaveForm );
+  wave = new Oscil( 440, 0.5f, customWaveForm );
   wave.patch(out);
 
   setupCP5();
@@ -246,8 +246,8 @@ void drawPeriodicFunction() {
   stroke(0, 255, 0);
   strokeWeight(1);
   for (int i = 0; i < width; i++) {
-    float val1 = (float)periodicFunction((float)(i + 0) / width, 0f, 1f, 1f);
-    float val2 = (float)periodicFunction(((float)i + 1) / width, 0f, 1f, 1f);
+    float val1 = (float)periodicFunction((float)i, 0f, 0f, 1f, 1f);
+    float val2 = (float)periodicFunction((float)i + 1, 0f, 1f, 1f);
     val1 = map(val1, -1, 1, 0, 1);
     val2 = map(val2, -1, 1, 0, 1);
 
