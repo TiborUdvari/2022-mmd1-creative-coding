@@ -21,16 +21,22 @@ void setup() {
   cp5 = new ControlP5(this);
   List l = Arrays.asList("a", "b", "c", "d", "e", "f", "g", "h");
   /* add a ScrollableList, by default it behaves like a DropdownList */
-  cp5.addScrollableList("dropdown")
+  
+   Slider s = cp5.addSlider("scl", 0.001, 0.099, 0.018, 10, 10, 100, 14);
+   Slider s2 = cp5.addSlider("scl2", 0.001, 0.099, 0.018, 10, 10, 100, 14);
+
+  ScrollableList sl = cp5.addScrollableList("dropdown")
      .setPosition(100, 100)
      .setSize(200, 100)
      .setBarHeight(20)
      .setItemHeight(20)
-     .addItems(l)
-     // .setType(ScrollableList.LIST) // currently supported DROPDOWN and LIST
+     //.addItems(l)
+     //.setType(ScrollableList.LIST) // currently supported DROPDOWN and LIST
      ;
      
-     
+    sl.add(s); 
+        sl.add(s2); 
+
 }
 
 void draw() {
@@ -52,10 +58,11 @@ void dropdown(int n) {
    CColor c = new CColor();
   c.setBackground(color(255,0,0));
   cp5.get(ScrollableList.class, "dropdown").getItem(n).put("color", c);
-  
+   
 }
 
 void keyPressed() {
+  println("key pressed"); 
   switch(key) {
     case('1'):
     /* make the ScrollableList behave like a ListBox */
@@ -257,5 +264,3 @@ java.lang.Object : boolean equals(Object)
 created: 2015/03/24 12:21:22
 
 */
-
-

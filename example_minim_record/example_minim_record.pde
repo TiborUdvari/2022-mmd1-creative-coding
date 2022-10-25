@@ -28,8 +28,6 @@ void setup()
   wave = new Oscil( 440, 0.5f, Waves.SINE );
   // patch the Oscil to the output
   
-  audioRecorder = minim.createRecorder(out, "test.wav");
-
   wave.patch( out );
 }
 
@@ -79,6 +77,7 @@ void keyPressed()
       recording = !recording;
       if (recording) {
         println("Start recording");
+        audioRecorder = minim.createRecorder(out, "test"+ frameCount +".wav");
         audioRecorder.beginRecord();  
       } 
       if (!recording) {

@@ -1,3 +1,6 @@
+import de.looksgood.ani.*;
+import de.looksgood.ani.easing.*;
+
 import ddf.minim.*;
 import ddf.minim.analysis.*;
 import ddf.minim.effects.*;
@@ -66,6 +69,7 @@ PGraphics b; // b for buffer
 Minim minim;
 AudioOutput out;
 Oscil wave;
+AudioRecorder audioRecorder;
 
 class CustomWaveForm implements Waveform {
   float value(float v) {
@@ -136,12 +140,15 @@ void drawDots() {
 }
 
 void setup() {
+  //surface.setResizable(true);
+
   frameRate(60);
   b = createGraphics(W, H, P2D);
   b.smooth(8);
 
   noise = new OpenSimplexNoise(12345);
-
+  Ani.init(this);
+  
   minim = new Minim(this);
   out = minim.getLineOut();
   
@@ -151,17 +158,26 @@ void setup() {
   wave.patch(out);
 
   setupCP5();
+  
+  Ani.to(this, 3, "scl:0.06", Ani.SINE_IN_OUT);
+
 }
+
+Slider s;
 
 void setupCP5() {
   cp5 = new ControlP5(this);
-
-  cp5.addSlider("sliderScl", 0.001, 0.099, 0.018, 10, 10, 100, 14);
+  //cp5.setUpdate(true);
+  //cp5.addSlider("sliderScl", 0.001, 0.099, 0.018, 10, 10, 100, 14);
+  
+  s = cp5.addSlider("scl", 0.001, 0.099, 0.018, 10, 10, 100, 14);
+  s.setUpdate(true);
+  
   cp5.addSlider("sliderSeed", 10000, 99999, 12345, 10, 14 + 10 + 8, 100, 14);
   cp5.addSlider("sliderRad", 0.01, 1.5, 1.3, 10, 14 + 10 * 2 + 8 * 2, 100, 14);
   cp5.addSlider("sliderN", 10, 200, 80, 10, 14 + 10 * 3 + 8 * 3, 100, 14);
   cp5.addSlider("sliderOffScl", 0.001, 0.015, 1, 10, 14 + 10 * 4 + 8 * 4, 100, 14);
-
+  
   cp5.addButton("saveParams")
     .setPosition(10, 14 + 10 * 5 + 8 * 5)
     .setSize(100, 14);
@@ -177,12 +193,20 @@ void setupCP5() {
   cp5.addRadioButton("radioDebug")
     .setPosition(10, 14 + 10 * 8 + 8 * 8)
     .addItem("debug", 1);
+    
+    
+  // if (frameCount == 5 * 30) {
+  //  println("resize");
+  //  surface.setSize(300, 300);
+  //}
+    
 }
 
 void settings() {    
   size(displayW, displayH, P2D);
-  noSmooth();
 
+  noSmooth();
+  
   //smooth(8);
   //fullScreen(2);
   //noSmooth();
@@ -193,11 +217,9 @@ void draw() {
   drawDots();
   image(b, 0, 0, width, height);
   
-  //float val = periodicFunction(, 0, float x, float y);
-  float val = (float)periodicFunction(millis() / 1000.0f, 0f, 0, 0) ;
-  val = map(val, -1, 1, 440, 880);
-  //wave.setFrequency((int)val);
-
+  // HACK
+  s.changeValue(scl);
+  
   
   if (periodicFuncDebug) {
     drawPeriodicFunction();
@@ -267,6 +289,19 @@ float getValue(int x) {
 }
 
 // --- Control P5 ---
+
+/*
+void scl(float v){
+  //scl=v;
+  println("update");
+  Ani.to(this, 3, "scl:"+v, Ani.SINE_IN_OUT);
+  //s.setValue(scl); 
+}
+*/
+
+void setScl(float v){
+  println(v);
+}
 
 void recordSketch() {
   println("Record sketch");
