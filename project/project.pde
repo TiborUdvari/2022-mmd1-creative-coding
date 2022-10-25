@@ -34,13 +34,13 @@ boolean pRecording = false;
 int numFrames = 60;
 int startFrame = 0;
 
-// Video export does not work with resolutions that widths are not divisible by 2 
+// Video export does not work with resolutions that widths are not divisible by 2
 /*
   360 degrees
-  Diameter: 8 m
-  Resolution 180:  4500 x 1080
-  Resolution 360: 11000 x 2000
-*/
+ Diameter: 8 m
+ Resolution 180:  4500 x 1080
+ Resolution 360: 11000 x 2000
+ */
 
 // vid.avi -s 800x800 -sws_flags neighbor -sws_dither none -vcodec rawvideo vid2.avi
 
@@ -53,15 +53,16 @@ final int instagramH = 1920;
 final int circularScreenW = 4500;
 final int circularScreenH = 1080;
 
-final float ratio = 1;
-final int W = instagramMinW; 
-final int H = instagramMinH;
+//float ratio = 1;
+//int W = instagramMinW;
+//int H = instagramMinH;
 
-//final int W = circularScreenW; 
-//final int H = circularScreenH;
+float ratio = 0.3;
+int W = circularScreenW;
+int H = circularScreenH;
 
-final int displayW = (int)(W * ratio);
-final int displayH = (int)(H * ratio);
+int displayW = (int)(W * ratio);
+int displayH = (int)(H * ratio);
 
 PGraphics b; // b for buffer
 
@@ -76,10 +77,9 @@ class CustomWaveForm implements Waveform {
     //return sin(TAU * v);
     /*
     println(v);
-    println(res);*/
+     println(res);*/
     float res = periodicFunction(v, 0, 0, 0);
     return res;
-    
   }
 }
 
@@ -87,13 +87,13 @@ float offset(float x, float y)
 {
   //return offScl*dist(x, y, W/2, H/2);
   // radial offset
-  //return offScl * dist(x, y, W/2, H/2) / max(W, H) * 100; 
-  
+  //return offScl * dist(x, y, W/2, H/2) / max(W, H) * 100;
+
   // min distance to corner
   //return offScl * dist(x, y, max(x, W/2), max(y, H/2)) / max(W, H) * 100;
-  
+
   return offScl * x % 2 * 100;
-  
+
   //return offScl * max(W/2, x) * 100;
 }
 
@@ -104,13 +104,13 @@ float periodicFunction(float p, float seed, float x, float y)
 
 void drawDots() {
   b.beginDraw();
-    
+
   float t = 1.0 * frameCount/numFrames;
-  
+
   b.fill(0);
   b.noStroke();
   b.rect(0, 0, W, H);
-  
+
   b.strokeCap(SQUARE);
 
   b.stroke(255);
@@ -133,7 +133,7 @@ void drawDots() {
       b.point((int)x+dx, (int)y+dy);
     }
   }
-  
+
   b.endDraw();
 
   drawRecording();
@@ -148,19 +148,18 @@ void setup() {
 
   noise = new OpenSimplexNoise(12345);
   Ani.init(this);
-  
+
   minim = new Minim(this);
   out = minim.getLineOut();
-  
+
   CustomWaveForm customWaveForm = new CustomWaveForm();
-  
+
   wave = new Oscil( 44, 1f, customWaveForm );
   wave.patch(out);
 
   setupCP5();
-  
-  Ani.to(this, 3, "scl:0.06", Ani.SINE_IN_OUT);
 
+  Ani.to(this, 3, "scl:0.06", Ani.SINE_IN_OUT);
 }
 
 Slider s;
@@ -169,15 +168,15 @@ void setupCP5() {
   cp5 = new ControlP5(this);
   //cp5.setUpdate(true);
   //cp5.addSlider("sliderScl", 0.001, 0.099, 0.018, 10, 10, 100, 14);
-  
+
   s = cp5.addSlider("scl", 0.001, 0.099, 0.018, 10, 10, 100, 14);
   s.setUpdate(true);
-  
+
   cp5.addSlider("sliderSeed", 10000, 99999, 12345, 10, 14 + 10 + 8, 100, 14);
   cp5.addSlider("sliderRad", 0.01, 1.5, 1.3, 10, 14 + 10 * 2 + 8 * 2, 100, 14);
   cp5.addSlider("sliderN", 10, 200, 80, 10, 14 + 10 * 3 + 8 * 3, 100, 14);
   cp5.addSlider("sliderOffScl", 0.001, 0.015, 1, 10, 14 + 10 * 4 + 8 * 4, 100, 14);
-  
+
   cp5.addButton("saveParams")
     .setPosition(10, 14 + 10 * 5 + 8 * 5)
     .setSize(100, 14);
@@ -193,34 +192,36 @@ void setupCP5() {
   cp5.addRadioButton("radioDebug")
     .setPosition(10, 14 + 10 * 8 + 8 * 8)
     .addItem("debug", 1);
-    
-    
+
+  cp5.addRadioButton("resolutionPreset")
+    .setPosition(10, 14 + 10 * 9 + 8 * 9)
+    .addItem("IG vs 360", 1);
+
   // if (frameCount == 5 * 30) {
   //  println("resize");
   //  surface.setSize(300, 300);
   //}
-    
 }
 
-void settings() {    
+void settings() {
   size(displayW, displayH, P2D);
 
   noSmooth();
-  
+
   //smooth(8);
   //fullScreen(2);
   //noSmooth();
   //pixelDensity(2);
 };
 
-void draw() {  
+void draw() {
   drawDots();
   image(b, 0, 0, width, height);
-  
+
   // HACK
   s.changeValue(scl);
-  
-  
+
+
   if (periodicFuncDebug) {
     drawPeriodicFunction();
   }
@@ -240,9 +241,9 @@ void drawRecording() {
     println("All frames have been saved");
     VideoExporter.generateVideo(this, recordingName);
     VideoExporter.cleanupImages(this, recordingName);
-    
+
     launch("%s/%s.mov".formatted(sketchPath(), recordingName));
-    
+
     recording = false;
     // launch terminal things
   }
@@ -255,7 +256,7 @@ void drawNoise() {
     for (int y = 0; y < H; y++) {
       float val = (float)periodicFunction(0f, 0f, (float)x, (float)y);
       color c = color(map(val, -1, 1, 0, 1) * 255);
-      
+
       b.pixels[y * W + x] = c;
     }
   }
@@ -267,14 +268,14 @@ void drawNoise() {
 void drawPeriodicFunction() {
   stroke(0, 255, 0);
   strokeWeight(1);
-  for (int i = 0; i < width; i++) {
-    float val1 = (float)periodicFunction((float)(i + 0) / width, 0f, 1f, 1f);
-    float val2 = (float)periodicFunction(((float)i + 1) / width, 0f, 1f, 1f);
+  for (int i = 0; i < displayW; i++) {
+    float val1 = (float)periodicFunction((float)(i + 0) / displayW, 0f, 1f, 1f);
+    float val2 = (float)periodicFunction(((float)i + 1) / displayW, 0f, 1f, 1f);
     val1 = map(val1, -1, 1, 0, 1);
     val2 = map(val2, -1, 1, 0, 1);
 
     // draw line between them
-    line(i, val1 * width, i+1, val2 * width);
+    line(i, val1 * displayH, i+1, val2 * displayH);
   }
 }
 
@@ -292,22 +293,41 @@ float getValue(int x) {
 
 /*
 void scl(float v){
-  //scl=v;
-  println("update");
-  Ani.to(this, 3, "scl:"+v, Ani.SINE_IN_OUT);
-  //s.setValue(scl); 
-}
-*/
+ //scl=v;
+ println("update");
+ Ani.to(this, 3, "scl:"+v, Ani.SINE_IN_OUT);
+ //s.setValue(scl);
+ }
+ */
 
-void setScl(float v){
+void setScl(float v) {
   println(v);
+}
+
+void resolutionPreset(int is360) {
+  if (is360 > 0) {
+    ratio = 0.3;
+    W = circularScreenW;
+    H = circularScreenH;
+  } else if ( is360 < 0) {
+    ratio = 1;
+    W = instagramMinW;
+    H = instagramMinH;
+  }
+
+  displayW = (int)(W * ratio);
+  displayH = (int)(H * ratio);
+  
+  b = createGraphics(W, H, P2D);
+  b.smooth(8);
+  surface.setSize(displayW, displayH);
 }
 
 void recordSketch() {
   println("Record sketch");
   String fn = VideoExporter.defaultFileName(this);
   recordingName = fn;
-  
+
   startFrame = frameCount + 1;
   recording = true;
   saveParams();
