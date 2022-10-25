@@ -31,8 +31,11 @@ int startFrame = 0;
 /*
   360 degrees
  Diameter: 8 m
- Resolution 180:  4500 x 1080
- Resolution 360: 11000 x 2000
+ Resolution 180:  4500 x 1080 – 4.16
+ Resolution 360: 11000 x 2000 – 5.5
+ 
+ Resolution thing 7680 x 1440 – 5.3
+ 
  */
 
 // vid.avi -s 800x800 -sws_flags neighbor -sws_dither none -vcodec rawvideo vid2.avi
@@ -43,14 +46,17 @@ final int instagramMinH = 888;
 final int instagramW = 1080;
 final int instagramH = 1920;
 
-final int circularScreenW = 4500;
-final int circularScreenH = 1080;
+//final int circularScreenW = 4500;
+//final int circularScreenH = 1080;
+
+final int circularScreenW = 7680;
+final int circularScreenH = 1440;
 
 //float ratio = 1;
 //int W = instagramMinW;
 //int H = instagramMinH;
 
-float ratio = 0.3;
+float ratio = 0.15;
 int W = circularScreenW;
 int H = circularScreenH;
 
