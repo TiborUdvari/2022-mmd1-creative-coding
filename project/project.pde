@@ -23,7 +23,10 @@ ControlP5 cp5;
 int seed = 12345;
 float scl = 0.018;
 float rad = 1.3;
-int m = 80;
+
+int cols = 1;
+int rows = 1;
+
 boolean periodicFuncDebug = false;
 float offScl = 0.15;
 
@@ -72,6 +75,8 @@ AudioOutput out;
 Oscil wave;
 AudioRecorder audioRecorder;
 
+ArrayList<controlP5.Controller> controllers;
+
 class CustomWaveForm implements Waveform {
   float value(float v) {
     //return sin(TAU * v);
@@ -103,6 +108,8 @@ float periodicFunction(float p, float seed, float x, float y)
 }
 
 void drawDots() {
+  float sw2screen = 1.0 / ratio;
+
   b.beginDraw();
 
   float t = 1.0 * frameCount/numFrames;
@@ -114,16 +121,18 @@ void drawDots() {
   b.strokeCap(SQUARE);
 
   b.stroke(255);
-  b.strokeWeight(1);
+  b.strokeWeight(10 * sw2screen );
+  b.strokeCap(ROUND);
+
   //b.strokeWeight(6);
 
-  for (int i=0; i<m; i++)
+  for (int i=0; i<cols; i++)
   {
-    for (int j=0; j<m; j++)
+    for (int j=0; j<rows; j++)
     {
-      float margin = 0;
-      float x = map(i, 0, m-1, margin, W-margin);
-      float y = map(j, 0, m-1, margin, H-margin);
+      float margin = displayW * 0.1;
+      float x = map(i, 0, cols-1, margin, W-margin);
+      float y = map(j, 0, rows-1, margin, H-margin);
 
       float dx = 20.0 * periodicFunction(t + offset(x, y), 0, x, y);
       float dy = 20.0 * periodicFunction(t + offset(x, y), 123, x, y);
@@ -159,48 +168,89 @@ void setup() {
 
   setupCP5();
 
-  Ani.to(this, 3, "scl:0.06", Ani.SINE_IN_OUT);
+  //Ani.to(this, 3, "scl:0.06", Ani.SINE_IN_OUT);
 }
 
 Slider s;
 
 void setupCP5() {
   cp5 = new ControlP5(this);
-  //cp5.setUpdate(true);
-  //cp5.addSlider("sliderScl", 0.001, 0.099, 0.018, 10, 10, 100, 14);
+  
+  int pl = 10; // padding left
+  int pt = 10; // padding top
+  int w = 100;
+  int h = 14;
+  int gap = 4;
+  
+  ArrayList<controlP5.Controller> sliders = new ArrayList<controlP5.Controller>();
+  controllers = new ArrayList<controlP5.Controller>();
+    
+  Slider scaleSlider = cp5.addSlider("scl", 0.001, 0.099);
+  scaleSlider.setDefaultValue(0.018);
+  controllers.add(scaleSlider);
+  sliders.add(scaleSlider);
+  
+  Slider seedSlider = cp5.addSlider("sliderSeed", 10000, 99999);
+  seedSlider.setDefaultValue(12345);
+  controllers.add(seedSlider);
+  sliders.add(seedSlider);
+  
+  Slider radSlider = cp5.addSlider("rad", 0.01, 1.5);
+  radSlider.setDefaultValue(1.3);
+  controllers.add(radSlider);
+  sliders.add(radSlider);  
+  
+  Slider colsSlider = cp5.addSlider("cols", 1, 10);
+  colsSlider.setDefaultValue(5);
+  controllers.add(colsSlider);
+  sliders.add(colsSlider);  
+  
+  Slider rowsSlider = cp5.addSlider("rows", 1, 10);
+  rowsSlider.setDefaultValue(5);
+  controllers.add(rowsSlider);
+  sliders.add(rowsSlider);  
+  
+  
+  Slider offsetScaleSlider = cp5.addSlider("offScl", 0.001, 0.015);
+  rowsSlider.setDefaultValue(1);
+  controllers.add(offsetScaleSlider);
+  sliders.add(offsetScaleSlider); 
+  
+  
+  var sameParamsButton = cp5.addButton("saveParams");
+  controllers.add(sameParamsButton);
+  sliders.add(sameParamsButton);
 
-  s = cp5.addSlider("scl", 0.001, 0.099, 0.018, 10, 10, 100, 14);
-  s.setUpdate(true);
+  var loadParamsButton = cp5.addButton("loadParams");
+  controllers.add(loadParamsButton);
+  sliders.add(loadParamsButton);
 
-  cp5.addSlider("sliderSeed", 10000, 99999, 12345, 10, 14 + 10 + 8, 100, 14);
-  cp5.addSlider("sliderRad", 0.01, 1.5, 1.3, 10, 14 + 10 * 2 + 8 * 2, 100, 14);
-  cp5.addSlider("sliderN", 10, 200, 80, 10, 14 + 10 * 3 + 8 * 3, 100, 14);
-  cp5.addSlider("sliderOffScl", 0.001, 0.015, 1, 10, 14 + 10 * 4 + 8 * 4, 100, 14);
+  var recordSketchButton = cp5.addButton("recordSketch");
+  controllers.add(recordSketchButton);
+  sliders.add(recordSketchButton);
 
-  cp5.addButton("saveParams")
-    .setPosition(10, 14 + 10 * 5 + 8 * 5)
-    .setSize(100, 14);
 
-  cp5.addButton("loadParams")
-    .setPosition(10, 14 + 10 * 6 + 8 * 6)
-    .setSize(100, 14);
+  var debugRadio = cp5.addRadioButton("radioDebug");
+  debugRadio.addItem("debug", 1);
+  debugRadio.setPosition(pl, pt + (h + gap) * controllers.size());
+  debugRadio.setSize(w, h);
 
-  cp5.addButton("recordSketch")
-    .setPosition(10, 14 + 10 * 7 + 8 * 7)
-    .setSize(100, 14);
+  var resolutionRadio = cp5.addRadioButton("resolutionPreset");
+  resolutionRadio.addItem("IG vs 360", 1);
+  resolutionRadio.setPosition(pl, pt + (h + gap) * (controllers.size() + 1));
+  resolutionRadio.setSize(w, h);
 
-  cp5.addRadioButton("radioDebug")
-    .setPosition(10, 14 + 10 * 8 + 8 * 8)
-    .addItem("debug", 1);
+  for (int i = 0; i < sliders.size(); i++) {
+    controlP5.Controller c = sliders.get(i);
+  }
 
-  cp5.addRadioButton("resolutionPreset")
-    .setPosition(10, 14 + 10 * 9 + 8 * 9)
-    .addItem("IG vs 360", 1);
+  for (int i = 0; i < controllers.size(); i++) {
+    controlP5.Controller c = controllers.get(i);
+    c.setSize(w, h);
+    c.setPosition(pl, pt + h * i + gap * i);
+  }
 
-  // if (frameCount == 5 * 30) {
-  //  println("resize");
-  //  surface.setSize(300, 300);
-  //}
+  
 }
 
 void settings() {
@@ -219,8 +269,7 @@ void draw() {
   image(b, 0, 0, width, height);
 
   // HACK
-  s.changeValue(scl);
-
+  //s.changeValue(scl);
 
   if (periodicFuncDebug) {
     drawPeriodicFunction();
@@ -350,32 +399,10 @@ void loadParams() {
   cp5.loadProperties();
 }
 
-public void sliderScl(float value) {
-  scl = value;
-  //drawNoise();
-  //drawPeriodicFunction();
-}
-
 public void sliderSeed(int value) {
   noise = new OpenSimplexNoise(value);
-  //drawNoise();
-  //drawPeriodicFunction();
-}
-
-public void sliderRad(float value) {
-  rad = value;
-  //drawNoise();
-  //drawPeriodicFunction();
 }
 
 void radioDebug(int val) {
   periodicFuncDebug = val > 0;
-}
-
-void sliderN(float val) {
-  m = (int) val;
-}
-
-void sliderOffScl(float val) {
-  offScl = val;
 }
