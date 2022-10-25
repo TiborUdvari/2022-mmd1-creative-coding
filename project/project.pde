@@ -20,16 +20,6 @@ import java.io.InputStreamReader;
 OpenSimplexNoise noise;
 ControlP5 cp5;
 
-int seed = 12345;
-float scl = 0.018;
-float rad = 1.3;
-
-int cols = 1;
-int rows = 1;
-
-boolean periodicFuncDebug = false;
-float offScl = 0.15;
-
 // Recording
 String recordingName;
 boolean recording = false;
@@ -77,6 +67,121 @@ AudioRecorder audioRecorder;
 
 ArrayList<controlP5.Controller> controllers;
 
+int seed = 12345;
+float scl = 0.018;
+float rad = 1.3;
+
+int cols = 1;
+int rows = 1;
+
+float mx = 0.5;
+float my = 0.5;
+
+boolean periodicFuncDebug = false;
+float offScl = 0.15;
+float periodicFuncScale = 1;
+float dotSizePct = 0.01;
+
+void setupCP5() {
+  cp5 = new ControlP5(this);
+  
+  int pl = 10; // padding left
+  int pt = 10; // padding top
+  int w = 100;
+  int h = 14;
+  int gap = 4;
+  
+  ArrayList<controlP5.Controller> sliders = new ArrayList<controlP5.Controller>();
+  controllers = new ArrayList<controlP5.Controller>();
+    
+  Slider scaleSlider = cp5.addSlider("scl", 0.001, 0.099);
+  scaleSlider.setDefaultValue(0.018);
+  controllers.add(scaleSlider);
+  sliders.add(scaleSlider);
+  
+  Slider seedSlider = cp5.addSlider("sliderSeed", 10000, 99999);
+  seedSlider.setDefaultValue(12345);
+  controllers.add(seedSlider);
+  sliders.add(seedSlider);
+  
+  Slider radSlider = cp5.addSlider("rad", 0.01, 1.5);
+  radSlider.setDefaultValue(1.3);
+  controllers.add(radSlider);
+  sliders.add(radSlider);  
+  
+  Slider periodicFuncScaleSlider = cp5.addSlider("periodicFuncScale", 0.01, 10);
+  periodicFuncScaleSlider.setDefaultValue(0.5);
+  controllers.add(periodicFuncScaleSlider);
+  sliders.add(periodicFuncScaleSlider);  
+  
+  Slider dotSizePctSlider = cp5.addSlider("dotSizePct", 0, 2);
+  dotSizePctSlider.setDefaultValue(0.1);
+  controllers.add(dotSizePctSlider);
+  sliders.add(dotSizePctSlider);  
+  
+  Slider colsSlider = cp5.addSlider("cols", 1, 10);
+  colsSlider.setDefaultValue(5);
+  controllers.add(colsSlider);
+  sliders.add(colsSlider);  
+  
+  Slider rowsSlider = cp5.addSlider("rows", 1, 10);
+  rowsSlider.setDefaultValue(5);
+  controllers.add(rowsSlider);
+  sliders.add(rowsSlider);  
+  
+  Slider mxSlider = cp5.addSlider("mx", 0.01, 1.0);
+  mxSlider.setDefaultValue(0.5);
+  controllers.add(mxSlider);
+  sliders.add(mxSlider); 
+  
+  Slider mySlider = cp5.addSlider("my", 0.01, 1.0);
+  mySlider.setDefaultValue(0.5);
+  controllers.add(mySlider);
+  sliders.add(mySlider); 
+  
+  
+  Slider offsetScaleSlider = cp5.addSlider("offScl", 0.001, 0.015);
+  rowsSlider.setDefaultValue(1);
+  controllers.add(offsetScaleSlider);
+  sliders.add(offsetScaleSlider); 
+  
+  
+  var sameParamsButton = cp5.addButton("saveParamsDefault");
+  controllers.add(sameParamsButton);
+  sliders.add(sameParamsButton);
+
+  var loadParamsButton = cp5.addButton("loadParams");
+  controllers.add(loadParamsButton);
+  sliders.add(loadParamsButton);
+
+  var recordSketchButton = cp5.addButton("recordSketch");
+  controllers.add(recordSketchButton);
+  sliders.add(recordSketchButton);
+
+/*
+  var debugRadio = cp5.addRadioButton("radioDebug");
+  debugRadio.addItem("debug", 1);
+  debugRadio.setPosition(pl, pt + (h + gap) * controllers.size());
+  debugRadio.setSize(w, h);
+  */
+  /*
+  var resolutionRadio = cp5.addRadioButton("resolutionPreset");
+  resolutionRadio.addItem("IG vs 360", 1);
+  resolutionRadio.setPosition(pl, pt + (h + gap) * (controllers.size() + 1));
+  resolutionRadio.setSize(w, h);
+  */
+  
+  for (int i = 0; i < sliders.size(); i++) {
+    controlP5.Controller c = sliders.get(i);
+  }
+
+  for (int i = 0; i < controllers.size(); i++) {
+    controlP5.Controller c = controllers.get(i);
+    c.setSize(w, h);
+    c.setPosition(pl, pt + h * i + gap * i);
+  }  
+}
+
 class CustomWaveForm implements Waveform {
   float value(float v) {
     //return sin(TAU * v);
@@ -104,7 +209,7 @@ float offset(float x, float y)
 
 float periodicFunction(float p, float seed, float x, float y)
 {
-  return (float)noise.eval(seed+rad*cos(TAU*p), rad*sin(TAU*p), scl*x, scl*y);
+  return  periodicFuncScale * (float)noise.eval(seed+rad*cos(TAU*p), rad*sin(TAU*p), scl*x, scl*y);
 }
 
 void drawDots() {
@@ -121,18 +226,22 @@ void drawDots() {
   b.strokeCap(SQUARE);
 
   b.stroke(255);
-  b.strokeWeight(10 * sw2screen );
+  b.strokeWeight(10 * sw2screen * dotSizePct * min(displayW, displayH) );
   b.strokeCap(ROUND);
 
   //b.strokeWeight(6);
-
+  
+  float _mx = W * mx;
+  float _my = H * my;
+  
+  
+  
   for (int i=0; i<cols; i++)
   {
     for (int j=0; j<rows; j++)
     {
-      float margin = displayW * 0.1;
-      float x = map(i, 0, cols-1, margin, W-margin);
-      float y = map(j, 0, rows-1, margin, H-margin);
+      float x = map(i, 0, max(cols-1, 1), _mx, W-_mx);
+      float y = map(j, 0, max(rows-1, 1), _my, H-_my);
 
       float dx = 20.0 * periodicFunction(t + offset(x, y), 0, x, y);
       float dy = 20.0 * periodicFunction(t + offset(x, y), 123, x, y);
@@ -171,88 +280,6 @@ void setup() {
   //Ani.to(this, 3, "scl:0.06", Ani.SINE_IN_OUT);
 }
 
-Slider s;
-
-void setupCP5() {
-  cp5 = new ControlP5(this);
-  
-  int pl = 10; // padding left
-  int pt = 10; // padding top
-  int w = 100;
-  int h = 14;
-  int gap = 4;
-  
-  ArrayList<controlP5.Controller> sliders = new ArrayList<controlP5.Controller>();
-  controllers = new ArrayList<controlP5.Controller>();
-    
-  Slider scaleSlider = cp5.addSlider("scl", 0.001, 0.099);
-  scaleSlider.setDefaultValue(0.018);
-  controllers.add(scaleSlider);
-  sliders.add(scaleSlider);
-  
-  Slider seedSlider = cp5.addSlider("sliderSeed", 10000, 99999);
-  seedSlider.setDefaultValue(12345);
-  controllers.add(seedSlider);
-  sliders.add(seedSlider);
-  
-  Slider radSlider = cp5.addSlider("rad", 0.01, 1.5);
-  radSlider.setDefaultValue(1.3);
-  controllers.add(radSlider);
-  sliders.add(radSlider);  
-  
-  Slider colsSlider = cp5.addSlider("cols", 1, 10);
-  colsSlider.setDefaultValue(5);
-  controllers.add(colsSlider);
-  sliders.add(colsSlider);  
-  
-  Slider rowsSlider = cp5.addSlider("rows", 1, 10);
-  rowsSlider.setDefaultValue(5);
-  controllers.add(rowsSlider);
-  sliders.add(rowsSlider);  
-  
-  
-  Slider offsetScaleSlider = cp5.addSlider("offScl", 0.001, 0.015);
-  rowsSlider.setDefaultValue(1);
-  controllers.add(offsetScaleSlider);
-  sliders.add(offsetScaleSlider); 
-  
-  
-  var sameParamsButton = cp5.addButton("saveParams");
-  controllers.add(sameParamsButton);
-  sliders.add(sameParamsButton);
-
-  var loadParamsButton = cp5.addButton("loadParams");
-  controllers.add(loadParamsButton);
-  sliders.add(loadParamsButton);
-
-  var recordSketchButton = cp5.addButton("recordSketch");
-  controllers.add(recordSketchButton);
-  sliders.add(recordSketchButton);
-
-
-  var debugRadio = cp5.addRadioButton("radioDebug");
-  debugRadio.addItem("debug", 1);
-  debugRadio.setPosition(pl, pt + (h + gap) * controllers.size());
-  debugRadio.setSize(w, h);
-
-  var resolutionRadio = cp5.addRadioButton("resolutionPreset");
-  resolutionRadio.addItem("IG vs 360", 1);
-  resolutionRadio.setPosition(pl, pt + (h + gap) * (controllers.size() + 1));
-  resolutionRadio.setSize(w, h);
-
-  for (int i = 0; i < sliders.size(); i++) {
-    controlP5.Controller c = sliders.get(i);
-  }
-
-  for (int i = 0; i < controllers.size(); i++) {
-    controlP5.Controller c = controllers.get(i);
-    c.setSize(w, h);
-    c.setPosition(pl, pt + h * i + gap * i);
-  }
-
-  
-}
-
 void settings() {
   size(displayW, displayH, P2D);
 
@@ -270,7 +297,8 @@ void draw() {
 
   // HACK
   //s.changeValue(scl);
-
+  
+  
   if (periodicFuncDebug) {
     drawPeriodicFunction();
   }
@@ -354,6 +382,8 @@ void setScl(float v) {
 }
 
 void resolutionPreset(int is360) {
+  return;
+  /*
   if (is360 > 0) {
     ratio = 0.3;
     W = circularScreenW;
@@ -369,7 +399,7 @@ void resolutionPreset(int is360) {
   
   b = createGraphics(W, H, P2D);
   b.smooth(8);
-  surface.setSize(displayW, displayH);
+  surface.setSize(displayW, displayH);*/
 }
 
 void recordSketch() {
@@ -379,10 +409,10 @@ void recordSketch() {
 
   startFrame = frameCount + 1;
   recording = true;
-  saveParams();
+  saveParamsDefault();
 }
 
-void saveParams() {
+void saveParamsDefault() {
   String fn = VideoExporter.defaultFileName(this);
   saveParams(fn);
 }
