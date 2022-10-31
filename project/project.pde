@@ -35,7 +35,7 @@ ControlP5 cp5;
 String recordingName;
 boolean recording = false;
 boolean pRecording = false;
-int numFrames = 600;
+float numFrames = 600;
 int startFrame = 0;
 
 // Video export does not work with resolutions that widths are not divisible by 2
@@ -60,14 +60,15 @@ final int instagramH = 1920;
 //final int circularScreenW = 4500;
 //final int circularScreenH = 1080;
 
-final int circularScreenW = 7680;
+//final int circularScreenW = 7680;
+final int circularScreenW = 10240;
 final int circularScreenH = 1440;
 
 //float ratio = 1;
 //int W = instagramMinW;
 //int H = instagramMinH;
 
-float ratio = 0.3;
+float ratio = 0.24;
 int W = circularScreenW;
 int H = circularScreenH;
 
@@ -378,7 +379,7 @@ void drawDots() {
 void setup() {
   //surface.setResizable(true);
 
-  frameRate(60);
+  frameRate(240);
   b = createGraphics(W, H, P2D);
   b.smooth(8);
 
