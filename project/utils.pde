@@ -137,7 +137,7 @@ void resolutionPreset(int is360) {
 
 // This draws only one line, not everything
 void drawPeriodicFunction() {
-  stroke(0, 255, 0);
+  stroke(255, 255, 255);
   strokeWeight(1);
   for (int i = 0; i < displayW; i++) {
     float val1 = (float)periodicFunction((float)(i + 0) / displayW, 0f, 1f, 1f);

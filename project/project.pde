@@ -122,11 +122,18 @@ void toggleCP5Visible() {
   } 
 }
 
+int lastLoad = 0;
+
 void transitionFinished(Ani theAni) {
-    var fn = String.format("data/%d.json", animIndex);
-    println("Load data from " + fn);
-    cp5.loadProperties(fn);
-}
+  
+    var fn = String.format("data/%d.json", animIndex); //<>//
+    println("Load data from " + fn); //<>//
+    int now = millis();
+    if (now - lastLoad > 1000) {
+      lastLoad = millis();
+      cp5.loadProperties(fn);
+    } //<>//
+} //<>//
 
 void keyPressed() {
   println(keyCode);
@@ -204,17 +211,17 @@ void setupCP5() {
   controllers.add(periodicFuncScaleSlider);
   sliders.add(periodicFuncScaleSlider);  
   
-  Slider dotSizePctSlider = cp5.addSlider("dotSizePct", 0, 0.55);
+  Slider dotSizePctSlider = cp5.addSlider("dotSizePct", 0, 0.01);
   dotSizePctSlider.setDefaultValue(0.1);
   controllers.add(dotSizePctSlider);
   sliders.add(dotSizePctSlider);  
   
-  Slider colsSlider = cp5.addSlider("cols", 1, 10);
+  Slider colsSlider = cp5.addSlider("cols", 1, 300 * 7.1);
   colsSlider.setDefaultValue(5);
   controllers.add(colsSlider);
   sliders.add(colsSlider);  
   
-  Slider rowsSlider = cp5.addSlider("rows", 1, 10);
+  Slider rowsSlider = cp5.addSlider("rows", 1, 300);
   rowsSlider.setDefaultValue(5);
   controllers.add(rowsSlider);
   sliders.add(rowsSlider);  
@@ -379,7 +386,6 @@ void drawDots() {
 void setup() {
   //surface.setResizable(true);
 
-  frameRate(240);
   b = createGraphics(W, H, P2D);
   b.smooth(8);
 
@@ -396,7 +402,8 @@ void setup() {
   //wave = new Oscil( map(), 1f, customWaveForm );
   wave.patch(out);
 
-  setupCP5();   //<>// //<>// //<>//
+  setupCP5();
+  //frameRate(60);
 }
 
 void settings() {
@@ -411,7 +418,6 @@ void settings() {
 };
 
 void draw() {
-  frameRate(1);
 
   drawDots();
   image(b, 0, 0, width, height);
