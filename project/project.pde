@@ -1,13 +1,5 @@
 // todo
 
-// Save and load into propery set 
-
-// Get property sets as strings
-
-// Load as string from json
-
-// 1,2,3,4,5
-
 // Transform property set tweening library 
 // Save different transitions
 // Have 10 different ways to animate
@@ -70,7 +62,7 @@ final int circularScreenH = 1440;
 //int W = instagramMinW;
 //int H = instagramMinH;
 
-float ratio = 0.15;
+float ratio = 0.3;
 int W = circularScreenW;
 int H = circularScreenH;
 
@@ -102,11 +94,29 @@ float offScl = 0.15;
 float periodicFuncScale = 1;
 float dotSizePct = 0.01;
 
+boolean cp5Visible = true;
+
 // Animation
 // Has 10 slots for states
 // Change - load next one and transition with anki
 
 int animIndex;
+
+void toggleCP5Visible() {
+  cp5Visible = !cp5Visible;
+  if (cp5Visible) {
+   cp5.show(); 
+  } 
+  if (!cp5Visible) {
+    cp5.hide();
+  } 
+}
+
+void transitionFinished(Ani theAni) {
+    var fn = String.format("data/%d.json", animIndex);
+    println("Load data from " + fn);
+    cp5.loadProperties(fn);
+}
 
 void keyPressed() {
   println(keyCode);
@@ -121,34 +131,19 @@ void keyPressed() {
     //cp5.loadProperties(fn);
   }
   
+  if (keyCode == 67) // c - control p5
+  {
+    toggleCP5Visible();
+  } 
+  
   if (keyCode == 76) // l 
   {
-    println("Load current data");
     var fn = String.format("data/%d.json", animIndex);
     println("Load data from " + fn);
-    cp5.loadProperties(fn);
+    //cp5.loadProperties(fn);
+    String propertyList = jsonFileToPropertyList(fn);
     
-    JSONObject json = loadJSONObject(fn);
-    println(json);
-    
-    var properties = (String[]) json.keys().toArray(new String[json.size()]);
-    for (int i = 0; i < properties.length; i++) {
-      String k = properties[i];
-      float f = json.getObject(k).getFloat("value");
-      
-      println(k);
-      println(f);
-      println("----");
-    }
-    println(properties);
-    // Get all the keys
-    
-    /*
-    int id = json.getInt("id");
-    String species = json.getString("species");
-    String name = json.getString("name");
-    */
-    //println(id + ", " + species + ", " + name);
+    Ani.to(this, 3, propertyList, Ani.SINE_IN_OUT, "onEnd:transitionFinished");
   }
   
   if (keyCode == 83) // s
@@ -158,11 +153,6 @@ void keyPressed() {
     println("Save data to " + fn);
     cp5.saveProperties(fn);
   }
-  
-  // transition
-  // ---
-  // Load the json from file
-  
 }
 
 void setupCP5() {
@@ -241,12 +231,12 @@ void setupCP5() {
   controllers.add(recordSketchButton);
   sliders.add(recordSketchButton);
 
-/*
+
   var debugRadio = cp5.addRadioButton("radioDebug");
   debugRadio.addItem("debug", 1);
   debugRadio.setPosition(pl, pt + (h + gap) * controllers.size());
   debugRadio.setSize(w, h);
-  */
+  
   /*
   var resolutionRadio = cp5.addRadioButton("resolutionPreset");
   resolutionRadio.addItem("IG vs 360", 1);
@@ -263,6 +253,7 @@ void setupCP5() {
     c.setSize(w, h);
     c.setPosition(pl, pt + h * i + gap * i);
   }  
+  
 }
 
 class CustomWaveForm implements Waveform {
@@ -356,33 +347,7 @@ void setup() {
   wave = new Oscil( 44, 1f, customWaveForm );
   wave.patch(out);
 
-  setupCP5();
-  
-  
-  var test = cp5.getProperties();
-  
-  // Get all the names of all the properties
-  var s = "";
-  var t = test.get();
-  for ( ControllerProperty c : test.get().keySet( ) ) {
-      s += "\t" + c + "\t"  + "\n";
-    } //<>//
-    
-   for ( var c : test.get().values( ) ) {
-      s += "\t" + c + "\t"  + "\n";
-    }
-    
-    /*
-  for ( ControllerProperty c : test.get().keySet( ) ) {
-      s += "\t" + c + "\t"  + "\n";
-    }*/
-  println(s); //<>//
-    
-  println("---  Done --- "); //<>//
-  println(test.toString());
-  //exit();
-
-  //Ani.to(this, 3, "scl:0.06", Ani.SINE_IN_OUT);
+  setupCP5();   //<>// //<>// //<>//
 }
 
 void settings() {
@@ -409,58 +374,6 @@ void draw() {
   }
 }
 
-void drawRecording() {
-  if (!recording) return;
-
-  int currentFrame = frameCount - startFrame;
-
-  if (currentFrame < numFrames)
-  {
-    b.save(recordingName + "_" + String.format("%03d", currentFrame) + ".png");
-  }
-  if (currentFrame >= numFrames)
-  {
-    println("All frames have been saved");
-    VideoExporter.generateVideo(this, recordingName);
-    VideoExporter.cleanupImages(this, recordingName);
-
-    launch("%s/%s.mov".formatted(sketchPath(), recordingName));
-
-    recording = false;
-    // launch terminal things
-  }
-}
-
-void drawNoise() {
-  b.loadPixels();
-
-  for (int x = 0; x < W; x++) {
-    for (int y = 0; y < H; y++) {
-      float val = (float)periodicFunction(0f, 0f, (float)x, (float)y);
-      color c = color(map(val, -1, 1, 0, 1) * 255);
-
-      b.pixels[y * W + x] = c;
-    }
-  }
-
-  b.updatePixels();
-}
-
-// This draws only one line, not everything
-void drawPeriodicFunction() {
-  stroke(0, 255, 0);
-  strokeWeight(1);
-  for (int i = 0; i < displayW; i++) {
-    float val1 = (float)periodicFunction((float)(i + 0) / displayW, 0f, 1f, 1f);
-    float val2 = (float)periodicFunction(((float)i + 1) / displayW, 0f, 1f, 1f);
-    val1 = map(val1, -1, 1, 0, 1);
-    val2 = map(val2, -1, 1, 0, 1);
-
-    // draw line between them
-    line(i, val1 * displayH, i+1, val2 * displayH);
-  }
-}
-
 float getValue(int x) {
   float delta = 1.0 / W;
   float t = delta * x;
@@ -469,78 +382,4 @@ float getValue(int x) {
   float val = (float)noise.eval(scl * samplingX, scl * samplingY);
   float normalized = (val + 1) / 2;
   return normalized;
-}
-
-// --- Control P5 ---
-
-/*
-void scl(float v){
- //scl=v;
- println("update");
- Ani.to(this, 3, "scl:"+v, Ani.SINE_IN_OUT);
- //s.setValue(scl);
- }
- */
-
-void setScl(float v) {
-  println(v);
-}
-
-void resolutionPreset(int is360) {
-  return;
-  /*
-  if (is360 > 0) {
-    ratio = 0.3;
-    W = circularScreenW;
-    H = circularScreenH;
-  } else if ( is360 < 0) {
-    ratio = 1;
-    W = instagramMinW;
-    H = instagramMinH;
-  }
-
-  displayW = (int)(W * ratio);
-  displayH = (int)(H * ratio);
-  
-  b = createGraphics(W, H, P2D);
-  b.smooth(8);
-  surface.setSize(displayW, displayH);*/
-}
-
-void recordSketch() {
-  println("Record sketch");
-  String fn = VideoExporter.defaultFileName(this);
-  recordingName = fn;
-
-  startFrame = frameCount + 1;
-  recording = true;
-  saveParamsDefault();
-}
-
-void saveParamsDefault() {
-  String fn = VideoExporter.defaultFileName(this);
-  saveParams(fn);
-  
-  var fnAnim = String.format("data/%d.json", animIndex);
-  saveParams(fnAnim);
-}
-
-void saveParams(String fn) {
-  println("Save params");
-
-  cp5.saveProperties();
-  cp5.saveProperties(fn);
-}
-
-void loadParams() {
-  println("Load params");
-  cp5.loadProperties();
-}
-
-public void sliderSeed(int value) {
-  noise = new OpenSimplexNoise(value);
-}
-
-void radioDebug(int val) {
-  periodicFuncDebug = val > 0;
 }
