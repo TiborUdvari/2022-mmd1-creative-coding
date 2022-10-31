@@ -1,8 +1,13 @@
-// todo
-
 // Transform property set tweening library 
 // Save different transitions
 // Have 10 different ways to animate
+
+// Interesting values
+
+// seed 5499
+// scl 0.09
+// rad 1.5
+// periodicFuncScale 1
 
 import de.looksgood.ani.*;
 import de.looksgood.ani.easing.*;
@@ -89,7 +94,7 @@ int rows = 1;
 float mx = 0.5;
 float my = 0.5;
 
-boolean periodicFuncDebug = false;
+boolean periodicFuncDebug = true;
 float offScl = 0.15;
 float periodicFuncScale = 1;
 float dotSizePct = 0.01;
@@ -121,6 +126,8 @@ void transitionFinished(Ani theAni) {
 void keyPressed() {
   println(keyCode);
   
+  
+  
   int numCode = keyCode - 48;
   if (numCode >= 0 && numCode < 10) {
     animIndex = numCode;
@@ -143,7 +150,7 @@ void keyPressed() {
     //cp5.loadProperties(fn);
     String propertyList = jsonFileToPropertyList(fn);
     
-    Ani.to(this, 3, propertyList, Ani.SINE_IN_OUT, "onEnd:transitionFinished");
+    Ani.to(this, 1, propertyList, Ani.SINE_IN_OUT, "onEnd:transitionFinished");
   }
   
   if (keyCode == 83) // s
@@ -152,6 +159,12 @@ void keyPressed() {
     var fn = String.format("data/%d.json", animIndex);
     println("Save data to " + fn);
     cp5.saveProperties(fn);
+  }
+  
+  
+  if (keyCode == 68) // d 
+  {
+    periodicFuncDebug = !periodicFuncDebug;
   }
 }
 
@@ -187,7 +200,7 @@ void setupCP5() {
   controllers.add(periodicFuncScaleSlider);
   sliders.add(periodicFuncScaleSlider);  
   
-  Slider dotSizePctSlider = cp5.addSlider("dotSizePct", 0, 2);
+  Slider dotSizePctSlider = cp5.addSlider("dotSizePct", 0, 0.55);
   dotSizePctSlider.setDefaultValue(0.1);
   controllers.add(dotSizePctSlider);
   sliders.add(dotSizePctSlider);  
@@ -231,12 +244,12 @@ void setupCP5() {
   controllers.add(recordSketchButton);
   sliders.add(recordSketchButton);
 
-
+/*
   var debugRadio = cp5.addRadioButton("radioDebug");
   debugRadio.addItem("debug", 1);
   debugRadio.setPosition(pl, pt + (h + gap) * controllers.size());
   debugRadio.setSize(w, h);
-  
+  */
   /*
   var resolutionRadio = cp5.addRadioButton("resolutionPreset");
   resolutionRadio.addItem("IG vs 360", 1);
@@ -344,7 +357,9 @@ void setup() {
 
   CustomWaveForm customWaveForm = new CustomWaveForm();
 
-  wave = new Oscil( 44, 1f, customWaveForm );
+  wave = new Oscil( 10, 1f, customWaveForm );
+  //dotSizePct
+  //wave = new Oscil( map(), 1f, customWaveForm );
   wave.patch(out);
 
   setupCP5();   //<>// //<>// //<>//
@@ -368,7 +383,7 @@ void draw() {
   // HACK
   //s.changeValue(scl);
   
-  
+  wave.setFrequency(constrain(map(dotSizePct, 0.55, 0.01, 10, 22), 10, 22));
   if (periodicFuncDebug) {
     drawPeriodicFunction();
   }

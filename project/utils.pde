@@ -7,12 +7,18 @@ String jsonFileToPropertyList(String fn) {
   var propertyList = "";
   var properties = (String[]) json.keys().toArray(new String[json.size()]);
   for (int i = 0; i < properties.length; i++) {
-    String k = properties[i];
-    float val = json.getJSONObject(k).getFloat("value");
 
-    propertyList += String.format("%s:%.20f", k.substring(1), val);
-    if (i < properties.length - 1) {
-      propertyList += ",";
+    try {
+      String k = properties[i];
+      float val = json.getJSONObject(k).getFloat("value");
+
+      propertyList += String.format("%s:%.20f", k.substring(1), val);
+      if (i < properties.length - 1) {
+        propertyList += ",";
+      }
+    }
+    catch (Exception e) {
+      println("Exception " + e);
     }
   }
   return propertyList;
@@ -68,7 +74,7 @@ void recordSketch() {
 void saveParamsDefault() {
   String fn = VideoExporter.defaultFileName(this);
   saveParams(fn);
-  
+
   var fnAnim = String.format("data/%d.json", animIndex);
   saveParams(fnAnim);
 }
@@ -112,21 +118,21 @@ void resolutionPreset(int is360) {
   return;
   /*
   if (is360 > 0) {
-    ratio = 0.3;
-    W = circularScreenW;
-    H = circularScreenH;
-  } else if ( is360 < 0) {
-    ratio = 1;
-    W = instagramMinW;
-    H = instagramMinH;
-  }
-
-  displayW = (int)(W * ratio);
-  displayH = (int)(H * ratio);
-  
-  b = createGraphics(W, H, P2D);
-  b.smooth(8);
-  surface.setSize(displayW, displayH);*/
+   ratio = 0.3;
+   W = circularScreenW;
+   H = circularScreenH;
+   } else if ( is360 < 0) {
+   ratio = 1;
+   W = instagramMinW;
+   H = instagramMinH;
+   }
+   
+   displayW = (int)(W * ratio);
+   displayH = (int)(H * ratio);
+   
+   b = createGraphics(W, H, P2D);
+   b.smooth(8);
+   surface.setSize(displayW, displayH);*/
 }
 
 // This draws only one line, not everything
