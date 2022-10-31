@@ -35,7 +35,7 @@ ControlP5 cp5;
 String recordingName;
 boolean recording = false;
 boolean pRecording = false;
-int numFrames = 60;
+int numFrames = 600;
 int startFrame = 0;
 
 // Video export does not work with resolutions that widths are not divisible by 2
@@ -107,6 +107,10 @@ boolean cp5Visible = true;
 
 int animIndex;
 
+float offMultX = 20;
+float offMultY = 20;
+float bgFill = 50;
+
 void toggleCP5Visible() {
   cp5Visible = !cp5Visible;
   if (cp5Visible) {
@@ -125,7 +129,6 @@ void transitionFinished(Ani theAni) {
 
 void keyPressed() {
   println(keyCode);
-  
   
   
   int numCode = keyCode - 48;
@@ -190,7 +193,7 @@ void setupCP5() {
   controllers.add(seedSlider);
   sliders.add(seedSlider);
   
-  Slider radSlider = cp5.addSlider("rad", 0.01, 1.5);
+  Slider radSlider = cp5.addSlider("rad", 0.01, 5);
   radSlider.setDefaultValue(1.3);
   controllers.add(radSlider);
   sliders.add(radSlider);  
@@ -214,6 +217,33 @@ void setupCP5() {
   rowsSlider.setDefaultValue(5);
   controllers.add(rowsSlider);
   sliders.add(rowsSlider);  
+  
+  
+
+  
+  Slider offMultXSlider = cp5.addSlider("offMultX", 0, 1000);
+  offMultXSlider.setDefaultValue(20);
+  controllers.add(offMultXSlider);
+  sliders.add(offMultXSlider); 
+  
+  Slider offMultYSlider = cp5.addSlider("offMultY", 0, 1000);
+  offMultYSlider.setDefaultValue(20);
+  controllers.add(offMultYSlider);
+  sliders.add(offMultYSlider); 
+  
+  
+  Slider bgFillSlider = cp5.addSlider("bgFill", 0, 255);
+  bgFillSlider.setDefaultValue(255);
+  controllers.add(bgFillSlider);
+  sliders.add(bgFillSlider); 
+  
+
+  Slider numFramesSlider = cp5.addSlider("numFrames", 10, 1000);
+  numFramesSlider.setDefaultValue(255);
+  controllers.add(numFramesSlider);
+  sliders.add(numFramesSlider); 
+  
+  
   
   Slider mxSlider = cp5.addSlider("mx", 0.01, 1.0);
   mxSlider.setDefaultValue(0.5);
@@ -306,7 +336,7 @@ void drawDots() {
 
   float t = 1.0 * frameCount/numFrames;
 
-  b.fill(0);
+  b.fill(0, bgFill);
   b.noStroke();
   b.rect(0, 0, W, H);
 
@@ -328,11 +358,14 @@ void drawDots() {
       float x = map(i, 0, max(cols-1, 1), _mx, W-_mx);
       float y = map(j, 0, max(rows-1, 1), _my, H-_my);
 
-      float dx = 20.0 * periodicFunction(t + offset(x, y), 0, x, y);
-      float dy = 20.0 * periodicFunction(t + offset(x, y), 123, x, y);
+      float dx = offMultX * periodicFunction(t + offset(x, y), 0, x, y);
+      float dy = offMultY * periodicFunction(t + offset(x, y), 123, x, y);
 
       //dx = 0;
       //dy = 0;
+      float s = 10 * sw2screen * dotSizePct * min(displayW, displayH); 
+      //b.strokeWeight( 1 / ( dx + dy)  * 10 * sw2screen * dotSizePct * min(displayW, displayH) );
+
       b.point((int)x+dx, (int)y+dy);
     }
   }
@@ -377,6 +410,8 @@ void settings() {
 };
 
 void draw() {
+  frameRate(1);
+
   drawDots();
   image(b, 0, 0, width, height);
 
