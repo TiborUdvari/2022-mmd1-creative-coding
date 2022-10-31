@@ -125,7 +125,7 @@ public class ControllerProperty implements Serializable , Cloneable {
 		controller = theController;
 	}
 
-	Object getValue( ) {
+	public Object getValue( ) {
 		return value;
 	}
 

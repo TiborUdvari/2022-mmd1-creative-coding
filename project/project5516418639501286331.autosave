@@ -1,13 +1,7 @@
 // todo
 
 // Save and load into propery set 
-
 // Get property sets as strings
-
-// Load as string from json
-
-// 1,2,3,4,5
-
 // Transform property set tweening library 
 // Save different transitions
 // Have 10 different ways to animate
@@ -101,69 +95,6 @@ boolean periodicFuncDebug = false;
 float offScl = 0.15;
 float periodicFuncScale = 1;
 float dotSizePct = 0.01;
-
-// Animation
-// Has 10 slots for states
-// Change - load next one and transition with anki
-
-int animIndex;
-
-void keyPressed() {
-  println(keyCode);
-  
-  int numCode = keyCode - 48;
-  if (numCode >= 0 && numCode < 10) {
-    animIndex = numCode;
-    // Load the json file if exists
-    println("Load params");
-    var fn = String.format("data/%d.json", animIndex);
-    println(fn);
-    //cp5.loadProperties(fn);
-  }
-  
-  if (keyCode == 76) // l 
-  {
-    println("Load current data");
-    var fn = String.format("data/%d.json", animIndex);
-    println("Load data from " + fn);
-    cp5.loadProperties(fn);
-    
-    JSONObject json = loadJSONObject(fn);
-    println(json);
-    
-    var properties = (String[]) json.keys().toArray(new String[json.size()]);
-    for (int i = 0; i < properties.length; i++) {
-      String k = properties[i];
-      float f = json.getObject(k).getFloat("value");
-      
-      println(k);
-      println(f);
-      println("----");
-    }
-    println(properties);
-    // Get all the keys
-    
-    /*
-    int id = json.getInt("id");
-    String species = json.getString("species");
-    String name = json.getString("name");
-    */
-    //println(id + ", " + species + ", " + name);
-  }
-  
-  if (keyCode == 83) // s
-  {
-    println("Save current data");
-    var fn = String.format("data/%d.json", animIndex);
-    println("Save data to " + fn);
-    cp5.saveProperties(fn);
-  }
-  
-  // transition
-  // ---
-  // Load the json from file
-  
-}
 
 void setupCP5() {
   cp5 = new ControlP5(this);
@@ -317,6 +248,8 @@ void drawDots() {
   float _mx = W * mx;
   float _my = H * my;
   
+  
+  
   for (int i=0; i<cols; i++)
   {
     for (int j=0; j<rows; j++)
@@ -357,32 +290,10 @@ void setup() {
   wave.patch(out);
 
   setupCP5();
-  
-  
-  var test = cp5.getProperties();
-  
-  // Get all the names of all the properties
-  var s = "";
-  var t = test.get();
-  for ( ControllerProperty c : test.get().keySet( ) ) {
-      s += "\t" + c + "\t"  + "\n";
-    } //<>//
-    
-   for ( var c : test.get().values( ) ) {
-      s += "\t" + c + "\t"  + "\n";
-    }
-    
-    /*
-  for ( ControllerProperty c : test.get().keySet( ) ) {
-      s += "\t" + c + "\t"  + "\n";
-    }*/
-  println(s); //<>//
-    
-  println("---  Done --- "); //<>//
-  println(test.toString());
-  //exit();
 
   //Ani.to(this, 3, "scl:0.06", Ani.SINE_IN_OUT);
+  
+  
 }
 
 void settings() {
@@ -520,9 +431,6 @@ void recordSketch() {
 void saveParamsDefault() {
   String fn = VideoExporter.defaultFileName(this);
   saveParams(fn);
-  
-  var fnAnim = String.format("data/%d.json", animIndex);
-  saveParams(fnAnim);
 }
 
 void saveParams(String fn) {
