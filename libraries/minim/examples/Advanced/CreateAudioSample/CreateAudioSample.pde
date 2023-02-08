@@ -54,7 +54,7 @@ void setup()
   // finally, create the AudioSample
   wave = minim.createSample( samples, // the samples
                              format,  // the format
-                             1024     // the output buffer size
+                             1024*8     // the output buffer size
                             );
 }
 
@@ -66,7 +66,8 @@ void draw()
   for (int i = 0; i < wave.bufferSize() - 1; i++)
   {
     line(i, 100 - wave.left.get(i)*50, i+1, 100 - wave.left.get(i+1)*50);
-  }
+
+}
 }
 
 void keyPressed()

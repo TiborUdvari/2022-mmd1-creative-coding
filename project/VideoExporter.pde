@@ -3,6 +3,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+
+
 static class VideoExporter
 {
   public static String getLatestGitLog(PApplet applet) {
@@ -53,7 +55,7 @@ static class VideoExporter
   }
   
   public static void generateVideo(PApplet applet, String fileName) {
-    String makeVideo = "/usr/local/bin/ffmpeg -y -framerate 60 -pattern_type glob -i '*.png' -preset veryslow -tune animation -c:v libx264 -pix_fmt yuv420p -crf 23 -f mp4 %s.mov".formatted(fileName);
+    String makeVideo = "/usr/local/bin/ffmpeg -y -framerate 60 -pattern_type glob -i '*.png' -i %s.wav -preset veryslow -tune animation -c:v libx264 -pix_fmt yuv420p -crf 23 -shortest -map 0:v:0 -map 1:a:0 -f mp4 %s.mov".formatted(fileName, fileName);
     VideoExporter.executeCommand(applet, makeVideo);
     
     String makeVideoLoop5 = "/usr/local/bin/ffmpeg -y -stream_loop 5 -i %s.mov -c copy %s-loop05.mov".formatted(fileName, fileName);

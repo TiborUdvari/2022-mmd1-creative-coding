@@ -2,7 +2,7 @@
 
 String jsonFileToPropertyList(String fn) {
   JSONObject json = loadJSONObject(fn);
-  println(json);
+  //println(json);
 
   var propertyList = "";
   var properties = (String[]) json.keys().toArray(new String[json.size()]);
@@ -12,7 +12,7 @@ String jsonFileToPropertyList(String fn) {
       String k = properties[i];
       float val = json.getJSONObject(k).getFloat("value");
 
-      propertyList += String.format("%s:%.20f", k.substring(1), val);
+      propertyList += String.format(Locale.ENGLISH, "%s:%.20f", k.substring(1), val);
       if (i < properties.length - 1) {
         propertyList += ",";
       }
@@ -36,6 +36,10 @@ void drawRecording() {
   if (currentFrame >= numFrames)
   {
     println("All frames have been saved");
+    
+    audioRecorder.endRecord();
+    audioRecorder.save();
+    
     VideoExporter.generateVideo(this, recordingName);
     VideoExporter.cleanupImages(this, recordingName);
 
@@ -69,6 +73,9 @@ void recordSketch() {
   startFrame = frameCount + 1;
   recording = true;
   saveParamsDefault();
+  
+  audioRecorder = minim.createRecorder(out, fn +".wav");
+  audioRecorder.beginRecord();  
 }
 
 void saveParamsDefault() {
