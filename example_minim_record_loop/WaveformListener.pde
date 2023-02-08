@@ -31,11 +31,6 @@ class WaveformListener implements AudioListener
     println("Sample count " + sampleCount);
   }
 
-  public AudioSample getRecording()
-  {
-    return null;
-  }
-
   public synchronized void samples(float[] samp)
   {
     left = samp;

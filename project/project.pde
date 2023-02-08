@@ -19,7 +19,7 @@ PGraphics b; // b for buffer
 Minim minim;
 AudioOutput out;
 Oscil wave;
-AudioRecorder audioRecorder;
+
 
 ArrayList<controlP5.Controller> controllers;
 

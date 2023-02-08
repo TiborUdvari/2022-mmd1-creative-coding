@@ -1,4 +1,5 @@
-
+AudioRecorder audioRecorder;
+WaveformRecorder wr;
 
 String jsonFileToPropertyList(String fn) {
   JSONObject json = loadJSONObject(fn);
@@ -37,8 +38,8 @@ void drawRecording() {
   {
     println("All frames have been saved");
     
-    audioRecorder.endRecord();
-    audioRecorder.save();
+    //audioRecorder.endRecord();
+    //audioRecorder.save();
     
     VideoExporter.generateVideo(this, recordingName);
     VideoExporter.cleanupImages(this, recordingName);
@@ -67,6 +68,10 @@ void drawNoise() {
 
 void recordSketch() {
   println("Record sketch");
+  
+  // Figure out how many audio samples I need ???
+  // Sample rate * how many seconds for the loop
+  
   String fn = VideoExporter.defaultFileName(this);
   recordingName = fn;
 
@@ -74,8 +79,21 @@ void recordSketch() {
   recording = true;
   saveParamsDefault();
   
+  /*
   audioRecorder = minim.createRecorder(out, fn +".wav");
   audioRecorder.beginRecord();  
+  */
+  
+  float targetFrameRate = 60.;
+  println("numFrames " + numFrames);
+  println("frameRate " + frameRate ); 
+  println("target frame rate " + targetFrameRate);
+  println("out sample rate " + out.sampleRate());
+  println("Samples target " + int(1.0 * numFrames/targetFrameRate * 1. * out.sampleRate()));
+  
+  wr = new WaveformRecorder(int(1.0 * numFrames/targetFrameRate * 1. * out.sampleRate()), fn +".wav");
+  
+  out.addListener(wr); 
 }
 
 void saveParamsDefault() {
