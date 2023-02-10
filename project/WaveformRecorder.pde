@@ -39,9 +39,7 @@ class WaveformRecorder implements AudioListener
   boolean created = false;
   void createSample() {
     if (!created) {
-      for (int i = 0; i < 500 - 1; i++ ) {
-          println(leftAccu[leftAccu.length - 1 - i]);
-      }
+      
       saveSampleChatGPT();
       created = true;
       // todo - cleanup
