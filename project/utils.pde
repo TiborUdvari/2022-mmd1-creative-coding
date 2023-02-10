@@ -1,6 +1,10 @@
 AudioRecorder audioRecorder;
 WaveformRecorder wr;
 
+float fract(float v) {
+  return v % 1.;
+}
+
 String jsonFileToPropertyList(String fn) {
   JSONObject json = loadJSONObject(fn);
   //println(json);
@@ -164,7 +168,7 @@ void resolutionPreset(int is360) {
 void drawPeriodicFunction() {
   stroke(255, 255, 255);
   strokeWeight(1);
-  for (int i = 0; i < displayW; i++) {
+  for (int i = 0; i < displayW - 1; i++) {
     float val1 = (float)periodicFunction((float)(i + 0) / displayW, 0f, 1f, 1f);
     float val2 = (float)periodicFunction(((float)i + 1) / displayW, 0f, 1f, 1f);
     val1 = map(val1, -1, 1, 0, 1);

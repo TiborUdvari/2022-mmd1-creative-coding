@@ -78,19 +78,14 @@ class CustomWaveForm implements Waveform {
   }
   
   float value(float v) {
-    //return periodicFunction(v, 0, 1, 1);
-    //return sin(TAU * v);
-
-    //float res = periodicFunction(v, 0, 1, 1);
     float t = 1.0 * frameCount/numFrames;
     //v = (v + (t * audioFreq ) % 1) % 1;
-
+    v = 1. * loopCounter/audioFreq;
     float accu = 0;
     float tot = rows + cols;
 
     float _mx = W * mx;
     float _my = H * my;
-    
     
     for (int i=0, j=0; i<cols && j<rows; i++, j++)
     {
@@ -99,7 +94,6 @@ class CustomWaveForm implements Waveform {
 
       float dx = offMultX * periodicFunction(v, 0, x, y);
       float dy = offMultY * periodicFunction(v + offset(x, y), 123, x, y);
-      
       
       // Result should go between -1 and 1. Just using the x to keep it simple
       //accu += (( abs(dx  / W)) +  abs(dy  / H) );
@@ -217,7 +211,7 @@ void setup() {
   wave.patch(out);
 
   setupCP5();
-  frameRate(1);
+  frameRate(60);
   //sequence();
 }
 
