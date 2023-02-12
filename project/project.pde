@@ -1,7 +1,14 @@
 // todo //<>//
-// 0. Visualise the actual audio 
-// 1. Check how many loops the sound goes through
-// 2. Check if the sound loop is in sync with the visuals
+
+// see if we have a multiple of 1024 frames if it can do it
+
+
+
+// Convert to .mkv
+// from mkv go to mp4 and hope it stays in sync
+
+
+
 // 3. Patch a pan, example: https://forum.processing.org/one/topic/phase-shift-between-two-oscillators-in-minim-2-1beta.html
 
 // Audio repeats freq time per second. It should be 
@@ -9,7 +16,7 @@
 OpenSimplexNoise noise;
 ControlP5 cp5;
 
-float numFrames = 600;
+float numFrames = 60;
 float ratio = 1;
 
 final int instagramMinW = 500;
@@ -65,7 +72,7 @@ float delayHack = 0;
 
 float gAccu = 0;
 
-int audioFreq = 360;
+int audioFreq = 180;
 float[] waveTable; 
 
 class CustomWaveForm implements Waveform {
@@ -244,7 +251,7 @@ void draw() {
 }
 
 void drawWaveTable() {
-  stroke(255, 255, 255);
+  stroke(255, 0, 0);
   strokeWeight(1);
   float step = 1. * displayW / audioFreq;
   for (int i = 0; i < audioFreq - 1; i++) {
@@ -257,6 +264,8 @@ void drawWaveTable() {
     // draw line between them
     line(i * step, val1 * displayH, (i+1) * step, val2 * displayH);
   }
+  line(0, H / 2, W, H / 2);
+  stroke(255, 255, 255);
 }
 
 /*

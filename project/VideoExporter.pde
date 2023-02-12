@@ -1,3 +1,24 @@
+// todo - get the duration of a clip example
+//ffprobe -i input.mkv -show_entries format=duration -v quiet -of csv="p=0"
+
+
+// duration - $(echo $(ffprobe -i out12.mkv -show_entries format=duration -v quiet -of csv="p=0") - .1 | bc)
+// todo - add a 1s crossfade at the end
+
+
+// ffmpeg -i out12-loop.mkv -af "afade=t=out:st=$(ffprobe -i out12.mkv -show_entries format=duration -v quiet -of csv="p=0")-1:d=1,afade=t=in:st=0:d=1" -c:a aac -c:v copy out12-cross.mkv
+// echo $(echo $(ffprobe -i out12.mkv -show_entries format=duration -v quiet -of csv="p=0") - .1 | bc)
+
+// ffmpeg -i out12-loop.mkv -af "afade=t=out:st=$(echo $(ffprobe -i out12-loop.mkv -show_entries format=duration -v quiet -of csv="p=0") - .1 | bc):d=1,afade=t=in:st=0:d=1" -c:a aac -c:v copy out12-cross.mkv
+
+
+// ffmpeg -i out12-loop.mkv -af "afade=t=out:st=$(echo $(ffprobe -i out12-loop.mkv -show_entries format=duration -v quiet -of csv="p=0") - 1 | bc):d=1,afade=t=in:st=0:d=1" -c:a aac -c:v copy out12-cross.mkv
+// ffmpeg -i out12-loop.mkv -vf "fade=t=in:st=0:d=1,fade=t=out:st=$(echo $(ffprobe -i out12-loop.mkv -show_entries format=duration -v quiet -of csv="p=0") - 1.5 | bc):d=1" -af "afade=t=out:st=$(echo $(ffprobe -i out12-loop.mkv -show_entries format=duration -v quiet -of csv="p=0") - 1 | bc):d=1,afade=t=in:st=0:d=1" -c:a aac out12-cross.mkv
+
+// Perfect loop to get at least 25 seconds of video
+// Apply the fades to the beginning and end
+
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -53,16 +74,43 @@ static class VideoExporter
   }
   
   public static void generateVideo(PApplet applet, String fileName) {
+    
+   
+    // Conversions to aac
+    
+    // Using the native AAC codec:
+    //ffmpeg -i input.wav -c:a aac -b:a 128k -loop 1 output-aac.aac
+
+    // Using the Nero AAC codec:
+    // ffmpeg -i input.wav -c:a libfdk_aac -vbr 4 output-nero.aac
+
+    // Using the fdk-aac codec:
+    // ffmpeg -i input.wav -c:a fdk-aac -vbr 3 output-fdk.aac
+    
+    
+    
+    // Test the loop
+    // ffplay -loop -1 2023-02-11_16-20-25-75b44f2.mov
+    
     String makeVideoNoSound = " /usr/local/bin/ffmpeg -y -framerate 60 -pattern_type glob -i '*.png' -preset veryslow -tune animation -c:v libx264 -pix_fmt yuv420p -crf 23 -f mp4 %s-mute.mov".formatted(fileName, fileName);
     VideoExporter.executeCommand(applet, makeVideoNoSound);
     
-    String makeVideo = " /usr/local/bin/ffmpeg -y -framerate 60 -pattern_type glob -i '*.png' -i %s.wav -preset veryslow -tune animation -c:v libx264 -pix_fmt yuv420p -crf 23 -shortest -map 0:v:0 -map 0:a:0 -f mp4 %s.mov".formatted(fileName, fileName, fileName);
-    VideoExporter.executeCommand(applet, makeVideo);
+    // Convert sound to .aac
+    // Important - use Apple alac for AAC, default encoder was adding silence at the beginning and end of the format
+    String convertSoundToAAC = " /usr/local/bin/ffmpeg -i %s.wav -c:a alac %s.m4a".formatted(fileName, fileName);
+    VideoExporter.executeCommand(applet, convertSoundToAAC);
 
-    String makeAudioLoop5 = "/usr/local/bin/ffmpeg -y -stream_loop 5 -i %s.wav -c copy %s-loop05.wav".formatted(fileName, fileName);
-    VideoExporter.executeCommand(applet, makeAudioLoop5);
-        
+    // Combine video and sound
+    String combineAudioVideo = "/usr/local/bin/ffmpeg -i %s-mute.mov -i %s.m4a -c:v copy -c:a copy %s.mov".formatted(fileName, fileName, fileName);
+    VideoExporter.executeCommand(applet, combineAudioVideo);
     
+    // -shortest -map 0:v:0 -map 0:a:0
+    
+    
+    
+    //String makeAudioLoop5 = "/usr/local/bin/ffmpeg -y -stream_loop 5 -i %s.wav -c copy %s-loop05.wav".formatted(fileName, fileName);
+    //VideoExporter.executeCommand(applet, makeAudioLoop5);
+        
     String makeVideoLoop5 = "/usr/local/bin/ffmpeg -y -stream_loop 5 -i %s.mov -c copy %s-loop05.mov".formatted(fileName, fileName);
     VideoExporter.executeCommand(applet, makeVideoLoop5);
     

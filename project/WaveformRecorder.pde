@@ -114,8 +114,8 @@ class WaveformRecorder implements AudioListener
         createSample();
         break;
       }
-      leftAccu[counter + i] = sampL[i];
-      rightAccu[counter + i] = sampR[i];
+      leftAccu[counter + i] = constrain(sampL[i], -.9, .9);
+      rightAccu[counter + i] = constrain(sampR[i], -.9, .9);
     }
 
     counter = min(counter + sampL.length, leftAccu.length);
