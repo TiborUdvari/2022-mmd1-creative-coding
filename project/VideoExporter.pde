@@ -18,6 +18,11 @@
 // Perfect loop to get at least 25 seconds of video
 // Apply the fades to the beginning and end
 
+// Get the length of the video
+
+// vid="out.mkv" && 
+//duration=$(echo "25 / 0.9" | bc) && echo $duration
+
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -74,8 +79,9 @@ static class VideoExporter
   }
   
   public static void generateVideo(PApplet applet, String fileName) {
-    
-   
+     String makeIGLoop = "/encode-for-ig %s".formatted(fileName);
+    VideoExporter.executeCommand(applet, makeIGLoop);
+
     // Conversions to aac
     
     // Using the native AAC codec:
@@ -87,10 +93,10 @@ static class VideoExporter
     // Using the fdk-aac codec:
     // ffmpeg -i input.wav -c:a fdk-aac -vbr 3 output-fdk.aac
     
-    
-    
     // Test the loop
     // ffplay -loop -1 2023-02-11_16-20-25-75b44f2.mov
+    /*
+    String makeVideoLossless = "/usr/local/bin/ffmpeg -i image%d.png -c:v huffyuv -pix_fmt yuv444p -r 60 output.avi";
     
     String makeVideoNoSound = " /usr/local/bin/ffmpeg -y -framerate 60 -pattern_type glob -i '*.png' -preset veryslow -tune animation -c:v libx264 -pix_fmt yuv420p -crf 23 -f mp4 %s-mute.mov".formatted(fileName, fileName);
     VideoExporter.executeCommand(applet, makeVideoNoSound);
@@ -107,7 +113,6 @@ static class VideoExporter
     // -shortest -map 0:v:0 -map 0:a:0
     
     
-    
     //String makeAudioLoop5 = "/usr/local/bin/ffmpeg -y -stream_loop 5 -i %s.wav -c copy %s-loop05.wav".formatted(fileName, fileName);
     //VideoExporter.executeCommand(applet, makeAudioLoop5);
         
@@ -116,6 +121,7 @@ static class VideoExporter
     
     String makeVideoLoop10 = "/usr/local/bin/ffmpeg -y -stream_loop 10 -i %s.mov -c copy %s-loop10.mov".formatted(fileName, fileName);
     VideoExporter.executeCommand(applet, makeVideoLoop10);
+    */
   }
   
   public static void cleanupImages(PApplet applet, String folderName) {
