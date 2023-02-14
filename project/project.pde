@@ -1,19 +1,4 @@
-// todo //<>//
-
-// see if we have a multiple of 1024 frames if it can do it
-
-
-
-// Convert to .mkv
-// from mkv go to mp4 and hope it stays in sync
-
-
-
-// 3. Patch a pan, example: https://forum.processing.org/one/topic/phase-shift-between-two-oscillators-in-minim-2-1beta.html
-
-// Audio repeats freq time per second. It should be 
-
-OpenSimplexNoise noise;
+OpenSimplexNoise noise; //<>//
 ControlP5 cp5;
 
 float numFrames = 60;
@@ -34,6 +19,7 @@ PGraphics b; // b for buffer
 Minim minim;
 AudioOutput out;
 Oscil wave;
+Pan panPatch;
 
 ArrayList<controlP5.Controller> controllers;
 
@@ -72,59 +58,82 @@ float delayHack = 0;
 
 float gAccu = 0;
 
-int audioFreq = 180;
-float[] waveTable; 
+//int audioFreq = 180;
+int audioFreq = 720;
+float[] waveTable;
+
+float gpan = 0f; // global pan
 
 class CustomWaveForm implements Waveform {
   // Value - goes from 0 to 1, 440 times per second. Unrelated to t
-  
+
   int loopCounter = 0;
   CustomWaveForm()
-  {  
-    
+  {
   }
-  
+
   float value(float v) {
     float t = 1.0 * frameCount/numFrames;
     //v = (v + (t * audioFreq ) % 1) % 1;
-    v = 1. * loopCounter/audioFreq;
+    v = t + 1. * loopCounter/audioFreq;
+    float pv = t + 1. * ((loopCounter * 2. - 1) % loopCounter)/audioFreq;
+
     float accu = 0;
     float tot = rows + cols;
 
     float _mx = W * mx;
     float _my = H * my;
-    
-    for (int i=0, j=0; i<cols && j<rows; i++, j++)
-    {
+
+    float pan = 0;
+
+  int maxSamples = 4;
+  int c = 0;
+  for (int i=0; i < cols; i++) {
+          if (!recording && c > maxSamples) break;
+
+    for (int j = 0; j < rows; j++) {
+      c++;
+      if (!recording && c > maxSamples) break;
+      
       float x = map(i, 0, max(cols-1, 1), _mx, W-_mx);
       float y = map(j, 0, max(rows-1, 1), _my, H-_my);
 
       float dx = offMultX * periodicFunction(v, 0, x, y);
       float dy = offMultY * periodicFunction(v + offset(x, y), 123, x, y);
-      
+
+      float pdx = offMultX * periodicFunction(pv, 0, x, y);
+      float pdy = offMultY * periodicFunction(pv + offset(x, y), 123, x, y);
+
       // Result should go between -1 and 1. Just using the x to keep it simple
       //accu += (( abs(dx  / W)) +  abs(dy  / H) );
       // It should be the speed, it would make more sense auditively
+
+      //accu += dx / W;
+      float val = ((dx - pdx) / W + (dy - pdy) / H) / cols*rows;
+      accu += val * 10 ;
       
-      accu += dx / W;
+      pan += 1. * (x + dx) / W * 2. - 1.;
       //accu = dx / W;
-    }
+    }}
     accu = constrain(accu, -.9, .9);
-    
+
     /*
     if (loopCounter == 0) {
-    
-    println("------");
-    } 
-    print(accu + ", ");
-    */
-    
+     
+     println("------");
+     }
+     print(accu + ", ");
+     */
+
     waveTable[loopCounter] = accu;
     loopCounter = (loopCounter + 1) % audioFreq;
-    
+    gpan = pan;
+    gpan = constrain(gpan, -.9, .9);
+    panPatch.setPan(gpan);
     gAccu = accu;
     return accu;
   }
+  // Update the pan
 }
 
 float offset(float x, float y)
@@ -151,6 +160,7 @@ void drawDots() {
 
   b.beginDraw();
 
+  float pt = 1.0 * ((frameCount + numFrames - 1) % 2)/numFrames;
   float t = 1.0 * frameCount/numFrames;
 
   b.fill(0, bgFill);
@@ -168,25 +178,31 @@ void drawDots() {
   float _mx = W * mx;
   float _my = H * my;
 
-  for (int i=0; i<cols; i++)
-  {
-    for (int j=0; j<rows; j++)
-    {
-      float x = map(i, 0, max(cols-1, 1), _mx, W-_mx);
-      float y = map(j, 0, max(rows-1, 1), _my, H-_my);
+  for (int i=0; i < cols; i++) {
+    for (int j = 0; j < rows; j++) {
+    float x = map(i, 0, max(cols-1, 1), _mx, W-_mx);
+    float y = map(j, 0, max(rows-1, 1), _my, H-_my);
 
-      float dx = offMultX * periodicFunction(t + offset(x, y), 0, x, y);
-      float dy = offMultY * periodicFunction(t + offset(x, y), 123, x, y);
+    float dx = offMultX * periodicFunction(t + offset(x, y), 0, x, y);
+    float dy = offMultY * periodicFunction(t + offset(x, y), 123, x, y);
 
-      //dx = 0;
-      //dy = 0;
-      float s = 10 * sw2screen * dotSizePct * min(displayW, displayH);
-      //b.strokeWeight( 1 / ( dx + dy)  * 10 * sw2screen * dotSizePct * min(displayW, displayH) );
-      // is not affected by the audio wave
-      //b.stroke(gAccu * gAccu * (abs(dx) + abs(dy)));
-      //b.stroke((abs(dx) + abs(dy)));
+    float pdx = offMultX * periodicFunction(pt + offset(x, y), 0, x, y);
+    float pdy = offMultY * periodicFunction(pt + offset(x, y), 123, x, y);
 
-      b.point((int)x+dx, (int)y+dy);
+    float deltaPos = (abs(dx - pdx) / W + abs(dy - pdy) / H) / 2. ;
+    float deltaPosFactor = map(deltaPos, 0, 1, 1, 0.6);
+    //dx = 0;
+    //dy = 0;
+    //float dMovement = (dx - pdx) + (dy );
+    float s = 10 * sw2screen * dotSizePct * min(displayW, displayH) * deltaPosFactor;
+    //b.strokeWeight( 1 / ( dx + dy)  * 10 * sw2screen * dotSizePct * min(displayW, displayH) );
+    // is not affected by the audio wave
+    //println(gAccu);
+    b.stroke(255, 255, 255, constrain(abs(gAccu), 0.5, 1.0 ) * 255);
+    //b.stroke((abs(dx) + abs(dy)));
+    b.strokeWeight(10 * sw2screen * dotSizePct * min(displayW, displayH) * deltaPosFactor );
+
+    b.point((int)x+dx, (int)y+dy);
     }
   }
 
@@ -208,14 +224,14 @@ void setup() {
   out = minim.getLineOut();
 
   CustomWaveForm customWaveForm = new CustomWaveForm();
-  
+
   // 10 - frequency, 1f - amplitude
   wave = new Oscil( audioFreq, 1f, customWaveForm );
   // debug the addition of the waveform
-  
+  panPatch = new Pan(0.);
   //dotSizePct
   //wave = new Oscil( map(), 1f, customWaveForm );
-  wave.patch(out);
+  wave.patch(panPatch).patch(out);
 
   setupCP5();
   frameRate(60);
@@ -241,13 +257,11 @@ void draw() {
   //s.changeValue(scl);
 
   //wave.setFrequency(constrain(map(dotSizePct, 0.0, 0.01, 22, 10), 10, 22));
-  
+
   if (periodicFuncDebug) {
     drawPeriodicFunction();
     drawWaveTable();
   }
-  
-  
 }
 
 void drawWaveTable() {
@@ -257,7 +271,7 @@ void drawWaveTable() {
   for (int i = 0; i < audioFreq - 1; i++) {
     float val1 = waveTable[i];
     float val2 = waveTable[i+1];
-    
+
     val1 = map(val1, -1, 1, 0, 1);
     val2 = map(val2, -1, 1, 0, 1);
 

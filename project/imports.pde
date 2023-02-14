@@ -169,13 +169,13 @@ void setupCP5() {
   sliders.add(dotSizePctSlider);
 
   //Slider colsSlider = cp5.addSlider("cols", 1, 300 * 7.1);
-  Slider colsSlider = cp5.addSlider("cols", 1, 20);
+  Slider colsSlider = cp5.addSlider("cols", 1, 200);
 
   colsSlider.setDefaultValue(5);
   controllers.add(colsSlider);
   sliders.add(colsSlider);
 
-  Slider rowsSlider = cp5.addSlider("rows", 1, 20);
+  Slider rowsSlider = cp5.addSlider("rows", 1, 200);
   rowsSlider.setDefaultValue(5);
   controllers.add(rowsSlider);
   sliders.add(rowsSlider);

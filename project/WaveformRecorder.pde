@@ -21,6 +21,7 @@ class WaveformRecorder implements AudioListener
   float[] rightAccu;
 
   public AudioSample audioSample;
+  public boolean audioFileSaved = false;
 
   WaveformRecorder(int sampleCount, String fn)
   {
@@ -36,13 +37,11 @@ class WaveformRecorder implements AudioListener
   {
     left = samp;
   }
-  boolean created = false;
-  void createSample() {
-    if (!created) {
-      
+  
+  void saveAudioFile() {
+    if (!audioFileSaved) {
       saveSampleChatGPT();
-      created = true;
-      // todo - cleanup
+      audioFileSaved = true;
     }
   }
 
@@ -111,7 +110,7 @@ class WaveformRecorder implements AudioListener
     {
       if (counter + i >= leftAccu.length) {
         //println("hit limit");
-        createSample();
+        saveAudioFile();
         break;
       }
       leftAccu[counter + i] = constrain(sampL[i], -.9, .9);

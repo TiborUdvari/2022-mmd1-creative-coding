@@ -23,7 +23,6 @@
 // vid="out.mkv" && 
 //duration=$(echo "25 / 0.9" | bc) && echo $duration
 
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -79,7 +78,7 @@ static class VideoExporter
   }
   
   public static void generateVideo(PApplet applet, String fileName) {
-     String makeIGLoop = "/encode-for-ig %s".formatted(fileName);
+     String makeIGLoop = "./encode-for-ig.sh %s".formatted(fileName);
     VideoExporter.executeCommand(applet, makeIGLoop);
 
     // Conversions to aac
@@ -125,8 +124,9 @@ static class VideoExporter
   }
   
   public static void cleanupImages(PApplet applet, String folderName) {
-    String cleanup = "mkdir -p %s && mv *.png %s".formatted(folderName, folderName);
-    VideoExporter.executeCommand(applet, cleanup);
+    return;
+    //String cleanup = "mkdir -p %s && mv *.png %s".formatted(folderName, folderName);
+    //VideoExporter.executeCommand(applet, cleanup);
   }
 
   public static void executeCommand(PApplet applet, String command) {

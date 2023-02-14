@@ -8,10 +8,13 @@
 # Convert to IG format
 
 # The audio should be a .wav file with the same name as the video
+export PATH=$PATH:/usr/local/bin/
 
 script_path="$(realpath "$0")"
 script_dir="$(dirname "$script_path")"
 cd "$script_dir"
+
+echo "Script dir is $script_dir"
 
 FILE_NAME="$1"
 VIDEO_FILE=$FILE_NAME.avi
@@ -25,6 +28,7 @@ VIDEO_FILE_DIR=$(dirname "$VIDEO_FILE")
 LOOPED_VIDEO_FILE=$VIDEO_FILE_NAME-looped.$VIDEO_FILE_EXT
 
 TARGET_LENGTH=15
+echo "Got here";
 
 LENGTH=$(ffprobe -i "$VIDEO_FILE" -show_entries format=duration -v quiet -of csv="p=0")
 LOOP_COUNT=$(echo "$TARGET_LENGTH/$LENGTH" | bc)

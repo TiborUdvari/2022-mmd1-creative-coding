@@ -37,21 +37,16 @@ void drawRecording() {
   if (currentFrame < numFrames)
   {
     b.save(recordingName + "_" + String.format("%03d", currentFrame) + ".png");
-  }
-  if (currentFrame >= numFrames)
+  } else if (currentFrame >= numFrames && wr.audioFileSaved)
   {
-    println("All frames have been saved");
-    
-    //audioRecorder.endRecord();
-    //audioRecorder.save();
-    
+    println("All frames and audio have been saved");
+
     VideoExporter.generateVideo(this, recordingName);
     VideoExporter.cleanupImages(this, recordingName);
 
     launch("%s/%s.mov".formatted(sketchPath(), recordingName));
 
     recording = false;
-    // launch terminal things
   }
 }
 
