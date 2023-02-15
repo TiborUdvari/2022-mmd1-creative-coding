@@ -105,7 +105,7 @@ class CustomWaveForm implements Waveform {
     float pan = 0;
 
     int maxSamples = 8;
-    int maxSamplesRecording = 40;
+    int maxSamplesRecording = 80;
 
     int inc = !recording ? cols * rows / maxSamples  : cols * rows / maxSamplesRecording;
     inc = (int)max(1, (float)inc);
