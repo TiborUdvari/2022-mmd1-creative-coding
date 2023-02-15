@@ -1,6 +1,25 @@
 // todo - set time code to frames for ani //<>//
 // loop from 0 to 1 at 0.25 - 0.75
 // add settings for this
+import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
+
+import java.util.Map;
+import java.util.function.Function;
+
+public class Memoizer4Floats {
+    private final Map<String, Float> cache = new ConcurrentHashMap<>();
+    private final Function<Float, Function<Float, Function<Float, Function<Float, Float>>>> function;
+
+    public Memoizer4Floats(Function<Float, Function<Float, Function<Float, Function<Float, Float>>>> function) {
+        this.function = function;
+    }
+
+    public Float apply(Float f1, Float f2, Float f3, Float f4) {
+        String key = String.format("%f,%f,%f,%f", f1, f2, f3, f4);
+        return cache.computeIfAbsent(key, k -> function.apply(f1).apply(f2).apply(f3).apply(f4));
+    }
+}
 
 OpenSimplexNoise noise;
 ControlP5 cp5;
@@ -141,10 +160,25 @@ float offset(float x, float y)
   //return offScl * max(W/2, x) * 100;
 }
 
+Function<Float, Function<Float, Function<Float, Function<Float, Float>>>> myFunction = p -> seed -> x -> y -> {
+    // compute result here
+      return periodicFuncScale * (float)noise.eval(seed+rad*cos(TAU*p), rad*sin(TAU*p), scl*x, scl*y);
+};
+
+Memoizer4Floats memoizedFunction = new Memoizer4Floats(myFunction);
+
+
+
+
 float periodicFunction(float p, float seed, float x, float y)
 {
   return periodicFuncScale * (float)noise.eval(seed+rad*cos(TAU*p), rad*sin(TAU*p), scl*x, scl*y);
+/*
+  float result = memoizedFunction.apply(p, seed, x, y);
+  return result;
+  */
 }
+
 
 void drawDots() {
   float sw2screen = 1.0 / ratio;
