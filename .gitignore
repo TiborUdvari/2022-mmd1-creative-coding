@@ -4,6 +4,8 @@
 # Image files
 *.png
 *.mov
+*.wav
+*.avi
 
 ### Java ###
 # Compiled class file

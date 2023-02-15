@@ -67,10 +67,7 @@ void drawNoise() {
 
 void recordSketch() {
   println("Record sketch");
-  
-  // Figure out how many audio samples I need ???
-  // Sample rate * how many seconds for the loop
-  
+
   String fn = VideoExporter.defaultFileName(this);
   recordingName = fn;
 
@@ -107,6 +104,11 @@ void saveParams(String fn) {
   println("Save params");
 
   cp5.saveProperties();
+  cp5.saveProperties("properties.json");
+  // Git commit the json file with the same common name
+  VideoExporter.commitPropertiesFile(this);
+  
+  
   cp5.saveProperties(fn);
 }
 

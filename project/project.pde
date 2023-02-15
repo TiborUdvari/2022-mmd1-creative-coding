@@ -86,35 +86,39 @@ class CustomWaveForm implements Waveform {
 
     float pan = 0;
 
-  int maxSamples = 4;
-  int c = 0;
-  for (int i=0; i < cols; i++) {
-          if (!recording && c > maxSamples) break;
+    int maxSamples = 4;
+    long maxSamplesRecording = 40L;
 
-    for (int j = 0; j < rows; j++) {
-      c++;
+    int c = 0;
+    for (int i=0; i < cols; i++) {
       if (!recording && c > maxSamples) break;
-      
-      float x = map(i, 0, max(cols-1, 1), _mx, W-_mx);
-      float y = map(j, 0, max(rows-1, 1), _my, H-_my);
+      if (recording && c > maxSamplesRecording) break;
+      for (int j = 0; j < rows; j++) {
+        c++;
+        if (!recording && c > maxSamples) break;
+        if (recording && c > maxSamplesRecording) break;
 
-      float dx = offMultX * periodicFunction(v, 0, x, y);
-      float dy = offMultY * periodicFunction(v + offset(x, y), 123, x, y);
+        float x = map(i, 0, max(cols-1, 1), _mx, W-_mx);
+        float y = map(j, 0, max(rows-1, 1), _my, H-_my);
 
-      float pdx = offMultX * periodicFunction(pv, 0, x, y);
-      float pdy = offMultY * periodicFunction(pv + offset(x, y), 123, x, y);
+        float dx = offMultX * periodicFunction(v, 0, x, y);
+        float dy = offMultY * periodicFunction(v + offset(x, y), 123, x, y);
 
-      // Result should go between -1 and 1. Just using the x to keep it simple
-      //accu += (( abs(dx  / W)) +  abs(dy  / H) );
-      // It should be the speed, it would make more sense auditively
+        float pdx = offMultX * periodicFunction(pv, 0, x, y);
+        float pdy = offMultY * periodicFunction(pv + offset(x, y), 123, x, y);
 
-      //accu += dx / W;
-      float val = ((dx - pdx) / W + (dy - pdy) / H) / cols*rows;
-      accu += val * 10 ;
-      
-      pan += 1. * (x + dx) / W * 2. - 1.;
-      //accu = dx / W;
-    }}
+        // Result should go between -1 and 1. Just using the x to keep it simple
+        //accu += (( abs(dx  / W)) +  abs(dy  / H) );
+        // It should be the speed, it would make more sense auditively
+
+        //accu += dx / W;
+        float val = ((dx - pdx) / W + (dy - pdy) / H) / cols*rows;
+        accu += val * 10 ;
+
+        pan += 1. * (x + dx) / W * 2. - 1.;
+        //accu = dx / W;
+      }
+    }
     accu = constrain(accu, -.9, .9);
 
     /*
@@ -180,29 +184,29 @@ void drawDots() {
 
   for (int i=0; i < cols; i++) {
     for (int j = 0; j < rows; j++) {
-    float x = map(i, 0, max(cols-1, 1), _mx, W-_mx);
-    float y = map(j, 0, max(rows-1, 1), _my, H-_my);
+      float x = map(i, 0, max(cols-1, 1), _mx, W-_mx);
+      float y = map(j, 0, max(rows-1, 1), _my, H-_my);
 
-    float dx = offMultX * periodicFunction(t + offset(x, y), 0, x, y);
-    float dy = offMultY * periodicFunction(t + offset(x, y), 123, x, y);
+      float dx = offMultX * periodicFunction(t + offset(x, y), 0, x, y);
+      float dy = offMultY * periodicFunction(t + offset(x, y), 123, x, y);
 
-    float pdx = offMultX * periodicFunction(pt + offset(x, y), 0, x, y);
-    float pdy = offMultY * periodicFunction(pt + offset(x, y), 123, x, y);
+      float pdx = offMultX * periodicFunction(pt + offset(x, y), 0, x, y);
+      float pdy = offMultY * periodicFunction(pt + offset(x, y), 123, x, y);
 
-    float deltaPos = (abs(dx - pdx) / W + abs(dy - pdy) / H) / 2. ;
-    float deltaPosFactor = map(deltaPos, 0, 1, 1, 0.6);
-    //dx = 0;
-    //dy = 0;
-    //float dMovement = (dx - pdx) + (dy );
-    float s = 10 * sw2screen * dotSizePct * min(displayW, displayH) * deltaPosFactor;
-    //b.strokeWeight( 1 / ( dx + dy)  * 10 * sw2screen * dotSizePct * min(displayW, displayH) );
-    // is not affected by the audio wave
-    //println(gAccu);
-    b.stroke(255, 255, 255, constrain(abs(gAccu), 0.5, 1.0 ) * 255);
-    //b.stroke((abs(dx) + abs(dy)));
-    b.strokeWeight(10 * sw2screen * dotSizePct * min(displayW, displayH) * deltaPosFactor );
+      float deltaPos = (abs(dx - pdx) / W + abs(dy - pdy) / H) / 2. ;
+      float deltaPosFactor = map(deltaPos, 0, 1, 1, 0.6);
+      //dx = 0;
+      //dy = 0;
+      //float dMovement = (dx - pdx) + (dy );
+      float s = 10 * sw2screen * dotSizePct * min(displayW, displayH) * deltaPosFactor;
+      //b.strokeWeight( 1 / ( dx + dy)  * 10 * sw2screen * dotSizePct * min(displayW, displayH) );
+      // is not affected by the audio wave
+      //println(gAccu);
+      b.stroke(255, 255, 255, constrain(abs(gAccu * 10000), 0.5, 1.0 ) * 255);
+      //b.stroke((abs(dx) + abs(dy)));
+      b.strokeWeight(10 * sw2screen * dotSizePct * min(displayW, displayH) * deltaPosFactor );
 
-    b.point((int)x+dx, (int)y+dy);
+      b.point((int)x+dx, (int)y+dy);
     }
   }
 

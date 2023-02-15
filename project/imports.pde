@@ -163,7 +163,7 @@ void setupCP5() {
   controllers.add(periodicFuncScaleSlider);
   sliders.add(periodicFuncScaleSlider);
 
-  Slider dotSizePctSlider = cp5.addSlider("dotSizePct", 0, 0.01);
+  Slider dotSizePctSlider = cp5.addSlider("dotSizePct", 0, 0.04);
   dotSizePctSlider.setDefaultValue(0.1);
   controllers.add(dotSizePctSlider);
   sliders.add(dotSizePctSlider);
