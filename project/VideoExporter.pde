@@ -88,7 +88,7 @@ static class VideoExporter
   }
 
   public static void cleanupImages(PApplet applet, String folderName) {
-    String cleanup = "mkdir -p %s && mv *.png %s".formatted(folderName, folderName);
+    String cleanup = "mkdir -p %s && mv *.png %s && mv *.wav %s".formatted(folderName, folderName);
     VideoExporter.executeCommand(applet, cleanup);
     String cleanup2 = "rm *.avi";
     VideoExporter.executeCommand(applet, cleanup2);
