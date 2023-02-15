@@ -65,12 +65,7 @@ float[] waveTable;
 float gpan = 0f; // global pan
 
 class CustomWaveForm implements Waveform {
-  // Value - goes from 0 to 1, 440 times per second. Unrelated to t
-
   int loopCounter = 0;
-  CustomWaveForm()
-  {
-  }
 
   float value(float v) {
     float t = 1.0 * frameCount/numFrames;
@@ -86,18 +81,15 @@ class CustomWaveForm implements Waveform {
 
     float pan = 0;
 
-    int maxSamples = 4;
-    long maxSamplesRecording = 40L;
+    int maxSamples = 8;
+    int maxSamplesRecording = 40;
+    
+    int inc = !recording ? cols * rows / maxSamples  : cols * rows / maxSamplesRecording;
+    inc = (int)max(1, (float)inc);
+    //println(inc);
 
-    int c = 0;
-    for (int i=0; i < cols; i++) {
-      if (!recording && c > maxSamples) break;
-      if (recording && c > maxSamplesRecording) break;
-      for (int j = 0; j < rows; j++) {
-        c++;
-        if (!recording && c > maxSamples) break;
-        if (recording && c > maxSamplesRecording) break;
-
+    for (int i=0; i < cols; i+=inc) {
+      for (int j = 0; j < rows; j+=inc) {
         float x = map(i, 0, max(cols-1, 1), _mx, W-_mx);
         float y = map(j, 0, max(rows-1, 1), _my, H-_my);
 
@@ -112,22 +104,14 @@ class CustomWaveForm implements Waveform {
         // It should be the speed, it would make more sense auditively
 
         //accu += dx / W;
-        float val = ((dx - pdx) / W + (dy - pdy) / H) / cols*rows;
-        accu += val * 10 ;
+        float val = ((dx - pdx) / W + (dy - pdy) / H) / max(1, (cols * rows / inc));
+        accu += val * 100 ;
 
         pan += 1. * (x + dx) / W * 2. - 1.;
         //accu = dx / W;
       }
     }
     accu = constrain(accu, -.9, .9);
-
-    /*
-    if (loopCounter == 0) {
-     
-     println("------");
-     }
-     print(accu + ", ");
-     */
 
     waveTable[loopCounter] = accu;
     loopCounter = (loopCounter + 1) % audioFreq;
@@ -137,19 +121,18 @@ class CustomWaveForm implements Waveform {
     gAccu = accu;
     return accu;
   }
-  // Update the pan
 }
 
 float offset(float x, float y)
 {
   //return offScl*dist(x, y, W/2, H/2);
   // radial offset
-  //return offScl * dist(x, y, W/2, H/2) / max(W, H) * 100;
+  return offScl * dist(x, y, W/2, H/2) / max(W, H) * 100;
 
   // min distance to corner
   //return offScl * dist(x, y, max(x, W/2), max(y, H/2)) / max(W, H) * 100;
 
-  return offScl * x % 2 * 100;
+  //return offScl * x % 2 * 100;
 
   //return offScl * max(W/2, x) * 100;
 }
