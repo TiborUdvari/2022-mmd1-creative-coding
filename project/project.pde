@@ -253,7 +253,7 @@ void draw() {
   //s.changeValue(scl);
 
   //wave.setFrequency(constrain(map(dotSizePct, 0.0, 0.01, 22, 10), 10, 22));
-
+  fpsLabel.setText(String.format("%.2f", frameRate) + "FPS");
   if (periodicFuncDebug) {
     drawPeriodicFunction();
     drawWaveTable();

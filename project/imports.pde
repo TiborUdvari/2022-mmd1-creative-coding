@@ -22,7 +22,7 @@ String recordingName;
 boolean recording = false;
 boolean pRecording = false;
 int startFrame = 0;
-
+Textlabel fpsLabel;
 // Video export does not work with resolutions that widths are not divisible by 2
 /*
   360 degrees
@@ -234,6 +234,15 @@ void setupCP5() {
   var recordSketchButton = cp5.addButton("recordSketch");
   controllers.add(recordSketchButton);
   sliders.add(recordSketchButton);
+
+  fpsLabel = cp5.addTextlabel("label")
+                    .setText("60.23FPS")
+                    .setPosition(width - 50, 10)
+                    .setColorValue(0xffffffff)
+                    .setFont(createFont("Arial",10))
+                    ;
+
+
 
   /*
   var debugRadio = cp5.addRadioButton("radioDebug");
