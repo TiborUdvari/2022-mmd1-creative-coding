@@ -1,4 +1,8 @@
-OpenSimplexNoise noise; //<>//
+// todo - set time code to frames for ani //<>//
+// loop from 0 to 1 at 0.25 - 0.75
+// add settings for this
+
+OpenSimplexNoise noise;
 ControlP5 cp5;
 
 float numFrames = 60;
@@ -49,7 +53,7 @@ int animIndex;
 float offMultX = 20;
 float offMultY = 20;
 float bgFill = 50;
-
+float aFillMix = 0.5;
 int lastLoad = 0;
 
 AniSequence seq;
@@ -83,7 +87,7 @@ class CustomWaveForm implements Waveform {
 
     int maxSamples = 8;
     int maxSamplesRecording = 40;
-    
+
     int inc = !recording ? cols * rows / maxSamples  : cols * rows / maxSamplesRecording;
     inc = (int)max(1, (float)inc);
     //println(inc);
@@ -176,7 +180,7 @@ void drawDots() {
       float pdx = offMultX * periodicFunction(pt + offset(x, y), 0, x, y);
       float pdy = offMultY * periodicFunction(pt + offset(x, y), 123, x, y);
 
-      float deltaPos = (abs(dx - pdx) / W + abs(dy - pdy) / H) / 2. ;
+      float deltaPos = (abs(dx) / W + abs(dy) / H) / 2. ;
       float deltaPosFactor = map(deltaPos, 0, 1, 1, 0.6);
       //dx = 0;
       //dy = 0;
@@ -185,7 +189,12 @@ void drawDots() {
       //b.strokeWeight( 1 / ( dx + dy)  * 10 * sw2screen * dotSizePct * min(displayW, displayH) );
       // is not affected by the audio wave
       //println(gAccu);
-      b.stroke(255, 255, 255, constrain(abs(gAccu * 10000), 0.5, 1.0 ) * 255);
+      //b.stroke(255, 255, 255, constrain(abs(gAccu * 10000), 0.5, 1.0 ) * 255);
+
+      // Add some params
+      float stokeVal = lerp(255., periodicFunction(t / 60 * 44000 + offset(x, y), 24, x, y) * 255., aFillMix);
+      b.stroke(255, 255, 255, stokeVal );
+
       //b.stroke((abs(dx) + abs(dy)));
       b.strokeWeight(10 * sw2screen * dotSizePct * min(displayW, displayH) * deltaPosFactor );
 

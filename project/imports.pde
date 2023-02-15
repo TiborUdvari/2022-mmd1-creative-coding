@@ -196,6 +196,11 @@ void setupCP5() {
   controllers.add(bgFillSlider);
   sliders.add(bgFillSlider);
 
+  Slider aFillMixSlider = cp5.addSlider("aFillMix", 0, 1);
+  aFillMixSlider.setDefaultValue(0.5);
+  controllers.add(aFillMixSlider);
+  sliders.add(aFillMixSlider);
+
 
   Slider numFramesSlider = cp5.addSlider("numFrames", 10, 1000);
   numFramesSlider.setDefaultValue(255);
@@ -217,7 +222,6 @@ void setupCP5() {
   rowsSlider.setDefaultValue(1);
   controllers.add(offsetScaleSlider);
   sliders.add(offsetScaleSlider);
-
 
   var sameParamsButton = cp5.addButton("saveParamsDefault");
   controllers.add(sameParamsButton);

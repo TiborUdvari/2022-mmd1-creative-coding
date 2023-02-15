@@ -1,6 +1,3 @@
-// Git commit the json file with the same common name
-// Copy the resulting json file with the git commit name
-// Encode as usual
 
 import java.io.BufferedReader;
 import java.io.File;
