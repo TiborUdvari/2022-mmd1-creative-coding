@@ -353,9 +353,7 @@ void draw() {
   fill(200, 125);
   rect( ani2Start * width, height - bh, ani2Dur * width, bh);
 
-  cols = (int)(1. * mouseX / width * 100);
-  cp5.update();
-  cp5.draw();
+ 
 }
 
 void drawWaveTable() {
