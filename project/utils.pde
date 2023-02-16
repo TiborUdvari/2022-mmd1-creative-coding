@@ -12,6 +12,7 @@ String jsonFileToPropertyList(String fn) {
 String jsonFileToPropertyList(String fn, String excludeKey) {
   JSONObject json = loadJSONObject(fn);
   //println(json);
+  String[] ignoreArray = {"aniLooping", "ani1Start", "ani1Dur", "ani2Start", "ani2Dur"};
 
   var propertyList = "";
   var properties = (String[]) json.keys().toArray(new String[json.size()]);
@@ -20,12 +21,14 @@ String jsonFileToPropertyList(String fn, String excludeKey) {
     try {
       String k = properties[i];
       float val = json.getJSONObject(k).getFloat("value");
-      
-      if (k != excludeKey) {
-            propertyList += String.format(Locale.ENGLISH, "%s:%.20f", k.substring(1), val);
-      }
-      if (i < properties.length - 1) {
-        propertyList += ",";
+      k = k.substring(1); // Remove the leading /
+      //println(k);
+
+      if (k != excludeKey && !Arrays.asList(ignoreArray).contains(k)) {
+        propertyList += String.format(Locale.ENGLISH, "%s:%.20f", k, val);
+        if (i < properties.length - 1) {
+          propertyList += ",";
+        }
       }
     }
     catch (Exception e) {
@@ -80,22 +83,22 @@ void recordSketch() {
   startFrame = frameCount + 1;
   recording = true;
   saveParamsDefault();
-  
+
   /*
   audioRecorder = minim.createRecorder(out, fn +".wav");
-  audioRecorder.beginRecord();  
-  */
-  
+   audioRecorder.beginRecord();
+   */
+
   float targetFrameRate = 60.;
   println("numFrames " + numFrames);
-  println("frameRate " + frameRate ); 
+  println("frameRate " + frameRate );
   println("target frame rate " + targetFrameRate);
   println("out sample rate " + out.sampleRate());
   println("Samples target " + int(1.0 * numFrames/targetFrameRate * 1. * out.sampleRate()));
-  
+
   wr = new WaveformRecorder(int(1.0 * numFrames/targetFrameRate * 1. * out.sampleRate()), fn +".wav");
-  
-  out.addListener(wr); 
+
+  out.addListener(wr);
 }
 
 void saveParamsDefault() {
@@ -113,7 +116,7 @@ void saveParams(String fn) {
   cp5.saveProperties("properties.json");
   // Git commit the json file with the same common name
   VideoExporter.commitPropertiesFile(this);
-  
+
   cp5.saveProperties(fn);
 }
 

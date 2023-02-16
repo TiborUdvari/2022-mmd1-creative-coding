@@ -152,78 +152,93 @@ void setupCP5() {
 
   Slider scaleSlider = cp5.addSlider("scl", 0.001, 0.099);
   scaleSlider.setDefaultValue(0.018);
+  scaleSlider.listen(true);
   controllers.add(scaleSlider);
   sliders.add(scaleSlider);
 
   Slider seedSlider = cp5.addSlider("sliderSeed", 10000, 99999);
   seedSlider.setDefaultValue(12345);
+  //seedSlider.listen(true);
   controllers.add(seedSlider);
   sliders.add(seedSlider);
 
   Slider radSlider = cp5.addSlider("rad", 0.01, 5);
   radSlider.setDefaultValue(1.3);
+  radSlider.listen(true);
   controllers.add(radSlider);
   sliders.add(radSlider);
 
   Slider periodicFuncScaleSlider = cp5.addSlider("periodicFuncScale", 0.01, 10);
   periodicFuncScaleSlider.setDefaultValue(0.5);
+  periodicFuncScaleSlider.listen(true);
   controllers.add(periodicFuncScaleSlider);
   sliders.add(periodicFuncScaleSlider);
 
   Slider dotSizePctSlider = cp5.addSlider("dotSizePct", 0, 0.04);
   dotSizePctSlider.setDefaultValue(0.1);
+  dotSizePctSlider.listen(true);
   controllers.add(dotSizePctSlider);
   sliders.add(dotSizePctSlider);
 
   //Slider colsSlider = cp5.addSlider("cols", 1, 300 * 7.1);
   Slider colsSlider = cp5.addSlider("cols", 1, 200);
-
+  colsSlider.listen(true);
   colsSlider.setDefaultValue(5);
+  //colsSlider.listen(true);
   controllers.add(colsSlider);
   sliders.add(colsSlider);
 
   Slider rowsSlider = cp5.addSlider("rows", 1, 200);
+  rowsSlider.listen(true);
   rowsSlider.setDefaultValue(5);
   controllers.add(rowsSlider);
   sliders.add(rowsSlider);
 
   Slider offMultXSlider = cp5.addSlider("offMultX", 0, 1000);
+  offMultXSlider.listen(true);
   offMultXSlider.setDefaultValue(20);
   controllers.add(offMultXSlider);
   sliders.add(offMultXSlider);
 
   Slider offMultYSlider = cp5.addSlider("offMultY", 0, 1000);
   offMultYSlider.setDefaultValue(20);
+  offMultYSlider.listen(true);
   controllers.add(offMultYSlider);
   sliders.add(offMultYSlider);
 
 
   Slider bgFillSlider = cp5.addSlider("bgFill", 0, 255);
   bgFillSlider.setDefaultValue(255);
+  bgFillSlider.listen(true);
   controllers.add(bgFillSlider);
   sliders.add(bgFillSlider);
 
   Slider aFillMixSlider = cp5.addSlider("aFillMix", 0, 1);
   aFillMixSlider.setDefaultValue(0.5);
+  aFillMixSlider.listen(true);
   controllers.add(aFillMixSlider);
   sliders.add(aFillMixSlider);
 
   Slider numFramesSlider = cp5.addSlider("numFrames", 10, 1000);
   numFramesSlider.setDefaultValue(255);
+  numFramesSlider.listen(true);
   controllers.add(numFramesSlider);
   sliders.add(numFramesSlider);
 
   Slider mxSlider = cp5.addSlider("mx", 0.01, 1.0);
   mxSlider.setDefaultValue(0.5);
+  mxSlider.listen(true);
   controllers.add(mxSlider);
   sliders.add(mxSlider);
 
   Slider mySlider = cp5.addSlider("my", 0.01, 1.0);
   mySlider.setDefaultValue(0.5);
+  mySlider.listen(true);
   controllers.add(mySlider);
   sliders.add(mySlider);
 
   Slider offsetScaleSlider = cp5.addSlider("offScl", 0.001, 0.015);
+  offsetScaleSlider.listen(true);
   rowsSlider.setDefaultValue(1);
   controllers.add(offsetScaleSlider);
   sliders.add(offsetScaleSlider);
@@ -317,12 +332,14 @@ void setupCP5() {
 
   for (int i = 0; i < sliders.size(); i++) {
     controlP5.Controller c = sliders.get(i);
+    //c.listen(true);
   }
 
   for (int i = 0; i < controllers.size(); i++) {
     controlP5.Controller c = controllers.get(i);
     c.setSize(w, h);
     c.setPosition(pl, pt + h * i + gap * i);
+    
   }
 
   d1.setHeight(h*10);
@@ -341,7 +358,7 @@ void controlEvent(ControlEvent theEvent) {
     // check if the Event was triggered from a ControlGroup
     println("event from group : "+theEvent.getGroup().getValue()+" from "+theEvent.getGroup());
   } else if (theEvent.isController()) {
-    //println("event from controller : "+theEvent.getController().getValue()+" from "+theEvent.getController());
+    println("event from controller : "+theEvent.getController().getValue()+" from "+theEvent.getController());
     //ani1trans
     //theEvent.getController().getValue()
   }
