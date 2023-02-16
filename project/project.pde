@@ -322,38 +322,35 @@ void draw() {
       String pl = jsonFileToPropertyList(fn, "numFrames");
       sequences.add(pl);
     }
-    println("The ani1Dur is " + ani1Dur); 
+    //println("The ani1Dur is " + ani1Dur);
     //println(sequences.get(0));
     //Ani.to(this, ani1Start * numFrames, 1.0 * numFrames * ani1Dur, sequences.get(0));
     //Ani.to(this, ani2Start * numFrames, 1.0 * numFrames * ani2Dur, sequences.get(1));
     loopSequence = new AniSequence(this);
     loopSequence.beginSequence();
-    
+
     // 1st is speed, second one is delay
-    loopSequence.add(Ani.to(this, ani1Dur * numFrames, ani1Start * numFrames,  sequences.get(0)));
-    loopSequence.add(Ani.to(this, ani2Dur * numFrames, (ani2Start - ani1Start - ani1Dur) * numFrames,  sequences.get(1)));
+    loopSequence.add(Ani.to(this, ani1Dur * numFrames, ani1Start * numFrames, sequences.get(0)));
+    loopSequence.add(Ani.to(this, ani2Dur * numFrames, (ani2Start - ani1Start - ani1Dur) * numFrames, sequences.get(1)));
 
     loopSequence.endSequence();
     loopSequence.start();
     //Ani.to(this, ani2Start * numFrames, 1.0 * numFrames * ani2Dur, sequences.get(1));
   }
-  
-  // Draw the progress
-  
-  float bw = t * width;
-  float bh = 20;
-  fill(255);
-  rect(0, height - bh, bw, bh);
-  
-  noStroke();
-  fill(100, 125);
-  rect( ani1Start * width, height - bh, ani1Dur * width, bh);
-  
-  
-  fill(200, 125);
-  rect( ani2Start * width, height - bh, ani2Dur * width, bh);
 
- 
+  if (periodicFuncDebug) {
+    float bw = t * width;
+    float bh = 20;
+    fill(255);
+    rect(0, height - bh, bw, bh);
+
+    noStroke();
+    fill(100, 125);
+    rect( ani1Start * width, height - bh, ani1Dur * width, bh);
+
+    fill(200, 125);
+    rect( ani2Start * width, height - bh, ani2Dur * width, bh);
+  }
 }
 
 void drawWaveTable() {
