@@ -6,6 +6,10 @@ float fract(float v) {
 }
 
 String jsonFileToPropertyList(String fn) {
+  return jsonFileToPropertyList(fn, "");
+}
+
+String jsonFileToPropertyList(String fn, String excludeKey) {
   JSONObject json = loadJSONObject(fn);
   //println(json);
 
@@ -16,8 +20,10 @@ String jsonFileToPropertyList(String fn) {
     try {
       String k = properties[i];
       float val = json.getJSONObject(k).getFloat("value");
-
-      propertyList += String.format(Locale.ENGLISH, "%s:%.20f", k.substring(1), val);
+      
+      if (k != excludeKey) {
+            propertyList += String.format(Locale.ENGLISH, "%s:%.20f", k.substring(1), val);
+      }
       if (i < properties.length - 1) {
         propertyList += ",";
       }

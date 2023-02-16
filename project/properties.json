@@ -28,7 +28,7 @@
   "/numFrames": {
     "min": 10,
     "max": 1000,
-    "value": 683.2000122070312
+    "value": 60
   },
   "/offScl": {
     "min": 0.0010000000474974513,
@@ -57,7 +57,7 @@
     "value": 0.20000000298023224
   },
   "/label": {
-    "stringValue": "55.86FPS",
+    "stringValue": "58.18FPS",
     "value": 0
   },
   "/offMultX": {

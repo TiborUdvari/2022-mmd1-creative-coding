@@ -322,7 +322,7 @@ void draw() {
 
     for (int i = 0; i < sequenceCount; i++) {
       var fn = String.format("data/%d.json", i);
-      String pl = jsonFileToPropertyList(fn);
+      String pl = jsonFileToPropertyList(fn, "numFrames");
       sequences.add(pl);
     }
     //println(sequences.get(0));
@@ -330,10 +330,10 @@ void draw() {
     //Ani.to(this, ani2Start * numFrames, 1.0 * numFrames * ani2Dur, sequences.get(1));
     loopSequence = new AniSequence(this);
     loopSequence.beginSequence();
-
+    println("ani2 dur " + ani2Dur);
     // 1st is speed, second one is delay
     loopSequence.add(Ani.to(this, ani1Dur * numFrames, ani1Start * numFrames, sequences.get(0)));
-    loopSequence.add(Ani.to(this, 0.0 * numFrames, ani2Start * numFrames, sequences.get(1)));
+    loopSequence.add(Ani.to(this, ani2Dur * numFrames, (ani2Start - ani1Start) * numFrames, sequences.get(1)));
 
     loopSequence.endSequence();
     loopSequence.start();
