@@ -331,8 +331,9 @@ void draw() {
     loopSequence = new AniSequence(this);
     loopSequence.beginSequence();
 
-    loopSequence.add(Ani.to(this, 0.2 * numFrames, 0.2 * numFrames, "mx:0.9"));
-    loopSequence.add(Ani.to(this, 0.2 * numFrames, 0.2 * numFrames, "mx:0.1"));
+    // 1st is speed, second one is delay
+    loopSequence.add(Ani.to(this, ani1Dur * numFrames, ani1Start * numFrames, sequences.get(0)));
+    loopSequence.add(Ani.to(this, 0.0 * numFrames, ani2Start * numFrames, sequences.get(1)));
 
     loopSequence.endSequence();
     loopSequence.start();

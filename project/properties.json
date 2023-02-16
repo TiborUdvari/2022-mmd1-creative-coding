@@ -28,7 +28,7 @@
   "/numFrames": {
     "min": 10,
     "max": 1000,
-    "value": 60
+    "value": 683.2000122070312
   },
   "/offScl": {
     "min": 0.0010000000474974513,
@@ -44,7 +44,7 @@
   "/ani2Start": {
     "min": 0,
     "max": 1,
-    "value": 0.429999977350235
+    "value": 0.5
   },
   "/rad": {
     "min": 0.009999999776482582,
@@ -57,7 +57,7 @@
     "value": 0.20000000298023224
   },
   "/label": {
-    "stringValue": "57.46FPS",
+    "stringValue": "55.86FPS",
     "value": 0
   },
   "/offMultX": {
