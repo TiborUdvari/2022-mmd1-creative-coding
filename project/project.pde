@@ -8,17 +8,17 @@ import java.util.Map;
 import java.util.function.Function;
 
 public class Memoizer4Floats {
-    private final Map<String, Float> cache = new ConcurrentHashMap<>();
-    private final Function<Float, Function<Float, Function<Float, Function<Float, Float>>>> function;
+  private final Map<String, Float> cache = new ConcurrentHashMap<>();
+  private final Function<Float, Function<Float, Function<Float, Function<Float, Float>>>> function;
 
-    public Memoizer4Floats(Function<Float, Function<Float, Function<Float, Function<Float, Float>>>> function) {
-        this.function = function;
-    }
+  public Memoizer4Floats(Function<Float, Function<Float, Function<Float, Function<Float, Float>>>> function) {
+    this.function = function;
+  }
 
-    public Float apply(Float f1, Float f2, Float f3, Float f4) {
-        String key = String.format("%f,%f,%f,%f", f1, f2, f3, f4);
-        return cache.computeIfAbsent(key, k -> function.apply(f1).apply(f2).apply(f3).apply(f4));
-    }
+  public Float apply(Float f1, Float f2, Float f3, Float f4) {
+    String key = String.format("%f,%f,%f,%f", f1, f2, f3, f4);
+    return cache.computeIfAbsent(key, k -> function.apply(f1).apply(f2).apply(f3).apply(f4));
+  }
 }
 
 OpenSimplexNoise noise;
@@ -79,6 +79,21 @@ AniSequence seq;
 int sequenceCount = 9;
 float delayHack = 0;
 
+// Set ani transitions to frames
+// 1 - 2
+// 1 - 2 dur
+// 2 - 1
+// 2 - 1 dur
+
+boolean aniLooping = false;
+
+float ani1Start = 0.;
+float ani1Dur = 0.2;
+
+float ani2Start = 0.5;
+float ani2Dur = 0.2;
+
+
 float gAccu = 0;
 
 //int audioFreq = 180;
@@ -93,7 +108,7 @@ class CustomWaveForm implements Waveform {
   float value(float v) {
     float t = 1.0 * frameCount/numFrames;
     //v = (v + (t * audioFreq ) % 1) % 1;
-    v = t + 1. * loopCounter/audioFreq;
+    v = fract(t) + 1. * loopCounter/audioFreq;
     float pv = t + 1. * ((loopCounter * 2. - 1) % loopCounter)/audioFreq;
 
     float accu = 0;
@@ -161,8 +176,8 @@ float offset(float x, float y)
 }
 
 Function<Float, Function<Float, Function<Float, Function<Float, Float>>>> myFunction = p -> seed -> x -> y -> {
-    // compute result here
-      return periodicFuncScale * (float)noise.eval(seed+rad*cos(TAU*p), rad*sin(TAU*p), scl*x, scl*y);
+  // compute result here
+  return periodicFuncScale * (float)noise.eval(seed+rad*cos(TAU*p), rad*sin(TAU*p), scl*x, scl*y);
 };
 
 Memoizer4Floats memoizedFunction = new Memoizer4Floats(myFunction);
@@ -173,10 +188,10 @@ Memoizer4Floats memoizedFunction = new Memoizer4Floats(myFunction);
 float periodicFunction(float p, float seed, float x, float y)
 {
   return periodicFuncScale * (float)noise.eval(seed+rad*cos(TAU*p), rad*sin(TAU*p), scl*x, scl*y);
-/*
+  /*
   float result = memoizedFunction.apply(p, seed, x, y);
-  return result;
-  */
+   return result;
+   */
 }
 
 
@@ -266,6 +281,10 @@ void setup() {
   setupCP5();
   frameRate(60);
   //sequence();
+  //Ani.timeMode = Ani.FRAMES;
+  Ani.setDefaultTimeMode(Ani.FRAMES);
+
+  // Do a sequence, repeat infinitely
 }
 
 void settings() {
@@ -291,6 +310,33 @@ void draw() {
   if (periodicFuncDebug) {
     drawPeriodicFunction();
     drawWaveTable();
+  }
+
+  // get the t
+  float pt = fract(1.0 * (frameCount - 1)/numFrames);
+  float t = fract(1.0 * frameCount/numFrames);
+
+  if (aniLooping && pt > t) {
+    println("Started loop");
+    ArrayList<String> sequences = new ArrayList<String>();
+
+    for (int i = 0; i < sequenceCount; i++) {
+      var fn = String.format("data/%d.json", i);
+      String pl = jsonFileToPropertyList(fn);
+      sequences.add(pl);
+    }
+    //println(sequences.get(0));
+    //Ani.to(this, ani1Start * numFrames, 1.0 * numFrames * ani1Dur, sequences.get(0));
+    //Ani.to(this, ani2Start * numFrames, 1.0 * numFrames * ani2Dur, sequences.get(1));
+    loopSequence = new AniSequence(this);
+    loopSequence.beginSequence();
+
+    loopSequence.add(Ani.to(this, 0.2 * numFrames, 0.2 * numFrames, "mx:0.9"));
+    loopSequence.add(Ani.to(this, 0.2 * numFrames, 0.2 * numFrames, "mx:0.1"));
+
+    loopSequence.endSequence();
+    loopSequence.start();
+    //Ani.to(this, ani2Start * numFrames, 1.0 * numFrames * ani2Dur, sequences.get(1));
   }
 }
 

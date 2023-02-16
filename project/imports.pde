@@ -17,6 +17,11 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.*;
 
+
+Easing[] easings = { Ani.LINEAR, Ani.QUAD_IN, Ani.QUAD_OUT, Ani.QUAD_IN_OUT, Ani.CUBIC_IN, Ani.CUBIC_IN_OUT, Ani.CUBIC_OUT, Ani.QUART_IN, Ani.QUART_OUT, Ani.QUART_IN_OUT, Ani.QUINT_IN, Ani.QUINT_OUT, Ani.QUINT_IN_OUT, Ani.SINE_IN, Ani.SINE_OUT, Ani.SINE_IN_OUT, Ani.CIRC_IN, Ani.CIRC_OUT, Ani.CIRC_IN_OUT, Ani.EXPO_IN, Ani.EXPO_OUT, Ani.EXPO_IN_OUT, Ani.BACK_IN, Ani.BACK_OUT, Ani.BACK_IN_OUT, Ani.BOUNCE_IN, Ani.BOUNCE_OUT, Ani.BOUNCE_IN_OUT, Ani.ELASTIC_IN, Ani.ELASTIC_OUT, Ani.ELASTIC_IN_OUT};
+String[] easingsVariableNames = {"Ani.LINEAR", "Ani.QUAD_IN", "Ani.QUAD_OUT", "Ani.QUAD_IN_OUT", "Ani.CUBIC_IN", "Ani.CUBIC_IN_OUT", "Ani.CUBIC_OUT", "Ani.QUART_IN", "Ani.QUART_OUT", "Ani.QUART_IN_OUT", "Ani.QUINT_IN", "Ani.QUINT_OUT", "Ani.QUINT_IN_OUT", "Ani.SINE_IN", "Ani.SINE_OUT", "Ani.SINE_IN_OUT", "Ani.CIRC_IN", "Ani.CIRC_OUT", "Ani.CIRC_IN_OUT", "Ani.EXPO_IN", "Ani.EXPO_OUT", "Ani.EXPO_IN_OUT", "Ani.BACK_IN", "Ani.BACK_OUT", "Ani.BACK_IN_OUT", "Ani.BOUNCE_IN", "Ani.BOUNCE_OUT", "Ani.BOUNCE_IN_OUT", "Ani.ELASTIC_IN", "Ani.ELASTIC_OUT", "Ani.ELASTIC_IN_OUT"};
+String code = "";
+
 // Recording
 String recordingName;
 boolean recording = false;
@@ -31,7 +36,7 @@ Textlabel fpsLabel;
  Resolution 360: 11000 x 2000 – 5.5
  
  Resolution thing 7680 x 1440 – 5.3
-*/
+ */
 
 // vid.avi -s 800x800 -sws_flags neighbor -sws_dither none -vcodec rawvideo vid2.avi
 
@@ -43,69 +48,69 @@ final int circularScreenH = 2000;
 
 void sequence() {
   println("Load sequence");
-  
+
   if (true) {
     return;
   }
   ArrayList<String> sequences = new ArrayList<String>();
-  
+
   for (int i = 0; i < sequenceCount; i++) {
     var fn = String.format("data/%d.json", i);
     String pl = jsonFileToPropertyList(fn);
     sequences.add(pl);
   }
-  
+
   //Ani.to(this, 1, propertyList, Ani.SINE_IN_OUT, "onEnd:transitionFinished");
-  
+
   seq = new AniSequence(this);
   seq.beginSequence();
-  
+
   seq.add(Ani.to(this, 0.01, sequences.get(0), Ani.SINE_IN_OUT, "onEnd:transitionFinished"));
   seq.add(Ani.to(this, 12, sequences.get(1), Ani.SINE_IN_OUT, "onEnd:transitionFinished"));
-  
+
   seq.add(Ani.to(this, 0.1, sequences.get(1), Ani.SINE_IN_OUT, "onEnd:transitionFinished"));
-  
+
   seq.add(Ani.to(this, 2, "delayHack:0" ));
-  
+
   seq.add(Ani.to(this, 10, sequences.get(2), Ani.SINE_IN_OUT, "onEnd:transitionFinished"));
-  
+
   seq.add(Ani.to(this, 8, "delayHack:0" ));
-  
+
   // Shake
   seq.add(Ani.to(this, 1, sequences.get(1), Ani.SINE_IN_OUT, "onEnd:transitionFinished"));
   seq.add(Ani.to(this, 4, "delayHack:0" ));
-  
+
   seq.add(Ani.to(this, 1, sequences.get(2), Ani.SINE_IN_OUT, "onEnd:transitionFinished"));
   seq.add(Ani.to(this, 4, "delayHack:0" ));
-  
+
   seq.add(Ani.to(this, 1, sequences.get(1), Ani.SINE_IN_OUT, "onEnd:transitionFinished"));
   seq.add(Ani.to(this, 4, "delayHack:0" ));
-  
+
   seq.add(Ani.to(this, 1, sequences.get(2), Ani.SINE_IN_OUT, "onEnd:transitionFinished"));
   seq.add(Ani.to(this, 4, "delayHack:0" ));
 
   seq.add(Ani.to(this, 1, sequences.get(5), Ani.SINE_IN_OUT, "onEnd:transitionFinished"));
-    seq.add(Ani.to(this, 4, "delayHack:0" ));
+  seq.add(Ani.to(this, 4, "delayHack:0" ));
 
   seq.add(Ani.to(this, 1, sequences.get(6), Ani.SINE_IN_OUT, "onEnd:transitionFinished"));
 
   seq.add(Ani.to(this, 10, "delayHack:0" ));
-  
-  
+
+
   seq.add(Ani.to(this, 1, sequences.get(7), Ani.SINE_IN_OUT, "onEnd:transitionFinished"));
   seq.add(Ani.to(this, 5, "delayHack:0" ));
 
-// 
+  //
 
   seq.add(Ani.to(this, 1, sequences.get(8), Ani.SINE_IN_OUT, "onEnd:transitionFinished"));
   seq.add(Ani.to(this, 5, "delayHack:0" ));
-  
-   seq.add(Ani.to(this, 1, sequences.get(7), Ani.SINE_IN_OUT, "onEnd:transitionFinished"));
+
+  seq.add(Ani.to(this, 1, sequences.get(7), Ani.SINE_IN_OUT, "onEnd:transitionFinished"));
   seq.add(Ani.to(this, 5, "delayHack:0" ));
-  
-   seq.add(Ani.to(this, 1, sequences.get(0), Ani.SINE_IN_OUT, "onEnd:transitionFinished"));
+
+  seq.add(Ani.to(this, 1, sequences.get(0), Ani.SINE_IN_OUT, "onEnd:transitionFinished"));
   seq.add(Ani.to(this, 5, "delayHack:0" ));
-  
+
   seq.endSequence();
   seq.start();
   //println(sequences.get(0));
@@ -141,6 +146,8 @@ void setupCP5() {
   int gap = 4;
 
   ArrayList<controlP5.Controller> sliders = new ArrayList<controlP5.Controller>();
+  ArrayList<controlP5.Controller> dropdowns = new ArrayList<controlP5.Controller>();
+
   controllers = new ArrayList<controlP5.Controller>();
 
   Slider scaleSlider = cp5.addSlider("scl", 0.001, 0.099);
@@ -201,7 +208,6 @@ void setupCP5() {
   controllers.add(aFillMixSlider);
   sliders.add(aFillMixSlider);
 
-
   Slider numFramesSlider = cp5.addSlider("numFrames", 10, 1000);
   numFramesSlider.setDefaultValue(255);
   controllers.add(numFramesSlider);
@@ -217,11 +223,59 @@ void setupCP5() {
   controllers.add(mySlider);
   sliders.add(mySlider);
 
-
   Slider offsetScaleSlider = cp5.addSlider("offScl", 0.001, 0.015);
   rowsSlider.setDefaultValue(1);
   controllers.add(offsetScaleSlider);
   sliders.add(offsetScaleSlider);
+
+  Slider ani1StartSlider = cp5.addSlider("ani1Start", 0., 1.);
+  controllers.add(ani1StartSlider);
+  sliders.add(ani1StartSlider);
+
+  Slider ani1DurSlider = cp5.addSlider("ani1Dur", 0., 1.);
+  ani1DurSlider.setDefaultValue(.2);
+  controllers.add(ani1DurSlider);
+  sliders.add(ani1DurSlider);
+
+  var d1 = cp5.addDropdownList("ani1trans")
+    .setPosition(100, 100)
+    .setItemHeight(h)
+    .setBarHeight(h)
+    .setDefaultValue(1.)
+    .setOpen(false)
+    ;
+
+  for (int i=0; i<easingsVariableNames.length; i++) {
+    d1.addItem(easingsVariableNames[i], i);
+  }
+
+  var d2 = cp5.addDropdownList("ani2trans")
+    .setPosition(100, 100)
+    .setItemHeight(h)
+    .setBarHeight(h)
+    .setValue(2)
+    .setOpen(false)
+    ;
+
+  for (int i=0; i<easingsVariableNames.length; i++) {
+    d2.addItem(easingsVariableNames[i], i);
+  }
+
+  d2.setValue(2.);
+
+  Slider ani2StartSlider = cp5.addSlider("ani2Start", 0., 1.);
+  ani2StartSlider.setDefaultValue(.5);
+  controllers.add(ani2StartSlider);
+  sliders.add(ani2StartSlider);
+
+  Slider ani2DurSlider = cp5.addSlider("ani2Dur", 0., 1.);
+  ani2DurSlider.setDefaultValue(.2);
+  controllers.add(ani2DurSlider);
+  sliders.add(ani2DurSlider);
+
+  var loopAniButton = cp5.addButton("toggleLoop");
+  controllers.add(loopAniButton);
+  sliders.add(loopAniButton);
 
   var sameParamsButton = cp5.addButton("saveParamsDefault");
   controllers.add(sameParamsButton);
@@ -235,14 +289,18 @@ void setupCP5() {
   controllers.add(recordSketchButton);
   sliders.add(recordSketchButton);
 
+  controllers.add(d1);
+  controllers.add(d2);
+
+  //sliders.add(d1);
+
+
   fpsLabel = cp5.addTextlabel("label")
-                    .setText("60.23FPS")
-                    .setPosition(width - 50, 10)
-                    .setColorValue(0xffffffff)
-                    .setFont(createFont("Arial",10))
-                    ;
-
-
+    .setText("60.23FPS")
+    .setPosition(width - 50, 10)
+    .setColorValue(0xffffffff)
+    .setFont(createFont("Arial", 10))
+    ;
 
   /*
   var debugRadio = cp5.addRadioButton("radioDebug");
@@ -266,6 +324,57 @@ void setupCP5() {
     c.setSize(w, h);
     c.setPosition(pl, pt + h * i + gap * i);
   }
+
+  d1.setHeight(h*10);
+  d2.setHeight(h*10);
+}
+
+
+void controlEvent(ControlEvent theEvent) {
+  // DropdownList is of type ControlGroup.
+  // A controlEvent will be triggered from inside the ControlGroup class.
+  // therefore you need to check the originator of the Event with
+  // if (theEvent.isGroup())
+  // to avoid an error message thrown by controlP5.
+
+  if (theEvent.isGroup()) {
+    // check if the Event was triggered from a ControlGroup
+    println("event from group : "+theEvent.getGroup().getValue()+" from "+theEvent.getGroup());
+  } else if (theEvent.isController()) {
+    //println("event from controller : "+theEvent.getController().getValue()+" from "+theEvent.getController());
+    //ani1trans
+    //theEvent.getController().getValue()
+  }
+}
+
+
+AniSequence loopSequence;
+
+void toggleLoop() {
+  println("Toggle loop");
+  aniLooping = !aniLooping;
+  println("Value of aniLooping");
+  println(aniLooping);
+  
+  if (!aniLooping) {
+    //loopSequence.pause();
+    //loopSequence = null;
+  }
+  /*
+  if (aniLooping) {
+    loopSequence = new AniSequence(this);
+    loopSequence.beginSequence();
+    
+    loopSequence.beginStep();
+    loopSequence.add(Ani.to(this, ani1start, 1.0 * numFrames * ani1dur, sequences.get(0), Ani.SINE_IN_OUT, "onEnd:transitionFinished"));
+    loopSequence.add(Ani.to(this, ani2start, 1.0 * numFrames * ani2dur, sequences.get(1), Ani.SINE_IN_OUT, "onEnd:transitionFinished"));
+    loopSequence.endStep();
+    loopSequence.endSequence();
+    loopSequence.start();
+  } else if (!aniLooping) {
+    loopSequence.stop();
+    loopSequence = null;
+  }*/
 }
 
 void keyPressed() {

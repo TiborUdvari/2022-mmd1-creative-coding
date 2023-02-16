@@ -108,7 +108,6 @@ void saveParams(String fn) {
   // Git commit the json file with the same common name
   VideoExporter.commitPropertiesFile(this);
   
-  
   cp5.saveProperties(fn);
 }
 
