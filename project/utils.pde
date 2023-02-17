@@ -22,19 +22,20 @@ String jsonFileToPropertyList(String fn, String excludeKey) {
       String k = properties[i];
       float val = json.getJSONObject(k).getFloat("value");
       k = k.substring(1); // Remove the leading /
-      //println(k);
 
       if (k != excludeKey && !Arrays.asList(ignoreArray).contains(k)) {
         propertyList += String.format(Locale.ENGLISH, "%s:%.20f", k, val);
-        if (i < properties.length - 1) {
-          propertyList += ",";
-        }
+        propertyList += ",";
       }
     }
     catch (Exception e) {
       println("Exception " + e);
     }
   }
+  
+  // Remove the last ,
+  propertyList = propertyList.substring(0, propertyList.length() - 1);
+
   return propertyList;
 }
 
