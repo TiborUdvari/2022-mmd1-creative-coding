@@ -24,13 +24,16 @@ OpenSimplexNoise noise;
 ControlP5 cp5;
 
 float numFrames = 60;
-float ratio = 1;
 
 final int instagramMinW = 500;
 final int instagramMinH = 888;
 
-int W = instagramMinW;
-int H = instagramMinH;
+//int W = instagramMinW;
+//int H = instagramMinH;
+
+int W = 15000;
+int H = 2000;
+float ratio = 0.1;
 
 int displayW = (int)(W * ratio);
 int displayH = (int)(H * ratio);
@@ -81,12 +84,6 @@ int lastLoad = 0;
 AniSequence seq;
 int sequenceCount = 9;
 float delayHack = 0;
-
-// Set ani transitions to frames
-// 1 - 2
-// 1 - 2 dur
-// 2 - 1
-// 2 - 1 dur
 
 boolean aniLooping = false;
 
@@ -307,6 +304,7 @@ void setup() {
 void settings() {
   size(displayW, displayH, P2D);
   //fullScreen(P2D, SPAN);
+  fullScreen(P2D, 2);
   noSmooth();
 
   //smooth(8);
@@ -376,7 +374,7 @@ void draw() {
 void drawWaveTable() {
   stroke(255, 0, 0);
   strokeWeight(1);
-  float step = 1. * displayW / audioFreq;
+  float step = 1. * width / audioFreq;
   for (int i = 0; i < audioFreq - 1; i++) {
     float val1 = waveTable[i];
     float val2 = waveTable[i+1];
@@ -385,7 +383,7 @@ void drawWaveTable() {
     val2 = map(val2, -1, 1, 0, 1);
 
     // draw line between them
-    line(i * step, val1 * displayH, (i+1) * step, val2 * displayH);
+    line(i * step, val1 * height, (i+1) * step, val2 * height);
   }
   line(0, H / 2, W, H / 2);
   stroke(255, 255, 255);

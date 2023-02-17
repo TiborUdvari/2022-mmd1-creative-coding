@@ -172,15 +172,18 @@ void resolutionPreset(int is360) {
 
 // This draws only one line, not everything
 void drawPeriodicFunction() {
+  
   stroke(255, 255, 255);
   strokeWeight(1);
-  for (int i = 0; i < displayW - 1; i++) {
-    float val1 = (float)periodicFunction((float)(i + 0) / displayW, 0f, 1f, 1f);
-    float val2 = (float)periodicFunction(((float)i + 1) / displayW, 0f, 1f, 1f);
+  for (int i = 0; i < width - 1; i++) {
+    float val1 = (float)periodicFunction((float)(i + 0) / width, 0f, 1f, 1f);
+    float val2 = (float)periodicFunction(((float)i + 1) / width, 0f, 1f, 1f);
     val1 = map(val1, -1, 1, 0, 1);
     val2 = map(val2, -1, 1, 0, 1);
 
     // draw line between them
-    line(i, val1 * displayH, i+1, val2 * displayH);
+    //line(i, val1 * displayH, i+1, val2 * displayH);
+    line(i, val1 * height, i+1, val2 * height);
+
   }
 }
