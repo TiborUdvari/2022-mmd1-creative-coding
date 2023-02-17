@@ -150,23 +150,42 @@ void setupCP5() {
 
   controllers = new ArrayList<controlP5.Controller>();
 
-  Slider scaleSlider = cp5.addSlider("scl", 0.001, 0.099);
-  scaleSlider.setDefaultValue(0.018);
-  scaleSlider.listen(true);
-  controllers.add(scaleSlider);
-  sliders.add(scaleSlider);
-
   Slider seedSlider = cp5.addSlider("sliderSeed", 10000, 99999);
   seedSlider.setDefaultValue(12345);
   //seedSlider.listen(true);
   controllers.add(seedSlider);
   sliders.add(seedSlider);
 
+  Slider scaleSlider = cp5.addSlider("scl", 0.001, 0.099);
+  scaleSlider.setDefaultValue(0.018);
+  scaleSlider.listen(true);
+  controllers.add(scaleSlider);
+  sliders.add(scaleSlider);
+
   Slider radSlider = cp5.addSlider("rad", 0.01, 5);
   radSlider.setDefaultValue(1.3);
   radSlider.listen(true);
   controllers.add(radSlider);
   sliders.add(radSlider);
+
+  Slider off1Slider = cp5.addSlider("off1", 0., 1.);
+  off1Slider.setDefaultValue(1.);
+  off1Slider.listen(true);
+  controllers.add(off1Slider);
+  sliders.add(off1Slider);
+
+  Slider off2Slider = cp5.addSlider("off2", 0., 1.);
+  off2Slider.setDefaultValue(0.);
+  off2Slider.listen(true);
+  controllers.add(off2Slider);
+  sliders.add(off2Slider);
+  
+  Slider off3slider = cp5.addSlider("off3", 0., 1.);
+  off3slider.setDefaultValue(0.);
+  off3slider.listen(true);
+  controllers.add(off3slider);
+  sliders.add(off3slider);
+  
 
   Slider periodicFuncScaleSlider = cp5.addSlider("periodicFuncScale", 0.01, 10);
   periodicFuncScaleSlider.setDefaultValue(0.5);
@@ -237,9 +256,9 @@ void setupCP5() {
   controllers.add(mySlider);
   sliders.add(mySlider);
 
-  Slider offsetScaleSlider = cp5.addSlider("offScl", 0.001, 0.015);
+  Slider offsetScaleSlider = cp5.addSlider("offScl", 0., 1.);
   offsetScaleSlider.listen(true);
-  rowsSlider.setDefaultValue(1);
+  offsetScaleSlider.setDefaultValue(1);
   controllers.add(offsetScaleSlider);
   sliders.add(offsetScaleSlider);
 

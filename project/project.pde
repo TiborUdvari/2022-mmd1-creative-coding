@@ -1,4 +1,6 @@
-import java.util.HashMap; //<>//
+// Hook up the transition type //<>//
+
+import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
 import java.util.Map;
@@ -53,6 +55,10 @@ int rows = 1;
 float mx = 0.5;
 float my = 0.5;
 
+float off1 = 1.;
+float off2 = 0.;
+float off3 = 0.;
+
 boolean periodicFuncDebug = true;
 float offScl = 0.15;
 float periodicFuncScale = 1;
@@ -106,7 +112,7 @@ class CustomWaveForm implements Waveform {
     float t = 1.0 * frameCount/numFrames;
     //v = (v + (t * audioFreq ) % 1) % 1;
     v = fract(t) + 1. * loopCounter/audioFreq;
-    float pv = t + 1. * ((loopCounter * 2. - 1) % loopCounter)/audioFreq;
+    float pv = fract(t) + 1. * ((loopCounter * 2. - 1) % loopCounter)/audioFreq;
 
     float accu = 0;
     float tot = rows + cols;
@@ -147,7 +153,9 @@ class CustomWaveForm implements Waveform {
       }
     }
     accu = constrain(accu, -.9, .9);
-
+    
+    if (loopCounter == 0) accu = 0; // there is some sort of bug here
+    
     waveTable[loopCounter] = accu;
     loopCounter = (loopCounter + 1) % audioFreq;
     gpan = pan;
@@ -158,18 +166,33 @@ class CustomWaveForm implements Waveform {
   }
 }
 
-float offset(float x, float y)
+// attempt to normalize
+float off1Func(float x, float y) {
+  return dist(x, y, W/2, H/2) / max(W, H);
+} 
+
+float off2Func(float x, float y) {
+  // angular  
+  
+  return fract((atan2(x - W / 2, y - H / 2) + PI) / TAU * 4);
+}
+
+float off3Func(float x, float y, int c, int r) {
+    return r % 2;
+}
+
+float offset(float x, float y) {
+  return offset(x, y, 0, 0);
+}
+
+float offset(float x, float y, int c, int r)
 {
-  //return offScl*dist(x, y, W/2, H/2);
-  // radial offset
-  return offScl * dist(x, y, W/2, H/2) / max(W, H) * 100;
-
-  // min distance to corner
-  //return offScl * dist(x, y, max(x, W/2), max(y, H/2)) / max(W, H) * 100;
-
-  //return offScl * x % 2 * 100;
-
-  //return offScl * max(W/2, x) * 100;
+  float tot = off1 + off2 + off3;
+  float rat = 3. / tot;
+  //println(off3Func(x, y, c, r));
+  //return 0;
+  //return off3Func(x, y, c, r);
+  return 10 * offScl * (off1Func(x, y) * off1 + off2Func(x, y) * off2 + off3Func(x, y, c, r) * off3) / 3.;
 }
 
 Function<Float, Function<Float, Function<Float, Function<Float, Float>>>> myFunction = p -> seed -> x -> y -> {
@@ -178,9 +201,6 @@ Function<Float, Function<Float, Function<Float, Function<Float, Float>>>> myFunc
 };
 
 Memoizer4Floats memoizedFunction = new Memoizer4Floats(myFunction);
-
-
-
 
 float periodicFunction(float p, float seed, float x, float y)
 {
@@ -220,11 +240,11 @@ void drawDots() {
       float x = map(i, 0, max(cols-1, 1), _mx, W-_mx);
       float y = map(j, 0, max(rows-1, 1), _my, H-_my);
 
-      float dx = offMultX * periodicFunction(t + offset(x, y), 0, x, y);
-      float dy = offMultY * periodicFunction(t + offset(x, y), 123, x, y);
+      float dx = offMultX * periodicFunction(t + offset(x, y, i, j), 0, x, y);
+      float dy = offMultY * periodicFunction(t + offset(x, y, i, j), 123, x, y);
 
-      float pdx = offMultX * periodicFunction(pt + offset(x, y), 0, x, y);
-      float pdy = offMultY * periodicFunction(pt + offset(x, y), 123, x, y);
+      float pdx = offMultX * periodicFunction(pt + offset(x, y, i, j), 0, x, y);
+      float pdy = offMultY * periodicFunction(pt + offset(x, y, i, j), 123, x, y);
 
       float deltaPos = (abs(dx) / W + abs(dy) / H) / 2. ;
       float deltaPosFactor = map(deltaPos, 0, 1, 1, 0.6);
