@@ -174,7 +174,7 @@ float off1Func(float x, float y) {
 float off2Func(float x, float y) {
   // angular  
   
-  return fract((atan2(x - W / 2, y - H / 2) + PI) / TAU * 4);
+  return fract((atan2(x - W / 2, y - H / 2) + PI) / TAU * 16);
 }
 
 float off3Func(float x, float y, int c, int r) {
@@ -350,9 +350,9 @@ void draw() {
     loopSequence.beginSequence();
 
     // 1st is speed, second one is delay
-    loopSequence.add(Ani.to(this, ani1Dur * numFrames, ani1Start * numFrames, sequences.get(0)));
-    loopSequence.add(Ani.to(this, ani2Dur * numFrames, (ani2Start - ani1Start - ani1Dur) * numFrames, sequences.get(1)));
-
+    loopSequence.add(Ani.to(this, ani1Dur * numFrames, ani1Start * numFrames, sequences.get(0), easings[(int)d1.getValue()]));
+    loopSequence.add(Ani.to(this, ani2Dur * numFrames, (ani2Start - ani1Start - ani1Dur) * numFrames, sequences.get(1), easings[(int)d2.getValue()]));
+    
     loopSequence.endSequence();
     loopSequence.start();
     //Ani.to(this, ani2Start * numFrames, 1.0 * numFrames * ani2Dur, sequences.get(1));

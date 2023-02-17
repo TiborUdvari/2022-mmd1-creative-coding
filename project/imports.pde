@@ -22,6 +22,9 @@ Easing[] easings = { Ani.LINEAR, Ani.QUAD_IN, Ani.QUAD_OUT, Ani.QUAD_IN_OUT, Ani
 String[] easingsVariableNames = {"Ani.LINEAR", "Ani.QUAD_IN", "Ani.QUAD_OUT", "Ani.QUAD_IN_OUT", "Ani.CUBIC_IN", "Ani.CUBIC_IN_OUT", "Ani.CUBIC_OUT", "Ani.QUART_IN", "Ani.QUART_OUT", "Ani.QUART_IN_OUT", "Ani.QUINT_IN", "Ani.QUINT_OUT", "Ani.QUINT_IN_OUT", "Ani.SINE_IN", "Ani.SINE_OUT", "Ani.SINE_IN_OUT", "Ani.CIRC_IN", "Ani.CIRC_OUT", "Ani.CIRC_IN_OUT", "Ani.EXPO_IN", "Ani.EXPO_OUT", "Ani.EXPO_IN_OUT", "Ani.BACK_IN", "Ani.BACK_OUT", "Ani.BACK_IN_OUT", "Ani.BOUNCE_IN", "Ani.BOUNCE_OUT", "Ani.BOUNCE_IN_OUT", "Ani.ELASTIC_IN", "Ani.ELASTIC_OUT", "Ani.ELASTIC_IN_OUT"};
 String code = "";
 
+DropdownList d1;
+DropdownList d2;
+
 // Recording
 String recordingName;
 boolean recording = false;
@@ -271,19 +274,18 @@ void setupCP5() {
   controllers.add(ani1DurSlider);
   sliders.add(ani1DurSlider);
 
-  var d1 = cp5.addDropdownList("ani1trans")
+  d1 = cp5.addDropdownList("ani1trans")
     .setPosition(100, 100)
     .setItemHeight(h)
     .setBarHeight(h)
     .setDefaultValue(1.)
-    .setOpen(false)
-    ;
+    .setOpen(false);
 
   for (int i=0; i<easingsVariableNames.length; i++) {
     d1.addItem(easingsVariableNames[i], i);
   }
 
-  var d2 = cp5.addDropdownList("ani2trans")
+  d2 = cp5.addDropdownList("ani2trans")
     .setPosition(100, 100)
     .setItemHeight(h)
     .setBarHeight(h)
