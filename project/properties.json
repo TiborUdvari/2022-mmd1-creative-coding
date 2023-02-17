@@ -9,11 +9,11 @@
     "max": 1,
     "value": 0.8700000047683716
   },
-  "/ani2trans": {"value": 30},
+  "/ani2trans": {"value": 13},
   "/rows": {
     "min": 1,
     "max": 200,
-    "value": 38.810001373291016
+    "value": 38
   },
   "/periodicFuncScale": {
     "min": 0.009999999776482582,
@@ -93,7 +93,7 @@
   "/cols": {
     "min": 1,
     "max": 200,
-    "value": 38.810001373291016
+    "value": 38
   },
   "/offScl": {
     "min": 0,
@@ -107,7 +107,7 @@
     "value": 0.5
   },
   "/label": {
-    "stringValue": "51.95FPS",
+    "stringValue": "45.77FPS",
     "value": 0
   },
   "/ani1Dur": {
