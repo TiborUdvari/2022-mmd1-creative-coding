@@ -12,7 +12,7 @@ String jsonFileToPropertyList(String fn) {
 String jsonFileToPropertyList(String fn, String excludeKey) {
   JSONObject json = loadJSONObject(fn);
   //println(json);
-  String[] ignoreArray = {"aniLooping", "ani1Start", "ani1Dur", "ani2Start", "ani2Dur"};
+  String[] ignoreArray = {"aniLooping", "ani1Start", "ani1Dur", "ani2Start", "ani2Dur", "ani1trans", "ani2trans"};
 
   var propertyList = "";
   var properties = (String[]) json.keys().toArray(new String[json.size()]);
