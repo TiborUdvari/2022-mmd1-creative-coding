@@ -13,7 +13,7 @@
 # Add a normalisation to it maybe
 
 # The audio should be a .wav file with the same name as the video
-export PATH=$PATH:/usr/local/bin/
+export PATH=$PATH:/usr/local/bin/:/Users/tudvari/.pyenv/shims/
 
 script_path="$(realpath "$0")"
 script_dir="$(dirname "$script_path")"
@@ -50,9 +50,11 @@ ffmpeg -y -i $LOOPED_VIDEO_FILE \
     -af "highpass=f=20,afftdn=nf=-20,lowpass=f=5000,afade=t=in:st=0.25:d=1,afade=t=out:st=$AFADE_OUT_START:d=1" \
     -c:a libfdk_aac -profile:a aac_he_v2 -b:a 256k \
     -c:v libx264 -pix_fmt yuv420p -crf 2 -preset veryslow -tune animation -f mp4 \
-    $VIDEO_FILE_DIR/$VIDEO_FILE_NAME-looped-faded.mov
+    $VIDEO_FILE_DIR/$VIDEO_FILE_NAME-ig.mov
 
 # set working directory to the directory of the video file
-echo "output file: $VIDEO_FILE_NAME-looped-faded.mov"
-open $VIDEO_FILE_NAME-looped-faded.mov 
+echo "output file: $VIDEO_FILE_NAME-ig.mov"
+
+mv $VIDEO_FILE_NAME-ig.mov ./renders/$VIDEO_FILE_NAME-ig.mov 
+open ./renders/$VIDEO_FILE_NAME-ig.mov  
 #ffplay -loop -1 $VIDEO_FILE_NAME-looped-faded.mov
