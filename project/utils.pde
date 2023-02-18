@@ -184,6 +184,5 @@ void drawPeriodicFunction() {
     // draw line between them
     //line(i, val1 * displayH, i+1, val2 * displayH);
     line(i, val1 * height, i+1, val2 * height);
-
   }
 }
