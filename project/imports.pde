@@ -17,6 +17,11 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.*;
 
+import oscP5.*;
+import netP5.*;
+
+OscP5 osc;
+NetAddress remote;
 
 Easing[] easings = { Ani.LINEAR, Ani.QUAD_IN, Ani.QUAD_OUT, Ani.QUAD_IN_OUT, Ani.CUBIC_IN, Ani.CUBIC_IN_OUT, Ani.CUBIC_OUT, Ani.QUART_IN, Ani.QUART_OUT, Ani.QUART_IN_OUT, Ani.QUINT_IN, Ani.QUINT_OUT, Ani.QUINT_IN_OUT, Ani.SINE_IN, Ani.SINE_OUT, Ani.SINE_IN_OUT, Ani.CIRC_IN, Ani.CIRC_OUT, Ani.CIRC_IN_OUT, Ani.EXPO_IN, Ani.EXPO_OUT, Ani.EXPO_IN_OUT, Ani.BACK_IN, Ani.BACK_OUT, Ani.BACK_IN_OUT, Ani.BOUNCE_IN, Ani.BOUNCE_OUT, Ani.BOUNCE_IN_OUT, Ani.ELASTIC_IN, Ani.ELASTIC_OUT, Ani.ELASTIC_IN_OUT};
 String[] easingsVariableNames = {"Ani.LINEAR", "Ani.QUAD_IN", "Ani.QUAD_OUT", "Ani.QUAD_IN_OUT", "Ani.CUBIC_IN", "Ani.CUBIC_IN_OUT", "Ani.CUBIC_OUT", "Ani.QUART_IN", "Ani.QUART_OUT", "Ani.QUART_IN_OUT", "Ani.QUINT_IN", "Ani.QUINT_OUT", "Ani.QUINT_IN_OUT", "Ani.SINE_IN", "Ani.SINE_OUT", "Ani.SINE_IN_OUT", "Ani.CIRC_IN", "Ani.CIRC_OUT", "Ani.CIRC_IN_OUT", "Ani.EXPO_IN", "Ani.EXPO_OUT", "Ani.EXPO_IN_OUT", "Ani.BACK_IN", "Ani.BACK_OUT", "Ani.BACK_IN_OUT", "Ani.BOUNCE_IN", "Ani.BOUNCE_OUT", "Ani.BOUNCE_IN_OUT", "Ani.ELASTIC_IN", "Ani.ELASTIC_OUT", "Ani.ELASTIC_IN_OUT"};
@@ -139,14 +144,79 @@ void transitionFinished(Ani theAni) {
   }
 }
 
+/* Lookup tables for osc address and controlEvent interoperability */
+HashMap<String, controlP5.Controller> fromOscToController;
+HashMap<controlP5.Controller, String> fromControllerToRemote;
+
+void initHook() {
+
+  fromOscToController = new HashMap();
+  fromControllerToRemote = new HashMap();
+
+  osc.addListener(new OscEventListener() {
+    public void oscEvent(OscMessage m) {
+      controlP5.Controller c = fromOscToController.get(m.addrPattern());
+      if (c!=null) {
+        Object[] o = m.arguments();
+        try {
+          Number v1 = (Number)o[0];
+          // do the mapping 
+          float mappedValue = map(v1.floatValue(), 0., 1., c.getMin(), c.getMax());
+          c.setValue(mappedValue);
+        }
+        catch(ClassCastException e) {
+          println("type mismatch, expecting a number.", e);
+        }
+      }
+    }
+    public void oscStatus(OscStatus s) {
+    }
+  }
+  );
+
+  cp5.addListener(new ControlListener() {
+    public void controlEvent(ControlEvent theEvent) {
+      String addr = fromControllerToRemote.get(theEvent.getController());
+      if (addr!=null) {
+        OscMessage m = new OscMessage(addr);
+        controlP5.Controller c = theEvent.getController();
+        float rawValue = c.getValue();
+        float mappedValue = map(rawValue, c.getMin(), c.getMax(), 0., 1.);
+        m.add(mappedValue);
+        
+        osc.send(m, remote);
+      }
+    }
+  }
+  );
+}
+
+void hook(String theAddr, controlP5.Controller theController) {
+  fromOscToController.put(theAddr, theController);
+}
+
+void hook(controlP5.Controller theController, String theAddr) {
+  fromControllerToRemote.put(theController, theAddr);
+}
+
 void setupCP5() {
   cp5 = new ControlP5(this);
 
+  osc = new OscP5(this, oscPort);
+  remote = new NetAddress(oscRemoteAddress, oscPort);
+  initHook();
+  
   int pl = 10; // padding left
   int pt = 10; // padding top
   int w = 100;
   int h = 14;
   int gap = 4;
+
+
+  if (greybox) {
+    pl = width / 2;
+    h = 48;
+  }
 
   ArrayList<controlP5.Controller> sliders = new ArrayList<controlP5.Controller>();
   ArrayList<controlP5.Controller> dropdowns = new ArrayList<controlP5.Controller>();
@@ -164,7 +234,9 @@ void setupCP5() {
   scaleSlider.listen(true);
   controllers.add(scaleSlider);
   sliders.add(scaleSlider);
+    
 
+  
   Slider radSlider = cp5.addSlider("rad", 0.01, 5);
   radSlider.setDefaultValue(1.3);
   radSlider.listen(true);
@@ -182,13 +254,13 @@ void setupCP5() {
   off2Slider.listen(true);
   controllers.add(off2Slider);
   sliders.add(off2Slider);
-  
+
   Slider off3slider = cp5.addSlider("off3", 0., 1.);
   off3slider.setDefaultValue(0.);
   off3slider.listen(true);
   controllers.add(off3slider);
   sliders.add(off3slider);
-  
+
 
   Slider periodicFuncScaleSlider = cp5.addSlider("periodicFuncScale", 0.01, 10);
   periodicFuncScaleSlider.setDefaultValue(0.5);
@@ -354,13 +426,17 @@ void setupCP5() {
   for (int i = 0; i < sliders.size(); i++) {
     controlP5.Controller c = sliders.get(i);
     //c.listen(true);
+    hook(c, "/1/fader/" + (i + 1));
+    hook("/1/fader/" + (i + 1), c);
   }
+  
+  
+  
 
   for (int i = 0; i < controllers.size(); i++) {
     controlP5.Controller c = controllers.get(i);
     c.setSize(w, h);
     c.setPosition(pl, pt + h * i + gap * i);
-    
   }
 
   d1.setHeight(h*10);
@@ -368,7 +444,22 @@ void setupCP5() {
 }
 
 
+// https://github.com/sojamo/controlp5/issues/57
+
+
+
 void controlEvent(ControlEvent theEvent) {
+  // When a control event happens it should update osc
+
+
+
+
+
+
+
+
+
+
   // DropdownList is of type ControlGroup.
   // A controlEvent will be triggered from inside the ControlGroup class.
   // therefore you need to check the originator of the Event with
@@ -393,26 +484,26 @@ void toggleLoop() {
   aniLooping = !aniLooping;
   println("Value of aniLooping");
   println(aniLooping);
-  
+
   if (!aniLooping) {
     //loopSequence.pause();
     //loopSequence = null;
   }
   /*
   if (aniLooping) {
-    loopSequence = new AniSequence(this);
-    loopSequence.beginSequence();
-    
-    loopSequence.beginStep();
-    loopSequence.add(Ani.to(this, ani1start, 1.0 * numFrames * ani1dur, sequences.get(0), Ani.SINE_IN_OUT, "onEnd:transitionFinished"));
-    loopSequence.add(Ani.to(this, ani2start, 1.0 * numFrames * ani2dur, sequences.get(1), Ani.SINE_IN_OUT, "onEnd:transitionFinished"));
-    loopSequence.endStep();
-    loopSequence.endSequence();
-    loopSequence.start();
-  } else if (!aniLooping) {
-    loopSequence.stop();
-    loopSequence = null;
-  }*/
+   loopSequence = new AniSequence(this);
+   loopSequence.beginSequence();
+   
+   loopSequence.beginStep();
+   loopSequence.add(Ani.to(this, ani1start, 1.0 * numFrames * ani1dur, sequences.get(0), Ani.SINE_IN_OUT, "onEnd:transitionFinished"));
+   loopSequence.add(Ani.to(this, ani2start, 1.0 * numFrames * ani2dur, sequences.get(1), Ani.SINE_IN_OUT, "onEnd:transitionFinished"));
+   loopSequence.endStep();
+   loopSequence.endSequence();
+   loopSequence.start();
+   } else if (!aniLooping) {
+   loopSequence.stop();
+   loopSequence = null;
+   }*/
 }
 
 void keyPressed() {

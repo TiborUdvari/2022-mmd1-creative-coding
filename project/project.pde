@@ -1,10 +1,23 @@
-// Hook up the transition type //<>//
-
-import java.util.HashMap;
+import java.util.HashMap; //<>//
 import java.util.concurrent.ConcurrentHashMap;
-
 import java.util.Map;
 import java.util.function.Function;
+
+String oscRemoteAddress = "192.168.1.193";
+int oscPort = 12000;
+
+final int instagramMinW = 500;
+final int instagramMinH = 888;
+
+// Option 1
+int W = instagramMinW;
+int H = instagramMinH;
+float ratio = 1;
+
+// Option 2
+//int W = 15000;
+//int H = 2000;
+//float ratio = 0.1;
 
 public class Memoizer4Floats {
   private final Map<String, Float> cache = new ConcurrentHashMap<>();
@@ -24,16 +37,6 @@ OpenSimplexNoise noise;
 ControlP5 cp5;
 
 float numFrames = 60;
-
-final int instagramMinW = 500;
-final int instagramMinH = 888;
-
-//int W = instagramMinW;
-//int H = instagramMinH;
-
-int W = 15000;
-int H = 2000;
-float ratio = 0.1;
 
 int displayW = (int)(W * ratio);
 int displayH = (int)(H * ratio);
@@ -301,10 +304,17 @@ void setup() {
   // Do a sequence, repeat infinitely
 }
 
+boolean greybox = false;
+
+
 void settings() {
   size(displayW, displayH, P2D);
   //fullScreen(P2D, SPAN);
-  fullScreen(P2D, 2);
+  
+  if (greybox) {
+    fullScreen(P2D, 2);
+  }
+  
   noSmooth();
 
   //smooth(8);
