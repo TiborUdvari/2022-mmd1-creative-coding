@@ -1,4 +1,4 @@
-import java.util.HashMap; //<>//
+import java.util.HashMap; //<>// //<>// //<>// //<>//
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.Map;
 import java.util.function.Function;
@@ -73,7 +73,6 @@ float aFillMix = 0.5;
 int lastLoad = 0;
 
 AniSequence seq;
-int sequenceCount = 9;
 float delayHack = 0;
 
 boolean aniLooping = false;
@@ -268,13 +267,19 @@ void drawDots() {
 }
 
 void setup() {
-  //surface.setResizable(true);
+  // TODO Interaction
+  // Load the entire sequence and then seek inside of it
+  // Play - should go through the states and the transitions
+  // Stop - stop the current animation
+  // Go to a specific step and start playing from there - arrow up and down
+  // 
 
   b = createGraphics(W, H, P2D);
   b.smooth(8);
   waveTable = new float[audioFreq];
   noise = new OpenSimplexNoise(12345);
   Ani.init(this);
+  sequence();
 
   minim = new Minim(this);
   out = minim.getLineOut();
@@ -291,11 +296,9 @@ void setup() {
 
   setupCP5();
   frameRate(60);
-  //sequence();
+  
   //Ani.timeMode = Ani.FRAMES;
-  Ani.setDefaultTimeMode(Ani.FRAMES);
-
-  // Do a sequence, repeat infinitely
+  //Ani.setDefaultTimeMode(Ani.FRAMES);
 }
 
 boolean greybox = false;
@@ -318,6 +321,8 @@ void settings() {
 };
 
 void draw() {
+  println(seq.getTime() + " - " + seq.getStepNumber());
+  
   drawDots();
   image(b, 0, 0, width, height);
 
@@ -339,7 +344,7 @@ void draw() {
     println("Started loop");
     ArrayList<String> sequences = new ArrayList<String>();
 
-    for (int i = 0; i < sequenceCount; i++) {
+    for (int i = 0; i < maxAnimIndex; i++) {
       var fn = String.format("data/%d.json", i);
       String pl = jsonFileToPropertyList(fn, "numFrames");
       sequences.add(pl);

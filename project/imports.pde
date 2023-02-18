@@ -37,7 +37,7 @@ boolean pRecording = false;
 int startFrame = 0;
 Textlabel fpsLabel;
 Textlabel animLabel;
-int maxAnimIndex = 20;
+int maxAnimIndex = 9;
 
 // Video export does not work with resolutions that widths are not divisible by 2
 /*
@@ -59,72 +59,40 @@ final int circularScreenH = 2000;
 
 void sequence() {
   println("Load sequence");
-
-  if (true) {
-    return;
-  }
-  ArrayList<String> sequences = new ArrayList<String>();
-
-  for (int i = 0; i < sequenceCount; i++) {
+  JSONObject performance = loadJSONObject("performance.json");
+  JSONArray stateSequence = performance.getJSONArray("sequence");
+  JSONArray transitions = performance.getJSONArray("transitions");
+  ArrayList<String> states = new ArrayList<String>();
+  for (int i = 0; i < maxAnimIndex; i++) {
     var fn = String.format("data/%d.json", i);
     String pl = jsonFileToPropertyList(fn);
-    sequences.add(pl);
+    states.add(pl);
   }
 
-  //Ani.to(this, 1, propertyList, Ani.SINE_IN_OUT, "onEnd:transitionFinished");
+  // Get a member from a JSONArray
+  //JSONObject s = stateSequence.getJSONObject(0);
+  //println(s.getString("duration"));
+  // get an int
+
 
   seq = new AniSequence(this);
   seq.beginSequence();
-
-  seq.add(Ani.to(this, 0.01, sequences.get(0), Ani.SINE_IN_OUT, "onEnd:transitionFinished"));
-  seq.add(Ani.to(this, 12, sequences.get(1), Ani.SINE_IN_OUT, "onEnd:transitionFinished"));
-
-  seq.add(Ani.to(this, 0.1, sequences.get(1), Ani.SINE_IN_OUT, "onEnd:transitionFinished"));
-
-  seq.add(Ani.to(this, 2, "delayHack:0" ));
-
-  seq.add(Ani.to(this, 10, sequences.get(2), Ani.SINE_IN_OUT, "onEnd:transitionFinished"));
-
-  seq.add(Ani.to(this, 8, "delayHack:0" ));
-
-  // Shake
-  seq.add(Ani.to(this, 1, sequences.get(1), Ani.SINE_IN_OUT, "onEnd:transitionFinished"));
-  seq.add(Ani.to(this, 4, "delayHack:0" ));
-
-  seq.add(Ani.to(this, 1, sequences.get(2), Ani.SINE_IN_OUT, "onEnd:transitionFinished"));
-  seq.add(Ani.to(this, 4, "delayHack:0" ));
-
-  seq.add(Ani.to(this, 1, sequences.get(1), Ani.SINE_IN_OUT, "onEnd:transitionFinished"));
-  seq.add(Ani.to(this, 4, "delayHack:0" ));
-
-  seq.add(Ani.to(this, 1, sequences.get(2), Ani.SINE_IN_OUT, "onEnd:transitionFinished"));
-  seq.add(Ani.to(this, 4, "delayHack:0" ));
-
-  seq.add(Ani.to(this, 1, sequences.get(5), Ani.SINE_IN_OUT, "onEnd:transitionFinished"));
-  seq.add(Ani.to(this, 4, "delayHack:0" ));
-
-  seq.add(Ani.to(this, 1, sequences.get(6), Ani.SINE_IN_OUT, "onEnd:transitionFinished"));
-
-  seq.add(Ani.to(this, 10, "delayHack:0" ));
-
-
-  seq.add(Ani.to(this, 1, sequences.get(7), Ani.SINE_IN_OUT, "onEnd:transitionFinished"));
-  seq.add(Ani.to(this, 5, "delayHack:0" ));
-
-  //
-
-  seq.add(Ani.to(this, 1, sequences.get(8), Ani.SINE_IN_OUT, "onEnd:transitionFinished"));
-  seq.add(Ani.to(this, 5, "delayHack:0" ));
-
-  seq.add(Ani.to(this, 1, sequences.get(7), Ani.SINE_IN_OUT, "onEnd:transitionFinished"));
-  seq.add(Ani.to(this, 5, "delayHack:0" ));
-
-  seq.add(Ani.to(this, 1, sequences.get(0), Ani.SINE_IN_OUT, "onEnd:transitionFinished"));
-  seq.add(Ani.to(this, 5, "delayHack:0" ));
-
+  seq.add(Ani.to(this, 0.0001, states.get(1)));
+  for (int i = 0; i < transitions.size(); i++) {
+    JSONObject t = transitions.getJSONObject(i);
+    
+    seq.add(
+      Ani.to(this, 
+          t.getFloat("duration"), 
+          t.getFloat("delay"),
+          states.get(t.getInt("to")), 
+          easings[
+            Arrays.asList(easingsVariableNames).indexOf(t.getString("fade"))]
+          )
+      );
+  }
   seq.endSequence();
-  seq.start();
-  //println(sequences.get(0));
+  //seq.start();
 }
 
 void toggleCP5Visible() {
@@ -513,57 +481,4 @@ void toggleLoop() {
    loopSequence.stop();
    loopSequence = null;
    }*/
-}
-
-void keyPressed() {
-  println(keyCode);
-
-  int numCode = keyCode - 48;
-  if (numCode >= 0 && numCode < 10) {
-    animIndex = numCode;
-    // Load the json file if exists
-    println("Load params");
-    var fn = String.format("data/%d.json", animIndex);
-    println(fn);
-    //cp5.loadProperties(fn);
-  }
-
-  if (keyCode == 67) // c - control p5
-  {
-    toggleCP5Visible();
-  }
-
-  if (keyCode == 76) // l
-  {
-    var fn = String.format("data/%d.json", animIndex);
-    println("Load data from " + fn);
-    //cp5.loadProperties(fn);
-    String propertyList = jsonFileToPropertyList(fn);
-
-    Ani.to(this, 1, propertyList, Ani.SINE_IN_OUT, "onEnd:transitionFinished");
-  }
-
-  if (keyCode == 83) // s
-  {
-    println("Save current data");
-    var fn = String.format("data/%d.json", animIndex);
-    println("Save data to " + fn);
-    cp5.saveProperties(fn);
-  }
-
-  if (keyCode == 68) // d
-  {
-    periodicFuncDebug = !periodicFuncDebug;
-  }
-  
-  if(key == CODED)
-  {
-    if (keyCode == LEFT){
-      animIndex = (maxAnimIndex + animIndex - 1) % maxAnimIndex;
-    } else if (keyCode == RIGHT) {
-      animIndex = (animIndex + 1) % maxAnimIndex;
-    }
-  }
-  
-  animLabel.setText("anim " + animIndex + "/" + maxAnimIndex);
 }
