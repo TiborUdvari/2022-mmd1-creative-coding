@@ -21,20 +21,6 @@ boolean wrappingX = true;
 //int H = 2000;
 //float ratio = 0.1;
 
-public class Memoizer4Floats {
-  private final Map<String, Float> cache = new ConcurrentHashMap<>();
-  private final Function<Float, Function<Float, Function<Float, Function<Float, Float>>>> function;
-
-  public Memoizer4Floats(Function<Float, Function<Float, Function<Float, Function<Float, Float>>>> function) {
-    this.function = function;
-  }
-
-  public Float apply(Float f1, Float f2, Float f3, Float f4) {
-    String key = String.format("%f,%f,%f,%f", f1, f2, f3, f4);
-    return cache.computeIfAbsent(key, k -> function.apply(f1).apply(f2).apply(f3).apply(f4));
-  }
-}
-
 OpenSimplexNoise noise;
 ControlP5 cp5;
 
@@ -202,15 +188,10 @@ Function<Float, Function<Float, Function<Float, Function<Float, Float>>>> myFunc
   return periodicFuncScale * (float)noise.eval(seed+rad*cos(TAU*p), rad*sin(TAU*p), scl*x, scl*y);
 };
 
-Memoizer4Floats memoizedFunction = new Memoizer4Floats(myFunction);
 
 float periodicFunction(float p, float seed, float x, float y)
 {
   return periodicFuncScale * (float)noise.eval(seed+rad*cos(TAU*p), rad*sin(TAU*p), scl*x, scl*y);
-  /*
-  float result = memoizedFunction.apply(p, seed, x, y);
-   return result;
-   */
 }
 
 
