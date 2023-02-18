@@ -36,6 +36,9 @@ boolean recording = false;
 boolean pRecording = false;
 int startFrame = 0;
 Textlabel fpsLabel;
+Textlabel animLabel;
+int maxAnimIndex = 20;
+
 // Video export does not work with resolutions that widths are not divisible by 2
 /*
   360 degrees
@@ -408,6 +411,13 @@ void setupCP5() {
     .setColorValue(0xffffffff)
     .setFont(createFont("Arial", 10))
     ;
+    
+   animLabel = cp5.addTextlabel("Animlabel")
+    .setText("anim " + animIndex + "/" + maxAnimIndex)
+    .setPosition(width - 50, 30)
+    .setColorValue(0xffffffff)
+    .setFont(createFont("Arial", 10))
+    ;
 
   /*
   var debugRadio = cp5.addRadioButton("radioDebug");
@@ -545,4 +555,15 @@ void keyPressed() {
   {
     periodicFuncDebug = !periodicFuncDebug;
   }
+  
+  if(key == CODED)
+  {
+    if (keyCode == LEFT){
+      animIndex = (maxAnimIndex + animIndex - 1) % maxAnimIndex;
+    } else if (keyCode == RIGHT) {
+      animIndex = (animIndex + 1) % maxAnimIndex;
+    }
+  }
+  
+  animLabel.setText("anim " + animIndex + "/" + maxAnimIndex);
 }
