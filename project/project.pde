@@ -14,6 +14,8 @@ int W = instagramMinW;
 int H = instagramMinH;
 float ratio = 1;
 
+boolean wrappingX = true;
+
 // Option 2
 //int W = 15000;
 //int H = 2000;
@@ -257,14 +259,25 @@ void drawDots() {
       //println(gAccu);
       //b.stroke(255, 255, 255, constrain(abs(gAccu * 10000), 0.5, 1.0 ) * 255);
 
-      // Add some params
-      float stokeVal = lerp(255., periodicFunction(t / 60 * 44000 + offset(x, y), 24, x, y) * 255., aFillMix);
-      b.stroke(255, 255, 255, stokeVal );
-
-      //b.stroke((abs(dx) + abs(dy)));
-      b.strokeWeight(10 * sw2screen * dotSizePct * min(displayW, displayH) * deltaPosFactor );
-
-      b.point((int)x+dx, (int)y+dy);
+      float strokeVal = lerp(255., periodicFunction(t / 60 * 44000 + offset(x, y), 24, x, y) * 255., aFillMix);
+      b.stroke(255, 255, 255, strokeVal );
+      float strokeWeight = 10 * sw2screen * dotSizePct * min(displayW, displayH) * deltaPosFactor;
+      b.strokeWeight(strokeWeight);
+      
+      int newX = (int)(x+dx);
+      int newY = (int)(y+dy);
+      b.point(newX, newY);
+      
+      if (wrappingX) {
+        if (newX > W - strokeWeight * .5) {
+          b.point( newX - W, newY );
+        } else if (newX < strokeWeight * .5) {
+          b.point( W + newX, newY);
+        }
+        
+      } 
+      
+      //b.point((int)x+dx, (int)y+dy);
     }
   }
 

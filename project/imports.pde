@@ -144,7 +144,6 @@ void transitionFinished(Ani theAni) {
   }
 }
 
-/* Lookup tables for osc address and controlEvent interoperability */
 HashMap<String, controlP5.Controller> fromOscToController;
 HashMap<controlP5.Controller, String> fromControllerToRemote;
 
