@@ -1,4 +1,4 @@
-import java.util.HashMap; //<>// //<>// //<>// //<>//
+import java.util.HashMap;  //<>//
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.Map;
 import java.util.function.Function;
@@ -10,19 +10,23 @@ final int instagramMinW = 500;
 final int instagramMinH = 888;
 
 // Option 1
+/*
 int W = instagramMinW;
 int H = instagramMinH;
 float ratio = 1;
+*/
 
-boolean wrappingX = true;
 
 // Option 2
-//int W = 15000;
-//int H = 2000;
-//float ratio = 0.1;
+// /*
+int W = 15000;
+int H = 2000;
+float ratio = 0.1;
+// */
 
 OpenSimplexNoise noise;
 ControlP5 cp5;
+boolean wrappingX = true;
 
 float numFrames = 60;
 
@@ -279,7 +283,9 @@ void setup() {
   waveTable = new float[audioFreq];
   noise = new OpenSimplexNoise(12345);
   Ani.init(this);
-  sequence();
+  seq = new AniSequence(this);
+
+  //sequence();
 
   minim = new Minim(this);
   out = minim.getLineOut();
@@ -320,8 +326,11 @@ void settings() {
   //pixelDensity(2);
 };
 
+int stepCounter = 0;
+int pStepCounter = 0;
+
 void draw() {
-  println(seq.getTime() + " - " + seq.getStepNumber());
+  //println(seq.getTime() + " - " + seq.getStepNumber());
   
   drawDots();
   image(b, 0, 0, width, height);
@@ -364,20 +373,33 @@ void draw() {
     loopSequence.start();
     //Ani.to(this, ani2Start * numFrames, 1.0 * numFrames * ani2Dur, sequences.get(1));
   }
-
+  
+  boolean isPlayingMainSequence = seq.isPlaying() && !seq.isEnded();
+  stepCounter = seq.getStepNumber();
+  if (isPlayingMainSequence && stepCounter != pStepCounter) {
+    println("UPDATE ANIM INDEX " + animIndex);
+    animLabel.setText("anim " + animIndex + "/" + maxAnimIndex);
+    stepLabel.setText("step " + stepCounter);
+  }
+  pStepCounter = stepCounter;
   if (periodicFuncDebug) {
-    float bw = t * width;
+    float pct = isPlayingMainSequence ? seq.getTime() / seq.getDuration() : t;
+    
+    float bw = pct * width;
     float bh = 20;
     fill(255);
     rect(0, height - bh, bw, bh);
-
-    noStroke();
-    fill(100, 125);
-    rect( ani1Start * width, height - bh, ani1Dur * width, bh);
-
-    fill(200, 125);
-    rect( ani2Start * width, height - bh, ani2Dur * width, bh);
+    
+    if (!isPlayingMainSequence) {
+      noStroke();
+      fill(100, 125);
+      rect( ani1Start * width, height - bh, ani1Dur * width, bh);
+      fill(200, 125);
+      rect( ani2Start * width, height - bh, ani2Dur * width, bh);
+    }
   }
+  
+  
 }
 
 void drawWaveTable() {

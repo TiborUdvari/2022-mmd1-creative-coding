@@ -37,7 +37,8 @@ boolean pRecording = false;
 int startFrame = 0;
 Textlabel fpsLabel;
 Textlabel animLabel;
-int maxAnimIndex = 9;
+Textlabel stepLabel;
+int maxAnimIndex = 45;
 
 // Video export does not work with resolutions that widths are not divisible by 2
 /*
@@ -74,22 +75,22 @@ void sequence() {
   //println(s.getString("duration"));
   // get an int
 
-
   seq = new AniSequence(this);
   seq.beginSequence();
   seq.add(Ani.to(this, 0.0001, states.get(1)));
   for (int i = 0; i < transitions.size(); i++) {
     JSONObject t = transitions.getJSONObject(i);
-    
-    seq.add(
-      Ani.to(this, 
+    println(states.get(t.getInt("to")) + ",animIndex:" + t.getInt("to"));
+    var animations = Ani.to(this, 
           t.getFloat("duration"), 
           t.getFloat("delay"),
-          states.get(t.getInt("to")), 
+          states.get(t.getInt("to")) + ",animIndex:" + t.getInt("to"), 
           easings[
             Arrays.asList(easingsVariableNames).indexOf(t.getString("fade"))]
-          )
-      );
+          );
+          
+    seq.add(animations);
+    
   }
   seq.endSequence();
   //seq.start();
@@ -106,13 +107,17 @@ void toggleCP5Visible() {
 }
 
 void transitionFinished(Ani theAni) {
+  animLabel.setText("anim " + animIndex + "/" + maxAnimIndex);
+
+  
+  /*
   var fn = String.format("data/%d.json", animIndex);
   int now = millis();
   if (now - lastLoad > 1000) {
     println("Load data from " + fn);
     lastLoad = millis();
     cp5.loadProperties(fn);
-  }
+  }*/
 }
 
 HashMap<String, controlP5.Controller> fromOscToController;
@@ -383,6 +388,13 @@ void setupCP5() {
    animLabel = cp5.addTextlabel("Animlabel")
     .setText("anim " + animIndex + "/" + maxAnimIndex)
     .setPosition(width - 50, 30)
+    .setColorValue(0xffffffff)
+    .setFont(createFont("Arial", 10))
+    ;
+    
+   stepLabel = cp5.addTextlabel("stepLabel")
+    .setText("step ")
+    .setPosition(width - 50, 50)
     .setColorValue(0xffffffff)
     .setFont(createFont("Arial", 10))
     ;
