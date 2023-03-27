@@ -1,4 +1,9 @@
-import java.util.HashMap;  //<>//
+/*  //<>//
+A long take on particles 
+Tibor Udvari
+2022 */
+
+import java.util.HashMap; 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.Map;
 import java.util.function.Function;
@@ -16,12 +21,21 @@ int H = instagramMinH;
 float ratio = 1;
 */
 
-
 // Option 2
 // /*
+
+// 1080
+
+/*
 int W = 15000;
 int H = 2000;
 float ratio = 0.1;
+*/
+
+int W = 5760; 
+int H = 1080;
+float ratio = 0.25;
+
 // */
 
 OpenSimplexNoise noise;
