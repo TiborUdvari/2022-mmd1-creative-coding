@@ -3,6 +3,8 @@ A long take on particles
 Tibor Udvari
 2022 */
 
+// connect OSC with Chuck
+
 import java.util.HashMap; 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.Map;
@@ -412,8 +414,6 @@ void draw() {
       rect( ani2Start * width, height - bh, ani2Dur * width, bh);
     }
   }
-  
-  
 }
 
 void drawWaveTable() {

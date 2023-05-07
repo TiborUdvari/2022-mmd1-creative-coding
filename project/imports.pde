@@ -23,6 +23,9 @@ import netP5.*;
 OscP5 osc;
 NetAddress remote;
 
+OscP5 chuckOSC;
+NetAddress chuckRemote;
+
 Easing[] easings = { Ani.LINEAR, Ani.QUAD_IN, Ani.QUAD_OUT, Ani.QUAD_IN_OUT, Ani.CUBIC_IN, Ani.CUBIC_IN_OUT, Ani.CUBIC_OUT, Ani.QUART_IN, Ani.QUART_OUT, Ani.QUART_IN_OUT, Ani.QUINT_IN, Ani.QUINT_OUT, Ani.QUINT_IN_OUT, Ani.SINE_IN, Ani.SINE_OUT, Ani.SINE_IN_OUT, Ani.CIRC_IN, Ani.CIRC_OUT, Ani.CIRC_IN_OUT, Ani.EXPO_IN, Ani.EXPO_OUT, Ani.EXPO_IN_OUT, Ani.BACK_IN, Ani.BACK_OUT, Ani.BACK_IN_OUT, Ani.BOUNCE_IN, Ani.BOUNCE_OUT, Ani.BOUNCE_IN_OUT, Ani.ELASTIC_IN, Ani.ELASTIC_OUT, Ani.ELASTIC_IN_OUT};
 String[] easingsVariableNames = {"Ani.LINEAR", "Ani.QUAD_IN", "Ani.QUAD_OUT", "Ani.QUAD_IN_OUT", "Ani.CUBIC_IN", "Ani.CUBIC_IN_OUT", "Ani.CUBIC_OUT", "Ani.QUART_IN", "Ani.QUART_OUT", "Ani.QUART_IN_OUT", "Ani.QUINT_IN", "Ani.QUINT_OUT", "Ani.QUINT_IN_OUT", "Ani.SINE_IN", "Ani.SINE_OUT", "Ani.SINE_IN_OUT", "Ani.CIRC_IN", "Ani.CIRC_OUT", "Ani.CIRC_IN_OUT", "Ani.EXPO_IN", "Ani.EXPO_OUT", "Ani.EXPO_IN_OUT", "Ani.BACK_IN", "Ani.BACK_OUT", "Ani.BACK_IN_OUT", "Ani.BOUNCE_IN", "Ani.BOUNCE_OUT", "Ani.BOUNCE_IN_OUT", "Ani.ELASTIC_IN", "Ani.ELASTIC_OUT", "Ani.ELASTIC_IN_OUT"};
 String code = "";
@@ -130,6 +133,9 @@ void initHook() {
 
   osc.addListener(new OscEventListener() {
     public void oscEvent(OscMessage m) {
+      chuckOSC.send(m, chuckRemote);
+
+      
       controlP5.Controller c = fromOscToController.get(m.addrPattern());
       if (c!=null) {
         Object[] o = m.arguments();
@@ -158,8 +164,12 @@ void initHook() {
         float rawValue = c.getValue();
         float mappedValue = map(rawValue, c.getMin(), c.getMax(), 0., 1.);
         m.add(mappedValue);
-        
         osc.send(m, remote);
+        
+        OscMessage chuckMessage = new OscMessage("/" + c.getName());
+        chuckMessage.add(mappedValue);
+        
+        chuckOSC.send(chuckMessage, chuckRemote);
       }
     }
   }
@@ -178,7 +188,11 @@ void setupCP5() {
   cp5 = new ControlP5(this);
 
   osc = new OscP5(this, oscPort);
+  chuckOSC = new OscP5(this, 12001); 
+  
   remote = new NetAddress(oscRemoteAddress, oscPort);
+  chuckRemote = new NetAddress("127.0.0.1", 6449);
+  
   initHook();
   
   int pl = 10; // padding left
