@@ -309,12 +309,14 @@ void setup() {
   CustomWaveForm customWaveForm = new CustomWaveForm();
 
   // 10 - frequency, 1f - amplitude
-  wave = new Oscil( audioFreq, 1f, customWaveForm );
+  
+  
+  //wave = new Oscil( audioFreq, 1f, customWaveForm );
   // debug the addition of the waveform
   panPatch = new Pan(0.);
   //dotSizePct
   //wave = new Oscil( map(), 1f, customWaveForm );
-  wave.patch(panPatch).patch(out);
+  //wave.patch(panPatch).patch(out);
 
   setupCP5();
   frameRate(60);
