@@ -33,7 +33,7 @@ VIDEO_FILE_EXT="${VIDEO_FILE##*.}"
 VIDEO_FILE_DIR=$(dirname "$VIDEO_FILE")
 LOOPED_VIDEO_FILE=$VIDEO_FILE_NAME-looped.$VIDEO_FILE_EXT
 
-TARGET_LENGTH=10
+TARGET_LENGTH=180
 
 LENGTH=$(ffprobe -i "$VIDEO_FILE" -show_entries format=duration -v quiet -of csv="p=0")
 LOOP_COUNT=$(echo "$TARGET_LENGTH/$LENGTH" | bc)

@@ -101,18 +101,26 @@
     "value": 0.15000000596046448
   },
   "/ani1trans": {"value": 0},
+  "/stepLabel": {
+    "stringValue": "step ",
+    "value": 0
+  },
   "/ani2Start": {
     "min": 0,
     "max": 1,
     "value": 0.5
   },
   "/label": {
-    "stringValue": "60.01FPS",
+    "stringValue": "58.53FPS",
     "value": 0
   },
   "/ani1Dur": {
     "min": 0,
     "max": 1,
     "value": 0.20000000298023224
+  },
+  "/Animlabel": {
+    "stringValue": "anim 5/45",
+    "value": 0
   }
 }

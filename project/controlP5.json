@@ -2,18 +2,18 @@
   "/ani1Start": {
     "min": 0,
     "max": 1,
-    "value": 0.07000000029802322
+    "value": 0
   },
   "/aFillMix": {
     "min": 0,
     "max": 1,
-    "value": 0.09999999403953552
+    "value": 0.06999999284744263
   },
-  "/ani2trans": {"value": 0},
+  "/ani2trans": {"value": 2},
   "/rows": {
     "min": 1,
     "max": 200,
-    "value": 180
+    "value": 186
   },
   "/periodicFuncScale": {
     "min": 0.009999999776482582,
@@ -23,17 +23,17 @@
   "/numFrames": {
     "min": 10,
     "max": 1000,
-    "value": 505
+    "value": 277.29998779296875
   },
   "/sliderSeed": {
     "min": 10000,
     "max": 99999,
-    "value": 36099.7109375
+    "value": 10000
   },
   "/rad": {
     "min": 0.009999999776482582,
     "max": 5,
-    "value": 0.7584999203681946
+    "value": 0.05990004539489746
   },
   "/ani2Dur": {
     "min": 0,
@@ -43,27 +43,27 @@
   "/offMultX": {
     "min": 0,
     "max": 1000,
-    "value": 89.99999237060547
+    "value": 1000
   },
   "/off2": {
     "min": 0,
     "max": 1,
-    "value": 0.12999999523162842
+    "value": 0
   },
   "/offMultY": {
     "min": 0,
     "max": 1000,
-    "value": 60
+    "value": 1000
   },
   "/off3": {
     "min": 0,
     "max": 1,
-    "value": 0.1599999964237213
+    "value": 1
   },
   "/scl": {
     "min": 0.0010000000474974513,
     "max": 0.0989999994635582,
-    "value": 0.06567999720573425
+    "value": 0.0029599997214972973
   },
   "/mx": {
     "min": 0.009999999776482582,
@@ -78,41 +78,49 @@
   "/off1": {
     "min": 0,
     "max": 1,
-    "value": 0.5999999642372131
+    "value": 1
   },
   "/bgFill": {
     "min": 0,
     "max": 255,
-    "value": 30.599998474121094
+    "value": 147.89999389648438
   },
   "/dotSizePct": {
     "min": 0,
     "max": 0.03999999910593033,
-    "value": 3.9999998989515007E-4
+    "value": 7.999999797903001E-4
   },
   "/cols": {
     "min": 1,
     "max": 200,
-    "value": 186
+    "value": 192
   },
   "/offScl": {
     "min": 0,
     "max": 1,
-    "value": 0.08999999612569809
+    "value": 0
   },
   "/ani1trans": {"value": 0},
+  "/stepLabel": {
+    "stringValue": "step ",
+    "value": 0
+  },
   "/ani2Start": {
     "min": 0,
     "max": 1,
     "value": 0.5
   },
   "/label": {
-    "stringValue": "2.83FPS",
+    "stringValue": "2.52FPS",
     "value": 0
   },
   "/ani1Dur": {
     "min": 0,
     "max": 1,
     "value": 0.20000000298023224
+  },
+  "/Animlabel": {
+    "stringValue": "anim 0/45",
+    "value": 0
   }
 }
