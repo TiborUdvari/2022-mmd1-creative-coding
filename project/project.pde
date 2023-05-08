@@ -229,7 +229,7 @@ void drawDots() {
   b.strokeCap(SQUARE);
 
   b.stroke(255);
-  b.strokeWeight(10 * sw2screen * dotSizePct * min(displayW, displayH) );
+  b.strokeWeight(100 * sw2screen * dotSizePct * displayWidth/displayHeight );
   b.strokeCap(ROUND);
 
   //b.strokeWeight(6);
@@ -261,7 +261,7 @@ void drawDots() {
 
       float strokeVal = lerp(255., periodicFunction(t / 60 * 44000 + offset(x, y), 24, x, y) * 255., aFillMix);
       b.stroke(255, 255, 255, strokeVal );
-      float strokeWeight = 10 * sw2screen * dotSizePct * min(displayW, displayH) * deltaPosFactor;
+      float strokeWeight = 5000 * sw2screen * dotSizePct * displayWidth/displayHeight * deltaPosFactor;
       b.strokeWeight(strokeWeight);
       
       int newX = (int)(x+dx);

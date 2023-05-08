@@ -1,12 +1,12 @@
 {
-  "transitions": [
+  "temp": [
     { "to": 8, "duration": 0.1, "delay": 0.1, "fade": "Ani.LINEAR", "c": "start with nothing" },
     { "to": 9, "duration": 10, "delay": 10, "fade": "Ani.QUAD_IN_OUT" }
 
   ],
 
 
-  "temp": [
+  "transitions": [
     { "to": 0, "duration": 0.1, "delay": 0.1, "fade": "Ani.LINEAR", "c": "start with nothing" },
     { "to": 1, "duration": 10, "delay": 10, "fade": "Ani.QUAD_IN_OUT" },
 
