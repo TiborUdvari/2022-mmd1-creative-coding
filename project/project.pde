@@ -9,8 +9,10 @@ import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.Map;
 import java.util.function.Function;
+import spout.*;
 
-String oscRemoteAddress = "192.168.1.193";
+Spout spout;
+String oscRemoteAddress = "10.0.1.91";
 int oscPort = 12000;
 
 final int instagramMinW = 500;
@@ -34,9 +36,20 @@ int H = 2000;
 float ratio = 0.1;
 */
 
+/*
 int W = 5760; 
 int H = 1080;
-float ratio = 0.25;
+11488x1800
+*/
+
+/*
+int W = 11488; 
+int H = 1800;
+*/
+
+int W = 5744; 
+int H = 900;
+float ratio = 0.1;
 
 // */
 
@@ -323,6 +336,9 @@ void setup() {
   
   //Ani.timeMode = Ani.FRAMES;
   //Ani.setDefaultTimeMode(Ani.FRAMES);
+  spout = new Spout(this);
+  spout.setSenderName("Spout Processing Sender");
+
 }
 
 boolean greybox = false;
@@ -352,6 +368,7 @@ void draw() {
   
   drawDots();
   image(b, 0, 0, width, height);
+  spout.sendTexture(b);
 
   // HACK
   //s.changeValue(scl);
@@ -416,6 +433,8 @@ void draw() {
       rect( ani2Start * width, height - bh, ani2Dur * width, bh);
     }
   }
+  
+  
 }
 
 void drawWaveTable() {
