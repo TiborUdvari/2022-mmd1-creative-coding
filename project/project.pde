@@ -11,6 +11,8 @@ import java.util.Map;
 import java.util.function.Function;
 import spout.*;
 
+boolean isWindows = false;
+
 Spout spout;
 String oscRemoteAddress = "10.0.1.91";
 int oscPort = 12000;
@@ -336,8 +338,15 @@ void setup() {
   
   //Ani.timeMode = Ani.FRAMES;
   //Ani.setDefaultTimeMode(Ani.FRAMES);
-  spout = new Spout(this);
+  
+  String osName = System.getProperty("os.name");
+  isWindows = osName.startsWith("Windows");
+  
+  if (isWindows) {
+    spout = new Spout(this);
   spout.setSenderName("Spout Processing Sender");
+  }
+
 
 }
 
@@ -368,8 +377,9 @@ void draw() {
   
   drawDots();
   image(b, 0, 0, width, height);
-  spout.sendTexture(b);
-
+  if (isWindows) {
+    spout.sendTexture(b);
+  }
   // HACK
   //s.changeValue(scl);
 
