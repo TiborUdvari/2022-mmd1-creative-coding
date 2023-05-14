@@ -135,7 +135,6 @@ void initHook() {
     public void oscEvent(OscMessage m) {
       chuckOSC.send(m, chuckRemote);
 
-      
       controlP5.Controller c = fromOscToController.get(m.addrPattern());
       if (c!=null) {
         Object[] o = m.arguments();
@@ -325,6 +324,11 @@ void setupCP5() {
   offsetScaleSlider.setDefaultValue(1);
   controllers.add(offsetScaleSlider);
   sliders.add(offsetScaleSlider);
+  
+  
+
+
+
 
   Slider ani1StartSlider = cp5.addSlider("ani1Start", 0., 1.);
   controllers.add(ani1StartSlider);

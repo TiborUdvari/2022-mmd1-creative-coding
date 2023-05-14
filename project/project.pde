@@ -3,6 +3,13 @@ A long take on particles
 Tibor Udvari
 2022 */
 
+// Launch instructions
+// 1. Add Mac / Computer address in Touch OSC 
+// 2. Add iPad address from screen here
+String oscRemoteAddress = "192.168.1.193";
+
+// todo - load sequences with the iPad
+
 // connect OSC with Chuck
 
 import java.util.HashMap; 
@@ -10,11 +17,11 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.Map;
 import java.util.function.Function;
 import spout.*;
+import java.lang.reflect.Field;
 
 boolean isWindows = false;
 
 Spout spout;
-String oscRemoteAddress = "10.0.1.91";
 int oscPort = 12000;
 
 final int instagramMinW = 500;
@@ -51,7 +58,7 @@ int H = 1800;
 
 int W = 5744; 
 int H = 900;
-float ratio = 0.1;
+float ratio = 0.2;
 
 // */
 
@@ -92,6 +99,7 @@ boolean periodicFuncDebug = true;
 float offScl = 0.15;
 float periodicFuncScale = 1;
 float dotSizePct = 0.01;
+float faderMix = 0;
 
 boolean cp5Visible = true;
 
@@ -347,6 +355,8 @@ void setup() {
   spout.setSenderName("Spout Processing Sender");
   }
 
+
+  setupKeyboardOscListener();
 
 }
 
