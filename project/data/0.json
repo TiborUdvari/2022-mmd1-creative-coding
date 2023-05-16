@@ -7,23 +7,23 @@
   "/aFillMix": {
     "min": 0,
     "max": 1,
-    "value": 0.06999999284744263
+    "value": 0
   },
   "/ani2trans": {"value": 2},
   "/rows": {
     "min": 1,
-    "max": 200,
-    "value": 186
+    "max": 50,
+    "value": 6
   },
   "/periodicFuncScale": {
     "min": 0.009999999776482582,
     "max": 10,
-    "value": 0.4095999598503113
+    "value": 0.4485573172569275
   },
   "/numFrames": {
     "min": 10,
     "max": 1000,
-    "value": 277.29998779296875
+    "value": 534.9144897460938
   },
   "/sliderSeed": {
     "min": 10000,
@@ -33,7 +33,7 @@
   "/rad": {
     "min": 0.009999999776482582,
     "max": 5,
-    "value": 0.05990004539489746
+    "value": 1.2999999523162842
   },
   "/ani2Dur": {
     "min": 0,
@@ -43,37 +43,37 @@
   "/offMultX": {
     "min": 0,
     "max": 1000,
-    "value": 1000
+    "value": 0
   },
   "/off2": {
     "min": 0,
     "max": 1,
-    "value": 0
+    "value": 0.0598631426692009
   },
   "/offMultY": {
     "min": 0,
     "max": 1000,
-    "value": 1000
+    "value": 0
   },
   "/off3": {
     "min": 0,
     "max": 1,
-    "value": 1
+    "value": 0.061003394424915314
   },
   "/scl": {
     "min": 0.0010000000474974513,
     "max": 0.0989999994635582,
-    "value": 0.0029599997214972973
+    "value": 0.017999999225139618
   },
   "/mx": {
     "min": 0.009999999776482582,
     "max": 1,
-    "value": 0.009999999776482582
+    "value": 0.5
   },
   "/my": {
     "min": 0.009999999776482582,
     "max": 1,
-    "value": 0.009999999776482582
+    "value": 0.5
   },
   "/off1": {
     "min": 0,
@@ -83,22 +83,22 @@
   "/bgFill": {
     "min": 0,
     "max": 255,
-    "value": 147.89999389648438
+    "value": 255
   },
   "/dotSizePct": {
     "min": 0,
     "max": 0.03999999910593033,
-    "value": 7.999999797903001E-4
+    "value": 0
   },
   "/cols": {
     "min": 1,
-    "max": 200,
-    "value": 192
+    "max": 50,
+    "value": 23
   },
   "/offScl": {
     "min": 0,
     "max": 1,
-    "value": 0
+    "value": 0.1499999761581421
   },
   "/ani1trans": {"value": 0},
   "/stepLabel": {
@@ -111,7 +111,7 @@
     "value": 0.5
   },
   "/label": {
-    "stringValue": "2.52FPS",
+    "stringValue": "59.88FPS",
     "value": 0
   },
   "/ani1Dur": {

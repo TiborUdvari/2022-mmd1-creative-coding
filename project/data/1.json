@@ -7,23 +7,23 @@
   "/aFillMix": {
     "min": 0,
     "max": 1,
-    "value": 0.8199999928474426
+    "value": 0
   },
   "/ani2trans": {"value": 2},
   "/rows": {
     "min": 1,
-    "max": 200,
-    "value": 1
+    "max": 50,
+    "value": 6
   },
   "/periodicFuncScale": {
     "min": 0.009999999776482582,
     "max": 10,
-    "value": 1.0393215417861938
+    "value": 0.4485573172569275
   },
   "/numFrames": {
     "min": 10,
     "max": 1000,
-    "value": 287.20001220703125
+    "value": 534.9144897460938
   },
   "/sliderSeed": {
     "min": 10000,
@@ -43,22 +43,22 @@
   "/offMultX": {
     "min": 0,
     "max": 1000,
-    "value": 51.91696548461914
+    "value": 0
   },
   "/off2": {
     "min": 0,
     "max": 1,
-    "value": 0
+    "value": 0.0598631426692009
   },
   "/offMultY": {
     "min": 0,
     "max": 1000,
-    "value": 20
+    "value": 0
   },
   "/off3": {
     "min": 0,
     "max": 1,
-    "value": 0
+    "value": 0.061003394424915314
   },
   "/scl": {
     "min": 0.0010000000474974513,
@@ -83,26 +83,26 @@
   "/bgFill": {
     "min": 0,
     "max": 255,
-    "value": 5.100000381469727
+    "value": 255
   },
   "/dotSizePct": {
     "min": 0,
     "max": 0.03999999910593033,
-    "value": 0.03923323005437851
+    "value": 0.013797033578157425
   },
   "/cols": {
     "min": 1,
-    "max": 200,
-    "value": 1
+    "max": 50,
+    "value": 5.9167609214782715
   },
   "/offScl": {
     "min": 0,
     "max": 1,
-    "value": 0.15000000596046448
+    "value": 0.1499999761581421
   },
   "/ani1trans": {"value": 0},
   "/stepLabel": {
-    "stringValue": "step 3",
+    "stringValue": "step ",
     "value": 0
   },
   "/ani2Start": {
@@ -111,7 +111,7 @@
     "value": 0.5
   },
   "/label": {
-    "stringValue": "55.57FPS",
+    "stringValue": "57.74FPS",
     "value": 0
   },
   "/ani1Dur": {
@@ -120,7 +120,7 @@
     "value": 0.20000000298023224
   },
   "/Animlabel": {
-    "stringValue": "anim 1/9",
+    "stringValue": "anim 1/45",
     "value": 0
   }
 }

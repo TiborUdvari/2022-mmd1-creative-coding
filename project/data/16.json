@@ -7,23 +7,23 @@
   "/aFillMix": {
     "min": 0,
     "max": 1,
-    "value": 0.8199999928474426
+    "value": 0.13740020990371704
   },
   "/ani2trans": {"value": 2},
   "/rows": {
     "min": 1,
-    "max": 200,
-    "value": 1
+    "max": 50,
+    "value": 7
   },
   "/periodicFuncScale": {
     "min": 0.009999999776482582,
     "max": 10,
-    "value": 0.009999999776482582
+    "value": 0.5453817248344421
   },
   "/numFrames": {
     "min": 10,
     "max": 1000,
-    "value": 287.20001220703125
+    "value": 534.9144897460938
   },
   "/sliderSeed": {
     "min": 10000,
@@ -33,7 +33,7 @@
   "/rad": {
     "min": 0.009999999776482582,
     "max": 5,
-    "value": 1.2999999523162842
+    "value": 1.651521921157837
   },
   "/ani2Dur": {
     "min": 0,
@@ -43,7 +43,7 @@
   "/offMultX": {
     "min": 0,
     "max": 1000,
-    "value": 20
+    "value": 878.5632934570312
   },
   "/off2": {
     "min": 0,
@@ -53,7 +53,7 @@
   "/offMultY": {
     "min": 0,
     "max": 1000,
-    "value": 20
+    "value": 63.85403060913086
   },
   "/off3": {
     "min": 0,
@@ -68,37 +68,37 @@
   "/mx": {
     "min": 0.009999999776482582,
     "max": 1,
-    "value": 0.5
+    "value": 0.4214652180671692
   },
   "/my": {
     "min": 0.009999999776482582,
     "max": 1,
-    "value": 0.5
+    "value": 0.13304448127746582
   },
   "/off1": {
     "min": 0,
     "max": 1,
-    "value": 1
+    "value": 0.7075256109237671
   },
   "/bgFill": {
     "min": 0,
     "max": 255,
-    "value": 5.099999904632568
+    "value": 47.83067321777344
   },
   "/dotSizePct": {
     "min": 0,
     "max": 0.03999999910593033,
-    "value": 0.036399997770786285
+    "value": 0.0011174449464306235
   },
   "/cols": {
     "min": 1,
-    "max": 200,
-    "value": 1
+    "max": 50,
+    "value": 3
   },
   "/offScl": {
     "min": 0,
     "max": 1,
-    "value": 0.15000000596046448
+    "value": 0.1499999761581421
   },
   "/ani1trans": {"value": 0},
   "/stepLabel": {
@@ -111,7 +111,7 @@
     "value": 0.5
   },
   "/label": {
-    "stringValue": "58.79FPS",
+    "stringValue": "44.81FPS",
     "value": 0
   },
   "/ani1Dur": {
@@ -120,7 +120,7 @@
     "value": 0.20000000298023224
   },
   "/Animlabel": {
-    "stringValue": "anim 16/45",
+    "stringValue": "anim 15/45",
     "value": 0
   }
 }

@@ -106,9 +106,13 @@ void setupKeyboardOscListener() {
 
         setAnimIndex(animIndex);
         loadAnimation(animIndex);
-      } else if (addrPattern == "/button/reload") {
+      } else if (addrPattern.startsWith("/button/reload")) {
         loadAnimation(animIndex);
-      } else if (addrPattern == "/button/save") {
+      } else if (addrPattern.startsWith("/button/next")) {
+        setAnimIndex( animIndex + 1 );
+      } else if (addrPattern.startsWith("/button/previous")) {
+        setAnimIndex( animIndex - 1 );
+      } else if (addrPattern.startsWith("/button/save")) {
         saveCurrentAnimation();
       } else if (addrPattern.startsWith("/3/multitoggleLeft")) {
         leftAnimIndex = getAddress(m);
