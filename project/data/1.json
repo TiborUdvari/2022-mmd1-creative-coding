@@ -88,12 +88,12 @@
   "/dotSizePct": {
     "min": 0,
     "max": 0.03999999910593033,
-    "value": 0.013797033578157425
+    "value": 0.01600000075995922
   },
   "/cols": {
     "min": 1,
     "max": 50,
-    "value": 5.9167609214782715
+    "value": 5
   },
   "/offScl": {
     "min": 0,
@@ -111,7 +111,7 @@
     "value": 0.5
   },
   "/label": {
-    "stringValue": "57.74FPS",
+    "stringValue": "19,49FPS",
     "value": 0
   },
   "/ani1Dur": {
