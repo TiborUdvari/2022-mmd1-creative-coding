@@ -7,23 +7,23 @@
   "/aFillMix": {
     "min": 0,
     "max": 1,
-    "value": 0
+    "value": 0.5
   },
   "/ani2trans": {"value": 2},
   "/rows": {
     "min": 1,
     "max": 50,
-    "value": 6
+    "value": 1
   },
   "/periodicFuncScale": {
     "min": 0.009999999776482582,
     "max": 10,
-    "value": 0.4485573172569275
+    "value": 1
   },
   "/numFrames": {
     "min": 10,
     "max": 1000,
-    "value": 534.9144897460938
+    "value": 60
   },
   "/sliderSeed": {
     "min": 10000,
@@ -43,22 +43,22 @@
   "/offMultX": {
     "min": 0,
     "max": 1000,
-    "value": 0
+    "value": 20
   },
   "/off2": {
     "min": 0,
     "max": 1,
-    "value": 0.0598631426692009
+    "value": 0
   },
   "/offMultY": {
     "min": 0,
     "max": 1000,
-    "value": 0
+    "value": 20
   },
   "/off3": {
     "min": 0,
     "max": 1,
-    "value": 0.061003394424915314
+    "value": 0
   },
   "/scl": {
     "min": 0.0010000000474974513,
@@ -83,22 +83,22 @@
   "/bgFill": {
     "min": 0,
     "max": 255,
-    "value": 255
+    "value": 50
   },
   "/dotSizePct": {
     "min": 0,
     "max": 0.03999999910593033,
-    "value": 0
+    "value": 0.009999999776482582
   },
   "/cols": {
     "min": 1,
     "max": 50,
-    "value": 23
+    "value": 1
   },
   "/offScl": {
     "min": 0,
     "max": 1,
-    "value": 0.1499999761581421
+    "value": 0.15000000596046448
   },
   "/ani1trans": {"value": 0},
   "/stepLabel": {
@@ -111,7 +111,7 @@
     "value": 0.5
   },
   "/label": {
-    "stringValue": "59.88FPS",
+    "stringValue": "58.05FPS",
     "value": 0
   },
   "/ani1Dur": {

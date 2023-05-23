@@ -135,11 +135,11 @@ float[] waveTable;
 
 float gpan = 0f; // global pan
 
-class CustomWaveForm implements Waveform {
-  int loopCounter = 0;
+int loopCounter = 0;
 
-  float value(float v) {
-    float t = 1.0 * frameCount/numFrames;
+float sampleValue(float v) {
+  
+      float t = 1.0 * frameCount/numFrames;
     //v = (v + (t * audioFreq ) % 1) % 1;
     v = fract(t) + 1. * loopCounter/audioFreq;
     float pv = fract(t) + 1. * ((loopCounter * 2. - 1) % loopCounter)/audioFreq;
@@ -192,7 +192,14 @@ class CustomWaveForm implements Waveform {
     gpan = constrain(gpan, -.9, .9);
     panPatch.setPan(gpan);
     gAccu = accu;
+    
     return accu;
+}
+
+class CustomWaveForm implements Waveform {
+
+  float value(float v) {
+    return sampleValue(v);
   }
 }
 
@@ -297,9 +304,7 @@ void drawDots() {
         } else if (newX < strokeWeight * .5) {
           b.point( W + newX, newY);
         }
-        
       } 
-      
       //b.point((int)x+dx, (int)y+dy);
     }
   }
@@ -330,18 +335,11 @@ void setup() {
   out = minim.getLineOut();
 
   CustomWaveForm customWaveForm = new CustomWaveForm();
-  
-  
   wave = new Oscil( audioFreq, 1f, customWaveForm );
-  
-  // debug the addition of the waveform
-  
-  
   panPatch = new Pan(0.);
   
   //wave = new Oscil( map(), 1f, customWaveForm );
-  
-  wave.patch(panPatch).patch(out);
+  //wave.patch(panPatch).patch(out);
 
   setupCP5();
   frameRate(60);
@@ -386,6 +384,42 @@ int pStepCounter = 0;
 
 void draw() {
   //println(seq.getTime() + " - " + seq.getStepNumber());
+  
+  float sample = sampleValue(0);
+  
+  OscMessage chuckMessage = new OscMessage("/noise");
+  chuckMessage.add(sample);
+  chuckOSC.send(chuckMessage, chuckRemote);
+  
+  OscMessage numMessage = new OscMessage("/num");
+  numMessage.add(cols * rows);
+  chuckOSC.send(numMessage, chuckRemote);
+  
+  OscMessage sizeMsg = new OscMessage("/size");
+  sizeMsg.add(map(dotSizePct, 0, 0.015, 0.0, 1.0));
+  chuckOSC.send(sizeMsg, chuckRemote);
+  
+  
+  
+  OscMessage periodicMsg = new OscMessage("/funScale");
+  periodicMsg.add(periodicFuncScale);
+  chuckOSC.send(periodicMsg, chuckRemote);
+  
+  
+  OscMessage radMsg = new OscMessage("/rad");
+  radMsg.add(rad);
+  chuckOSC.send(radMsg, chuckRemote);
+  
+  OscMessage bgMsg = new OscMessage("/bg");
+  bgMsg.add(bgFill);
+  chuckOSC.send(bgMsg, chuckRemote);
+  
+  OscMessage fillMsg = new OscMessage("/alpha");
+  fillMsg.add(aFillMix);
+  chuckOSC.send(fillMsg, chuckRemote);
+  
+  
+  
   
   drawDots();
   image(b, 0, 0, width, height);

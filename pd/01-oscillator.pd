@@ -1,0 +1,13 @@
+#N canvas 947 234 450 300 12;
+#X obj 48 176 dac~;
+#X msg 234 16 \; pd dsp 1;
+#X msg 338 16 \; pd dsp 0;
+#X text 249 53 ON;
+#X text 358 53 OFF;
+#X obj 95 129 *~ 0.1;
+#X obj 117 84 osc~;
+#X floatatom 58 18 5 0 0 0 - - - 0;
+#X connect 5 0 0 0;
+#X connect 5 0 0 1;
+#X connect 6 0 5 0;
+#X connect 7 0 6 0;
