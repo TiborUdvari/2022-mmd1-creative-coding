@@ -10,3 +10,13 @@ mrpeach
 ![img](./docs/01-complementaires.webp)
 ![img](./docs/02-mrpeach.webp)
 ![img](./docs/03-cyclone.webp)
+
+### Processing
+Install [Processing 4.2](https://processing.org/download)
+
+### Processing plugins
+```
+spout
+ani
+oscP5
+```
