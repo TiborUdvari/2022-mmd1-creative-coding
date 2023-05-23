@@ -7,7 +7,7 @@
   "/aFillMix": {
     "min": 0,
     "max": 1,
-    "value": 0
+    "value": 0.01647726260125637
   },
   "/ani2trans": {"value": 2},
   "/rows": {
@@ -43,7 +43,7 @@
   "/offMultX": {
     "min": 0,
     "max": 1000,
-    "value": 0
+    "value": 16.477256774902344
   },
   "/off2": {
     "min": 0,
@@ -53,7 +53,7 @@
   "/offMultY": {
     "min": 0,
     "max": 1000,
-    "value": 0
+    "value": 14.204530715942383
   },
   "/off3": {
     "min": 0,
@@ -68,12 +68,12 @@
   "/mx": {
     "min": 0.009999999776482582,
     "max": 1,
-    "value": 0.5
+    "value": 0.4898124933242798
   },
   "/my": {
     "min": 0.009999999776482582,
     "max": 1,
-    "value": 0.5
+    "value": 0.4819374978542328
   },
   "/off1": {
     "min": 0,
@@ -88,12 +88,12 @@
   "/dotSizePct": {
     "min": 0,
     "max": 0.03999999910593033,
-    "value": 0.01600000075995922
+    "value": 0
   },
   "/cols": {
     "min": 1,
     "max": 50,
-    "value": 5
+    "value": 5.927839756011963
   },
   "/offScl": {
     "min": 0,
@@ -111,7 +111,7 @@
     "value": 0.5
   },
   "/label": {
-    "stringValue": "19,37FPS",
+    "stringValue": "29,97FPS",
     "value": 0
   },
   "/ani1Dur": {
