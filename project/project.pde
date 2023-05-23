@@ -58,7 +58,7 @@ int H = 1800;
 
 int W = 5744; 
 int H = 900;
-float ratio = 0.2;
+float ratio = 0.25;
 
 // */
 
@@ -95,7 +95,7 @@ float off1 = 1.;
 float off2 = 0.;
 float off3 = 0.;
 
-boolean periodicFuncDebug = true;
+boolean periodicFuncDebug = false;
 float offScl = 0.15;
 float periodicFuncScale = 1;
 float dotSizePct = 0.01;
@@ -357,7 +357,10 @@ void setup() {
 
 
   setupKeyboardOscListener();
-
+  
+  
+  // hide it
+  toggleCP5Visible();
 }
 
 boolean greybox = false;
