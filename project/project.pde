@@ -6,7 +6,7 @@ Tibor Udvari
 // Launch instructions
 // 1. Add Mac / Computer address in Touch OSC 
 // 2. Add iPad address from screen here
-String oscRemoteAddress = "192.168.1.193";
+String oscRemoteAddress = "172.20.10.2";
 
 // todo - load sequences with the iPad
 
@@ -383,6 +383,20 @@ int stepCounter = 0;
 int pStepCounter = 0;
 
 void draw() {
+    
+  if (anims != null) {
+    boolean isTransitioning = false;
+    for (Ani anim : anims) 
+    {   
+      if (anim.isPlaying()) {
+        isTransitioning = true;
+        break;
+      }
+    }
+    
+    setOscValue("/transition/transitioning", isTransitioning ? 1 : 0);  
+  }
+  
   //println(seq.getTime() + " - " + seq.getStepNumber());
   
   float sample = sampleValue(0);

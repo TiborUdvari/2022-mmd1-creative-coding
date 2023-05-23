@@ -1,9 +1,29 @@
+float transitionTime = 1.;
+Ani[] anims;
+
+void setTransitionTime(float _transitionTime) {
+  transitionTime = _transitionTime;
+  setOscValue("/label/transitionTime", transitionTime);  
+}
+
 void loadAnimation(int i) {
   var fn = String.format("data/%d.json", animIndex);
   println("Load data from " + fn);
   //cp5.loadProperties(fn);
   String propertyList = jsonFileToPropertyList(fn);
-  Ani.to(this, 1, propertyList, Ani.SINE_IN_OUT, "onEnd:transitionFinished");
+  //Ani.to(this, 1, propertyList, Ani.SINE_IN_OUT, "onEnd:transitionFinished");
+  
+  /*
+  if (anims != null && anims[0].isPlaying()) {
+    for (Ani anim : anims) 
+    {   
+      anim.end();
+    }
+  }*/
+  
+  anims = Ani.to(this, transitionTime, propertyList, Ani.SINE_IN_OUT, "onEnd:transitionFinished");
+  println("There are anims " + anims.length);
+  
 }
 
 void saveCurrentAnimation() {
@@ -86,6 +106,12 @@ void setOscValue(String k, int val) {
   osc.send(oscMessage, remote);
 }
 
+void setOscValue(String k, float val) {
+  OscMessage oscMessage = new OscMessage(k);
+  oscMessage.add(String.format("%.02f", val));
+  osc.send(oscMessage, remote);
+}
+
 void setAnimIndex(int _animIndex) {
   animIndex = _animIndex;
   setOscValue("/label/animIndex", animIndex);
@@ -101,12 +127,21 @@ void setupKeyboardOscListener() {
       println(m.addrPattern());
 
       String addrPattern = m.addrPattern();
-      if (addrPattern.startsWith("/2/toggle/")) {
+      if (addrPattern.startsWith("/transition/toggle/")) {
         int animIndex = getAddress(m);
 
         setAnimIndex(animIndex);
         loadAnimation(animIndex);
-      } else if (addrPattern.startsWith("/button/reload")) {
+        
+        println("loaded toggle");
+      }
+      else if (addrPattern.startsWith("/transition/transitionTime")) {
+        float tt = m.get(0).floatValue();
+        setTransitionTime(tt);
+        
+        
+      }
+       else if (addrPattern.startsWith("/button/reload")) {
         loadAnimation(animIndex);
       } else if (addrPattern.startsWith("/button/next")) {
         setAnimIndex( animIndex + 1 );

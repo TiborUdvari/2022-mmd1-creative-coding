@@ -433,6 +433,8 @@ void setupCP5() {
   for (int i = 0; i < sliders.size(); i++) {
     controlP5.Controller c = sliders.get(i);
     //c.listen(true);
+    
+    
     hook(c, "/1/fader/" + (i + 1));
     hook("/1/fader/" + (i + 1), c);
   }
