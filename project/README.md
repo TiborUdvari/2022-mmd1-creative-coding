@@ -1,3 +1,9 @@
+## Connection
+* Connect iPad to network
+* Open TouchOSC, open first tab connection, take note of Local IP Address
+* Change `oscRemoteAddress` to this Local IP Address from iPad
+* Type `ipconfig` in windows command line and add it under Host on the TouchOSC app
+
 ## Installation
 ### Pure Data
 Install [Pure Data](https://puredata.info/downloads/pure-data) from here.
@@ -19,4 +25,6 @@ Install [Processing 4.2](https://processing.org/download)
 spout
 ani
 oscP5
+controlP5
 ```
+
