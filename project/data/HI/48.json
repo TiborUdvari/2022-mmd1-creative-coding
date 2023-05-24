@@ -7,23 +7,23 @@
   "/aFillMix": {
     "min": 0,
     "max": 1,
-    "value": 0.13740020990371704
+    "value": 0.8199999928474426
   },
   "/ani2trans": {"value": 2},
   "/rows": {
     "min": 1,
-    "max": 50,
-    "value": 36
+    "max": 200,
+    "value": 1
   },
   "/periodicFuncScale": {
     "min": 0.009999999776482582,
     "max": 10,
-    "value": 0.6514031291007996
+    "value": 1.0393215417861938
   },
   "/numFrames": {
     "min": 10,
     "max": 1000,
-    "value": 534.9144897460938
+    "value": 287.20001220703125
   },
   "/sliderSeed": {
     "min": 10000,
@@ -33,7 +33,7 @@
   "/rad": {
     "min": 0.009999999776482582,
     "max": 5,
-    "value": 0.43811914324760437
+    "value": 1.2999999523162842
   },
   "/ani2Dur": {
     "min": 0,
@@ -43,7 +43,7 @@
   "/offMultX": {
     "min": 0,
     "max": 1000,
-    "value": 675.5681762695312
+    "value": 51.91696548461914
   },
   "/off2": {
     "min": 0,
@@ -53,12 +53,12 @@
   "/offMultY": {
     "min": 0,
     "max": 1000,
-    "value": 3.9772567749023438
+    "value": 20
   },
   "/off3": {
     "min": 0,
     "max": 1,
-    "value": 1
+    "value": 0
   },
   "/scl": {
     "min": 0.0010000000474974513,
@@ -68,41 +68,41 @@
   "/mx": {
     "min": 0.009999999776482582,
     "max": 1,
-    "value": 0.9707499742507935
+    "value": 0.5
   },
   "/my": {
     "min": 0.009999999776482582,
     "max": 1,
-    "value": 0.10312998294830322
+    "value": 0.5
   },
   "/off1": {
     "min": 0,
     "max": 1,
-    "value": 0
+    "value": 1
   },
   "/bgFill": {
     "min": 0,
     "max": 255,
-    "value": 47.83066940307617
+    "value": 5.100000381469727
   },
   "/dotSizePct": {
     "min": 0,
     "max": 0.03999999910593033,
-    "value": 2.2727251052856445E-4
+    "value": 0.03923323005437851
   },
   "/cols": {
     "min": 1,
-    "max": 50,
-    "value": 45
+    "max": 200,
+    "value": 1
   },
   "/offScl": {
     "min": 0,
     "max": 1,
-    "value": 0.1499999761581421
+    "value": 0.15000000596046448
   },
   "/ani1trans": {"value": 0},
   "/stepLabel": {
-    "stringValue": "step ",
+    "stringValue": "step 3",
     "value": 0
   },
   "/ani2Start": {
@@ -111,7 +111,7 @@
     "value": 0.5
   },
   "/label": {
-    "stringValue": "29,98FPS",
+    "stringValue": "55.57FPS",
     "value": 0
   },
   "/ani1Dur": {
@@ -120,7 +120,7 @@
     "value": 0.20000000298023224
   },
   "/Animlabel": {
-    "stringValue": "anim 14/45",
+    "stringValue": "anim 1/9",
     "value": 0
   }
 }

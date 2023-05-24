@@ -89,10 +89,14 @@ String rightPropertyList;
 // Interpolate the values
 
 int getAddress(OscMessage m) {
+  return getAddress(m, 8);
+}
+
+int getAddress(OscMessage m, int cols) {
   String[] parts = m.addrPattern().split("/");
-  int r = abs(Integer.parseInt(parts[3]) - 8);
+  int r = abs(Integer.parseInt(parts[3]) - cols);
   int c = Integer.parseInt(parts[4]) - 1;
-  int animIndex = r * 8 + c;
+  int animIndex = r * cols + c;
   return animIndex;
 }
 
@@ -139,6 +143,15 @@ void setupKeyboardOscListener() {
         float tt = m.get(0).floatValue();
         setTransitionTime(tt);
         
+        
+      }
+      else if (addrPattern.startsWith("/transition/audioToggle")) {
+        int val = getAddress(m, 4);
+        
+          OscMessage chuckMessage = new OscMessage("/audioToggle");
+          chuckMessage.add(val);
+          chuckOSC.send(chuckMessage, chuckRemote);
+        // send chuck value
         
       }
        else if (addrPattern.startsWith("/button/reload")) {
