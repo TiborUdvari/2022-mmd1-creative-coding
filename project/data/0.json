@@ -7,23 +7,23 @@
   "/aFillMix": {
     "min": 0,
     "max": 1,
-    "value": 0.5
+    "value": 0.016477257013320923
   },
   "/ani2trans": {"value": 2},
   "/rows": {
     "min": 1,
     "max": 50,
-    "value": 1
+    "value": 6
   },
   "/periodicFuncScale": {
     "min": 0.009999999776482582,
     "max": 10,
-    "value": 1
+    "value": 0.44855737686157227
   },
   "/numFrames": {
     "min": 10,
     "max": 1000,
-    "value": 60
+    "value": 534.9144897460938
   },
   "/sliderSeed": {
     "min": 10000,
@@ -43,22 +43,22 @@
   "/offMultX": {
     "min": 0,
     "max": 1000,
-    "value": 20
+    "value": 16.477256774902344
   },
   "/off2": {
     "min": 0,
     "max": 1,
-    "value": 0
+    "value": 0.0598631426692009
   },
   "/offMultY": {
     "min": 0,
     "max": 1000,
-    "value": 20
+    "value": 14.204532623291016
   },
   "/off3": {
     "min": 0,
     "max": 1,
-    "value": 0
+    "value": 0.061003394424915314
   },
   "/scl": {
     "min": 0.0010000000474974513,
@@ -68,12 +68,12 @@
   "/mx": {
     "min": 0.009999999776482582,
     "max": 1,
-    "value": 0.5
+    "value": 0.499937504529953
   },
   "/my": {
     "min": 0.009999999776482582,
     "max": 1,
-    "value": 0.5
+    "value": 0.5010625123977661
   },
   "/off1": {
     "min": 0,
@@ -83,22 +83,22 @@
   "/bgFill": {
     "min": 0,
     "max": 255,
-    "value": 50
+    "value": 255
   },
   "/dotSizePct": {
     "min": 0,
     "max": 0.03999999910593033,
-    "value": 0.009999999776482582
+    "value": 0
   },
   "/cols": {
     "min": 1,
     "max": 50,
-    "value": 1
+    "value": 5
   },
   "/offScl": {
     "min": 0,
     "max": 1,
-    "value": 0.15000000596046448
+    "value": 0.1499999761581421
   },
   "/ani1trans": {"value": 0},
   "/stepLabel": {
@@ -111,7 +111,7 @@
     "value": 0.5
   },
   "/label": {
-    "stringValue": "58.05FPS",
+    "stringValue": "29,97FPS",
     "value": 0
   },
   "/ani1Dur": {

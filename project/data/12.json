@@ -18,7 +18,7 @@
   "/periodicFuncScale": {
     "min": 0.009999999776482582,
     "max": 10,
-    "value": 3.7235002517700195
+    "value": 1.1054940223693848
   },
   "/numFrames": {
     "min": 10,
@@ -48,7 +48,7 @@
   "/off2": {
     "min": 0,
     "max": 1,
-    "value": 0.1271379590034485
+    "value": 0
   },
   "/offMultY": {
     "min": 0,
@@ -78,7 +78,7 @@
   "/off1": {
     "min": 0,
     "max": 1,
-    "value": 0.16932722926139832
+    "value": 0.1693272590637207
   },
   "/bgFill": {
     "min": 0,
@@ -93,7 +93,7 @@
   "/cols": {
     "min": 1,
     "max": 50,
-    "value": 36
+    "value": 45
   },
   "/offScl": {
     "min": 0,
@@ -111,7 +111,7 @@
     "value": 0.5
   },
   "/label": {
-    "stringValue": "56.85FPS",
+    "stringValue": "29,97FPS",
     "value": 0
   },
   "/ani1Dur": {

@@ -18,7 +18,7 @@
   "/periodicFuncScale": {
     "min": 0.009999999776482582,
     "max": 10,
-    "value": 0.4485573172569275
+    "value": 0.28813043236732483
   },
   "/numFrames": {
     "min": 10,
@@ -43,7 +43,7 @@
   "/offMultX": {
     "min": 0,
     "max": 1000,
-    "value": 188.71148681640625
+    "value": 0
   },
   "/off2": {
     "min": 0,
@@ -88,12 +88,12 @@
   "/dotSizePct": {
     "min": 0,
     "max": 0.03999999910593033,
-    "value": 0.017742302268743515
+    "value": 0.00540909031406045
   },
   "/cols": {
     "min": 1,
     "max": 50,
-    "value": 5
+    "value": 5.927839756011963
   },
   "/offScl": {
     "min": 0,
@@ -111,7 +111,7 @@
     "value": 0.5
   },
   "/label": {
-    "stringValue": "57.83FPS",
+    "stringValue": "29,96FPS",
     "value": 0
   },
   "/ani1Dur": {
